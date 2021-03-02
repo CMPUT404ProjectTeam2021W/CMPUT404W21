@@ -1,3 +1,13 @@
 *{ 
     background-color: aqua;
 }
+
+@font-face{
+    font-family: 'gotham-bold';
+    src: url("fonts/GothamBold.ttf");
+
+}
+
+p{
+    font-family: 'gotham-bold';
+}
