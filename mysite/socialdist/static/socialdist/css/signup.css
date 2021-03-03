@@ -47,7 +47,6 @@
 
 .signup button{
   width:250px;
-  height:auto;
   padding-top:10px;
   padding-bottom: 10px;
   border: 1px white solid;
@@ -56,8 +55,6 @@
   font-size: 28px;
   background-color: rgba(255,255,255,0.2);
   cursor: pointer;
-  margin-left:50vw;
-  margin-top: 3%;
 }
 
 .signup button:hover{
@@ -73,13 +70,16 @@
 .login{
   margin-top: 5%;
 }
-
+.button_nav{
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  align-content: flex-start;
+}
 .return{
-
     width:250px;
-    margin-top: -3.5%;
-    margin-left: 33vw;
-    height:auto;
+    margin-left: 25px;
+    margin-top: 50px;
     padding-top:10px;
     padding-bottom: 10px;
     border: 1px white solid;

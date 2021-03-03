@@ -10,9 +10,11 @@
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    <div class="button_nav">
     <button type="submit">Log In</button>
   </form>
   <div class="return"><a href="{% url 'index' %}">Return</a></div>
+  </div>
 </div>
 </div>
 

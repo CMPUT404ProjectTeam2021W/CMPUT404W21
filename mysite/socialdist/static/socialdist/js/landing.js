@@ -3,26 +3,26 @@ $(document).ready(function() {
     $('.hermes-big').animate({
       marginTop: "-=15vh",
       opacity: 1
-    }, 500);
-  },1000);
+    }, 250);
+  },400);
   setTimeout(function() {
     $('.big-marker').animate({
       opacity: 1
-    }, 500);
-  },2000);
+    }, 250);
+  },500);
 
   setTimeout(function() {
     $('.friendly-reminder').animate({
       opacity: 1
-    }, 500);
-  },2500);
+    }, 250);
+  },700);
 
   setTimeout(function() {
     $('.link-box').animate({
       opacity: 1,
       display: "visible"
-    }, 500);
-  },2500);
+    }, 250);
+  },900);
 
 
 });
