@@ -1,12 +1,18 @@
-{% extends 'base.html' %}
-
+{% extends 'socialdist/base.html' %}
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-  <h2>Sign up</h2>
+<div class='pretty-bg'>
+  <div class="hermes-na">Hermes</div>
+  <div class='big-marker-na'></div>
+  <div class="friendly-reminder reminder-na"> your friendly neighbourhood social network </div>
+
+  <div class="signup">
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Sign Up</button>
   </form>
+</div>
+</div>
 {% endblock %}

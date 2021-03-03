@@ -12,7 +12,7 @@ $(document).ready(function() {
   },2000);
 
   setTimeout(function() {
-    $('#friendly-reminder').animate({
+    $('.friendly-reminder').animate({
       opacity: 1
     }, 500);
   },2500);
