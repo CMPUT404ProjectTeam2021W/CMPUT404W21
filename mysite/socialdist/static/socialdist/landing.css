@@ -1,5 +1,6 @@
 *{ 
     background-color: aqua;
+    margin: 0;
 }
 
 @font-face{
@@ -10,4 +11,8 @@
 
 p{
     font-family: 'gotham-bold';
+}
+
+body {
+    background: linear-gradient(135deg, #813ec7, #d93d5c);    
 }
