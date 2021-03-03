@@ -11,8 +11,7 @@ def index(request):
     return render(request, "socialdist/index.html")
 
 
-
 class SignUpView(generic.CreateView):
     form_class = SignUpForm
     success_url = reverse_lazy('login')
-    template_name = 'socialdist/signup.html'
+    template_name = 'registration/signup.html'
