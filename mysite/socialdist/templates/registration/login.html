@@ -3,15 +3,16 @@
 
 {% block content %}
 <div class='pretty-bg'>
-  <div class="hermes-big">Hermes</div>
-  <div class='big-marker'></div>
-  <div class="friendly-reminder"> your friendly neighbourhood social network </div>
-<h2>Log In</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Log In</button>
-</form>
+  <div class="hermes-na">Hermes</div>
+  <div class='big-marker-na'></div>
+  <div class="friendly-reminder reminder-na"> your friendly neighbourhood social network </div>
+  <div class="signup login">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Log In</button>
+  </form>
+</div>
 </div>
 
 {% endblock %}
