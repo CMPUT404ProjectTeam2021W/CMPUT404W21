@@ -11,9 +11,9 @@
   Hi {{ user.username }}!
   <p> <a href="{% url 'logout' %}">Log Out</a></p>
 {% else %}
-  <div class="link-box"><a href="{% url 'login' %}">Log In</a></div>
+  <a href="{% url 'login' %}"><div class="link-box">Log In</div></a>
   <br>
-  <div class="link-box link-box-noncolor"><a href="{% url 'signup' %}">Sign Up</a></div>
+  <a href="{% url 'signup' %}"><div class="link-box link-box-noncolor">Sign Up</div></a>
 
 {% endif %}
 </div>

@@ -19,7 +19,8 @@ $(document).ready(function() {
 
   setTimeout(function() {
     $('.link-box').animate({
-      opacity: 1
+      opacity: 1,
+      display: "visible"
     }, 500);
   },2500);
 

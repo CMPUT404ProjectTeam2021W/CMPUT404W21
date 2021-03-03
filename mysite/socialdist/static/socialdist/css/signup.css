@@ -56,7 +56,7 @@
   font-size: 28px;
   background-color: rgba(255,255,255,0.2);
   cursor: pointer;
-  margin-left:42vw;
+  margin-left:50vw;
   margin-top: 3%;
 }
 
@@ -72,4 +72,23 @@
 
 .login{
   margin-top: 5%;
+}
+
+.return{
+
+    width:250px;
+    margin-top: -3.5%;
+    margin-left: 33vw;
+    height:auto;
+    padding-top:10px;
+    padding-bottom: 10px;
+    border: 1px white solid;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 28px;
+    background-color: rgba(255,255,255,0.2);
+    cursor: pointer;
+}
+.return:hover{
+  background-color: grey;
 }
