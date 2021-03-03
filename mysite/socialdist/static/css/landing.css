@@ -1,6 +1,7 @@
 *{
 
     margin: 0;
+    box-sizing: border-box;
 }
 
 @font-face{
@@ -20,4 +21,89 @@ p{
     position: fixed;
     top: 0;
     left: 0;
+}
+
+.hermes-big{
+  color: white;
+  font-family: 'gotham-bold', 'times';
+  font-size: 60px;
+  text-align: center;
+  position: absolute;
+  width: 30%;
+  height: auto;
+  opacity: 0.5;
+  width: 100vw;
+  margin-top: 30vh;
+  height: auto;
+}
+
+.big-marker{
+  background:url('../img/big_mark.svg');
+  margin-top: 25vh;
+  margin-left: 48vw;
+  width: 100%;
+  background-repeat: no-repeat;
+  height: 50px;
+  opacity: 0;
+}
+
+#friendly-reminder {
+    width: 100%;
+    height:auto;
+    font-size: 19px;
+    color: white;
+    font-family: 'gotham-bold', 'times';
+    text-align: center;
+    opacity: 0;
+}
+
+a{
+    text-decoration: none;
+    font-family: 'gotham-bold', 'times';
+  }
+
+.link-box
+{
+  width:250px;
+  height:auto;
+  padding-top:10px;
+  padding-bottom: 10px;
+  border: 1px white solid;
+  border-radius: 50px;
+  text-align: center;
+  font-size: 28px;
+  background-color: rgba(255,255,255,0.2);
+  cursor: pointer;
+  margin-left:42vw;
+  margin-top: 6%;
+  opacity: 0;
+}
+.link-box:hover{
+  opacity: 0.6;
+}
+
+.link-box>a{
+  color: white;
+}
+
+.link-box-noncolor
+{
+  background-color:white;
+  margin-top: 0;
+}
+
+.link-box-noncolor>a{
+  color: #706BA5;
+}
+
+@media only screen and (max-width: 600px) {
+  .link-box
+  {
+    margin-top: 20%;
+    margin-left: 23%;
+    width: 280px;
+  }
+  .link-box-noncolor{
+    margin-top: 0;
+  }
 }
