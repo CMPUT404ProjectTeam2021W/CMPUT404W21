@@ -1,0 +1,94 @@
+*
+{
+  color: white;
+  font-family: 'gotham-bold';
+}
+
+.signup{
+  margin-top: 3%;
+  width: 100%;
+  height: auto;
+}
+.signup p{
+  text-align: center;
+  margin-top: 2%;
+}
+
+.signup label{
+  padding-right: 5%;
+  text-align: left;
+}
+
+
+
+.signup input{
+  border: none;
+  border-bottom: 5px solid rgba(255,255,255,0.6);
+  border-radius:5px;
+  background-color: transparent;
+  font-family: 'gotham-light','times';
+  outline: none;
+}
+.signup input::selection{
+  outline:none;
+}
+.signup li
+{
+  margin-left: 35%;
+  font-size: 13px;
+  margin-top: 1%;
+  font-family: 'gotham-light';
+}
+
+.signup .helptext
+{
+  display: none;
+}
+
+.signup button{
+  width:250px;
+  height:auto;
+  padding-top:10px;
+  padding-bottom: 10px;
+  border: 1px white solid;
+  border-radius: 50px;
+  text-align: center;
+  font-size: 28px;
+  background-color: rgba(255,255,255,0.2);
+  cursor: pointer;
+  margin-left:50vw;
+  margin-top: 3%;
+}
+
+.signup button:hover{
+  background-color: white;
+  color:black;
+}
+
+.signup #id_password2
+{
+  margin-left: -1%;
+}
+
+.login{
+  margin-top: 5%;
+}
+
+.return{
+
+    width:250px;
+    margin-top: -3.5%;
+    margin-left: 33vw;
+    height:auto;
+    padding-top:10px;
+    padding-bottom: 10px;
+    border: 1px white solid;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 28px;
+    background-color: rgba(255,255,255,0.2);
+    cursor: pointer;
+}
+.return:hover{
+  background-color: grey;
+}
