@@ -1,11 +1,16 @@
-<html>
-<head>
-{% load  static %}
-<link rel='stylesheet' type="text/css" href="{% static 'socialdist/landing.css' %}">
+{% extends 'socialdist/base.html' %}
+{% block title %}Home{% endblock %}
 
-</head>
-<body>
-<p> hi</p>
-</body>
 
-</html>
+{% block content %}
+<div class='pretty-bg'>
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+  <p> <a href="{% url 'logout' %}">Log Out</a></p>
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Log In</a>
+  <a href="{% url 'signup' %}">Sign Up</a>
+{% endif %}
+</div>
+{% endblock %}
