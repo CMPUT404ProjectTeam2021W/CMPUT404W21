@@ -3,35 +3,42 @@ from django.db import models
 #class User(models.Model):
 #    name = models.CharField(max_length=200)
 
-#class Author(models.Model):
-#    githublink = models.URLField()
-#    username = models.CharField(max_length=20)
+class Author(models.Model):
+    githublink = models.URLField()
+    name = models.CharField(max_length=20)
     
 # Create your models here.
 class User(models.Model):
-    username = models.CharField(max_length=200, unique=True)
-    password = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
+    password = models.CharField(max_length=200, default="")
 
     class Meta:
         constraints = [
             models.CheckConstraint(
                 name='username_password_is_different',
-                check=models.Q(password=models.F(username)),
+                check=models.Q(password=models.F('username')),
             )
         ]
 
 class Post(models.Model):
+    CONTENT_TYPE = (
+        ('T', 'Text'),
+        ('I', 'Image'),
+        ('L', 'ImageLink'),
+        ('C', 'CommonMark'),
+    )
+
     title = models.CharField(max_length=50)
+    contenttype = models.CharField(max_length=1, choices=CONTENT_TYPE, default='T')
     poster = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta: 
-        abstract = True
+class PostContentText(models.Model):
+    text = models.CharField(max_length=2500)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
-class TextPost(Post):
-    content = models.CharField(max_length=2500)
-
-    class Meta(Post.Meta):
-        db_table = 'text_post'
+class PostCotentImageLink(models.Model):
+    text = models.URLField()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
 class Comment(models.Model):
     comment = models.CharField(max_length=2500)
