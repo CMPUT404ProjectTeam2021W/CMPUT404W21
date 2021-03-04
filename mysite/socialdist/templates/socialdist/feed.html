@@ -5,6 +5,14 @@
 <div class="sidebar">
   <div class="photo"></div>
   <div class="name">Welcome back <br> <span>Robin Gale</span></div>
+  <div class = "sidebar-links">
+  <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
+    <p><a class="mini-links" href="#"> Unlisted </a>  </p>
+  <a class="mini-links"href="#"> Friends </a><br>
+  <a class="mini-links"href="{% url 'image_upload' %}"> Profile </a><br>
+  <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
+  </div>
+
   </div>
 
   <div class="feed-section">
