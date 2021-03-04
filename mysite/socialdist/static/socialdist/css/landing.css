@@ -139,6 +139,13 @@ a{
   color: #706BA5;
 }
 
+.logged-in
+{
+  margin-top: 5%;
+  width:100%;
+  text-align: center;
+}
+
 @media only screen and (max-width: 600px) {
   .link-box
   {
