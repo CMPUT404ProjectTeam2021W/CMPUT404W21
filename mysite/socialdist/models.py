@@ -44,4 +44,7 @@ class Comment(models.Model):
     comment = models.CharField(max_length=2500)
     commentor = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-
+    
+class Image(models.Model):
+    name = models.CharField(max_length=50)
+    new_image = models.ImageField(upload_to='images/') 
