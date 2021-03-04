@@ -11,7 +11,8 @@ from .forms import ImageForm, SignUpForm
 def index(request):
     return render(request, "socialdist/index.html")
 
-
+def feed(request):
+    return render(request, "socialdist/feed.html")
 class SignUpView(generic.CreateView):
     form_class = SignUpForm
     success_url = reverse_lazy('login')

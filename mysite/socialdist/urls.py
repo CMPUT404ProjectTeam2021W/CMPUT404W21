@@ -8,7 +8,10 @@ urlpatterns = [
   path('signup/', views.SignUpView.as_view(), name='signup'),
   path('', include('django.contrib.auth.urls')),
   path('image_upload', views.image_view, name = 'image_upload'),
-  path('success', views.success, name = 'success')
+  path('success', views.success, name = 'success'),
+  path('feed/', views.feed, name='feed'),
+  path('', include('django.contrib.auth.urls'))
+
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,
