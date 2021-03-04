@@ -4,13 +4,17 @@
 
 {% block content %}
 <div class='pretty-bg'>
+  <div class="hermes-big">Hermes</div>
+  <div class='big-marker'></div>
+  <div class="friendly-reminder"> your friendly neighbourhood social network </div>
 {% if user.is_authenticated %}
   Hi {{ user.username }}!
   <p> <a href="{% url 'logout' %}">Log Out</a></p>
 {% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Log In</a>
-  <a href="{% url 'signup' %}">Sign Up</a>
+  <a href="{% url 'login' %}"><div class="link-box">Log In</div></a>
+  <br>
+  <a href="{% url 'signup' %}"><div class="link-box link-box-noncolor">Sign Up</div></a>
+
 {% endif %}
 </div>
 {% endblock %}

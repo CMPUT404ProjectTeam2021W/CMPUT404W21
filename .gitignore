@@ -69,6 +69,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 pytestdebug.log
+*.yml
 
 # Translations
 *.mo
@@ -155,3 +156,4 @@ dmypy.json
 .idea/vcs.xml
 .idea/misc.xml
 .idea/
+
