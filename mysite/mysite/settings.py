@@ -129,4 +129,7 @@ STATICFILES_DIRS = (
 LOGIN_REDIRECT_URL = 'feed'
 LOGOUT_REDIRECT_URL = 'index'
 django_on_heroku.settings(locals()) # bottom of the file
-SECRET_KEY = os.environ['secret_key']
+try:
+    SECRET_KEY = os.environ['secret_key']
+except:
+    SECRET_KEY = 'thisismysecretkey;'
