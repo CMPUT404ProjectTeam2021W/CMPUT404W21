@@ -12,12 +12,28 @@
     <!-- from Ahmet Aksungur (https://codepen.io/ahmetaksungur) at https://codepen.io/ahmetaksungur/pen/MWaVxyd  -->
 
     <label class="ui-form-input-container">
+      <div class="outer-container">
     <textarea class="ui-form-input" placeholder="How are you doing today?">
     </textarea>
     <div class="button-div">
-      <button> Submit </button>
+      <div class="switch">
+    <input id="switch-it" type="checkbox" class="switch-input" />
+    <label for="switch-it" class="switch-label"></label>
+      </div>
+      Unlisted Post
+      <div class="dropdown">
+  <button onclick="privacy_controls()" class="dropbtn">&#x2699 Post Privacy</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a href="#">Public</a>
+    <a href="#">Friends</a>
+    <a href="#">Only Me</a>
+  </div>
+</div>
+      <button class="submitbtn"> Submit </button>
 
     </div>
+      </div>
+
   </label>
 </div>
 
