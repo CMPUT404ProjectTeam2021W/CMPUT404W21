@@ -5,18 +5,12 @@
     <meta charset="utf-8" />
     <title>{% block title %}Hermes{% endblock %}</title>
 
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'socialdist/css/landing.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'socialdist/css/signup.css' %}"
-    />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{% static 'socialdist/js/landing.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/landing.css' %}"/>
+     <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/signup.css' %}"/>
+     <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/feed.css' %}"/>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+     <script type="text/javascript" src="{% static 'socialdist/js/landing.js' %}"></script>
+     <script type="text/javascript" src="{% static 'socialdist/js/auto_expand_text.js' %}"></script>
   </head>
   <body>
     <main>{% block content %} {% endblock %}</main>
