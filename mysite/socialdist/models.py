@@ -7,4 +7,7 @@ class User(models.Model):
 class Author(models.Model):
     githublink = models.URLField()
     username = models.CharField(max_length=20)
-    
+
+class Image(models.Model):
+    name = models.CharField(max_length=50)
+    new_image = models.ImageField(upload_to='images/') 
