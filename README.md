@@ -30,7 +30,7 @@ Once authorized, you should be redirected to your home feed
 
 # Live Version
 
-[Deployed on Heroku](https://hermes-cmput404.herokuapp.com/)
+Deployed on Heroku at [https://hermes-cmput404.herokuapp.com/](https://hermes-cmput404.herokuapp.com/)
 
 # License
 
