@@ -12,6 +12,7 @@
   <h1>Welcome Back {{ user.username }}!</h1>
 <p> <a href="{% url 'feed' %}"><button>Your Feed</button></a></p>
   <p> <a href="{% url 'logout' %}"><button>Log Out</button></a></p>
+  <p> <a href="{% url 'create_post' %}"><button>Make Post</button></a></p>
 
 </div>
 {% else %}

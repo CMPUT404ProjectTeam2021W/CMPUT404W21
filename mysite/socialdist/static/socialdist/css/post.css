@@ -1,0 +1,52 @@
+.post-body
+{
+  margin-top: 10%;
+  height: auto;
+  width: 600px;
+}
+
+.post-body label
+{
+  margin-top: 10%;
+  color: black;
+}
+
+input#id_contents{
+  margin-left: 20px;
+  color:black;
+  outline: none;
+  height:100px;
+  width: 400px;
+  border: none;
+  font-size: 20px;
+  font-family:"gotham-light", "times";
+}
+
+
+select#id_access_level{
+  margin-left: 20px;
+  color:black;
+    outline: none;
+    border:none;
+    padding: 5px 10px;
+}
+
+input#submitbtn
+{
+  margin-top: 20px;
+  border: none;
+  margin-left: 30%;
+  background-color: #D0B7D8;
+  height: 45px;
+  width:200px;
+  font-size: 18px;
+  border-radius:30px;
+  transition: background-color 0.5s;
+  cursor: pointer;
+}
+
+input#submitbtn:hover{
+  background-color: #d93d5c;
+  opacity: 0.5;
+  color: white;
+}
