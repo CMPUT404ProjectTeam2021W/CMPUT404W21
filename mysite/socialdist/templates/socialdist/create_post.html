@@ -35,9 +35,20 @@
 <div class='fade-bg'>
 <div class="sidebar">
   <div class="photo"></div>
-  <div class="name">Welcome back <br> <span>Robin Gale</span></div>
-  <div class = "sidebar-links"></div>
+  <div class="name">Welcome back <br> <span>{{user.username}}</span></div><br><br><br>
+  <div class = "sidebar-links">
+    <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
+
+  <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
+    <a class="mini-links"href="{% url 'profile' %}"> Profile </a><br>
+    <p><a class="mini-links" href="#"> Unlisted </a>  </p>
+  <a class="mini-links"href="#"> Friends </a><br>
+
+  <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
+  <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
+
   </div>
+</div>
     <div class="feed-section">
         <span>New Post</span>
 <div class="post-body">
@@ -49,7 +60,6 @@
     <input type="submit" value="Create post" id="submitbtn"/>
   </form>
 
-</div>
 </div>
 </div>
 

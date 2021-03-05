@@ -22,7 +22,7 @@ class MyUserChangeForm(UserChangeForm):
 class ImageForm(forms.ModelForm):
     class Meta:
         model = Image
-        fields = ['username', 'new_image']
+        fields = ['new_image']
 
 class CreatePostForm(forms.ModelForm):
 
