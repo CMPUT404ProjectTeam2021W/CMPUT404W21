@@ -1,4 +1,18 @@
 from django.contrib import admin
-from .models import User
+from django.contrib.auth.admin import UserAdmin
+from .forms import MyUserCreationForm, MyUserChangeForm
+from .models import MyUser
+
+
 # Register your models here.
-admin.site.register(User)
+class MyUserAdmin(UserAdmin):
+    add_form = MyUserCreationForm
+    form = MyUserChangeForm
+    model = MyUser
+    list_display = ['username', 'github_link']
+    fieldsets = UserAdmin.fieldsets + (
+            (None, {'fields': ['github_link']}),
+    )
+
+
+admin.site.register(MyUser, MyUserAdmin)

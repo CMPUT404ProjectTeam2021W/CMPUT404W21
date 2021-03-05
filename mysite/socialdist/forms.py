@@ -1,25 +1,25 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import *
+from .models import MyUser
 
 
-class SignUpForm(UserCreationForm):
-    username = forms.CharField(max_length=30)
+class MyUserCreationForm(UserCreationForm):
     github_link = forms.URLField(required=False)
 
     class Meta:
-        model = User
-        fields = ('username', 'github_link', 'password1', 'password2', )
+        model = MyUser
+        fields = ('username', 'github_link', )
 
-    def save(self, commit=True):
-        user = super(SignUpForm, self).save(commit=False)
-        user.github_link = self.cleaned_data['github_link']
-        if commit:
-            user.save()
-        return user
+
+class MyUserChangeForm(UserChangeForm):
+
+    class Meta(UserChangeForm):
+        model = MyUser
+        fields = ('username', 'github_link')
+
 
 class ImageForm(forms.ModelForm):
     class Meta:
         model = Image
-        fields = ['name', 'new_image']
+        fields = ['username', 'new_image']

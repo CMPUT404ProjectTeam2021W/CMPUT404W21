@@ -1,24 +1,12 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-#class User(models.Model):
-#    name = models.CharField(max_length=200)
 
-class Author(models.Model):
-    githublink = models.URLField()
-    name = models.CharField(max_length=20)
-    
 # Create your models here.
-class User(models.Model):
-    name = models.CharField(max_length=200, unique=True)
-    password = models.CharField(max_length=200, default="")
+class MyUser(AbstractUser):
+    github_link = models.URLField(default='')
+    friends = models.TextField(default='')
 
-    class Meta:
-        constraints = [
-            models.CheckConstraint(
-                name='username_password_is_different',
-                check=models.Q(password=models.F('username')),
-            )
-        ]
 
 class Post(models.Model):
     CONTENT_TYPE = (
@@ -30,7 +18,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=50)
     contenttype = models.CharField(max_length=1, choices=CONTENT_TYPE, default='T')
-    poster = models.ForeignKey(User, on_delete=models.CASCADE)
+    poster = models.ForeignKey(MyUser, on_delete=models.CASCADE)
 
 class PostContentText(models.Model):
     text = models.CharField(max_length=2500)
@@ -42,9 +30,9 @@ class PostCotentImageLink(models.Model):
 
 class Comment(models.Model):
     comment = models.CharField(max_length=2500)
-    commentor = models.ForeignKey(User, on_delete=models.CASCADE)
+    commentor = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     
 class Image(models.Model):
-    name = models.CharField(max_length=50)
+    username = models.CharField(max_length=50)
     new_image = models.ImageField(upload_to='images/') 
