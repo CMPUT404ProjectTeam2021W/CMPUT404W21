@@ -21,45 +21,31 @@ def feed(request):
     return render(request, 'socialdist/feed.html', {'posts': posts})
 
 def image_view(request):
-    if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('success')
-    else:
-        form = ImageForm()
-    return render(request, 'socialdist/image_upload.html', {'form' : form})
+    # if request.method == 'POST':
+    #     form = ImageForm(request.POST, request.FILES)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('success')
+    # else:
+    #     form = ImageForm()
+    # return render(request, 'socialdist/image_upload.html', {'form' : form})
+    pass
 
 def success(request):
     return HttpResponse('successfully uploaded')
 
 def create_post(request):
-    # if request.method == 'POST':
-    #     form = CreatePostForm(request.user)
-    #     if form.is_valid():
-    #
-    #         form.save()
-    #
-    # else:
-    #     form = CreatePostForm(poster=request.user)
-    #
-    # return render(request, 'socialdist/test_post.html', {'form' : form})
     if request.method == 'POST':
         # This branch runs when the user submits the form.
-
         # Create an instance of the form with the submitted data.
         form = CreatePostForm(request.POST)
-
         # Convert the form into a model instance.  commit=False postpones
         # saving to the database.
         post = form.save(commit=False)
-
         # Make the currently logged in user the Post creator.
         post.created_by = request.user
-
         # Save post in database.
         post.save()
-
         # Rediect to post list.
         return redirect('feed')
     elif request.method == 'GET':
@@ -69,3 +55,20 @@ def create_post(request):
         return render(request, 'socialdist/create_post.html', { 'form': form })
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
+
+def profile_posts(request):
+    posts = Post.objects.filter(**{'created_by': request.user})
+    # posts = Post.objects.all().filter('-created_by'=request.user)
+
+    # posts = Post.objects.filter(created_by=request.user)
+    return render(request, 'socialdist/profile.html', {'posts': posts})
+
+def user_settings(request):
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('success')
+    else:
+        form = ImageForm()
+    return render(request, 'socialdist/user_settings.html', {'form': form})

@@ -1,0 +1,41 @@
+{% extends 'socialdist/base.html' %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class='fade-bg'>
+<div class="sidebar">
+  <div class="photo"></div>
+  <div class="name">Welcome back <br> <span>Robin Gale</span></div>
+  <div class = "sidebar-links">
+    <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a><br><br><br>
+
+  <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
+    <a class="mini-links"href="{% url 'profile' %}"> Profile </a><br>
+    <p><a class="mini-links" href="#"> Unlisted </a>  </p>
+  <a class="mini-links"href="#"> Friends </a><br>
+
+  <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
+  <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
+
+  </div>
+
+  </div>
+
+  <div class="feed-section user-settings">
+    <span>
+      User Settings
+      </span>
+      <p> <em> Username: </em> {{user.username}}
+        <p> <em> Github Link: </em> {{user.github_link}}
+          <br>
+          <form method = "post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <br>
+              <br>
+              <br>
+              
+            <input type="submit" value="Save changes" id="savebtn"/>
+          </form>
+          </div>
+          </div>
+{% endblock %}

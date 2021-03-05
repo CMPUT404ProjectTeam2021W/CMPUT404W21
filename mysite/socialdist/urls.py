@@ -11,7 +11,9 @@ urlpatterns = [
   path('success', views.success, name = 'success'),
   path('feed/', views.feed, name='feed'),
   path('create_post/', views.create_post, name='create_post'),
-  path('', include('django.contrib.auth.urls'))
+  path('', include('django.contrib.auth.urls')),
+  path('profile/', views.profile_posts, name='profile'),
+  path('user_settings/', views.user_settings, name = 'user_settings')
 
 ]
 if settings.DEBUG:
