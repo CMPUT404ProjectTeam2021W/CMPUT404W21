@@ -8,9 +8,11 @@
   <div class = "sidebar-links">
   <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
     <p><a class="mini-links" href="#"> Unlisted </a>  </p>
+  <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
   <a class="mini-links"href="#"> Friends </a><br>
   <a class="mini-links"href="{% url 'image_upload' %}"> Profile </a><br>
   <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
+  
   </div>
 
   </div>
@@ -18,7 +20,7 @@
   <div class="feed-section">
     <span>Feed</span>
     <!-- from Ahmet Aksungur (https://codepen.io/ahmetaksungur) at https://codepen.io/ahmetaksungur/pen/MWaVxyd  -->
-<form method="post">
+{% comment %} <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
     <label class="ui-form-input-container">
@@ -45,7 +47,7 @@
       </div>
       
   </label>
-  </form>
+  </form> {% endcomment %}
 </div>
 
 </div>
