@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 #class User(models.Model):
 #    name = models.CharField(max_length=200)
@@ -8,9 +9,9 @@ class Author(models.Model):
     name = models.CharField(max_length=20)
     
 # Create your models here.
-class User(models.Model):
-    name = models.CharField(max_length=200, unique=True)
-    password = models.CharField(max_length=200, default="")
+class User(User):
+    name = User.username
+    # password = models.CharField(max_length=200, default="")
 
     class Meta:
         constraints = [
