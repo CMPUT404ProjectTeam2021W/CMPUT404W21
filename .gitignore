@@ -157,5 +157,3 @@ dmypy.json
 .idea/misc.xml
 .idea/
 .DS_Store
-
-*/migrations/
