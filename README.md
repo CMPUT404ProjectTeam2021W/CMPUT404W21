@@ -2,13 +2,15 @@
 
 ![](https://i.ibb.co/6XrGCHN/Group-2.png)
 
+## Live Version
+
+Deployed on Heroku at [https://hermes-cmput404.herokuapp.com/](https://hermes-cmput404.herokuapp.com/)
+
 # Installation
 
-```git clone https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21.git
+```git clone https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21.git```
 
-cd mysite```
-
-Ensure your currently installed python version is >3
+```cd mysite```
 
 ```python manage.py runserver```
 
@@ -28,10 +30,6 @@ Once authorized, you should be redirected to your home feed
 
 [Our wiki page](https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21/wiki)
 
-# Live Version
-
-Deployed on Heroku at [https://hermes-cmput404.herokuapp.com/](https://hermes-cmput404.herokuapp.com/)
-
 # License
 
 Code is LICENSE'D under the Apache 2 license
@@ -43,7 +41,3 @@ Code is LICENSE'D under the Apache 2 license
 -  Debangana Ghosh (orackle)
 -  Jason Robock (Vinen88)
 -  Xinyu Chen (xinyuchen98)
-
-
-
-
