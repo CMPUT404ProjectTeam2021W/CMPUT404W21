@@ -4,13 +4,15 @@
 
 # Installation
 
-```git clone https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21.git```
+```git clone https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21.git
 
-```cd mysite```
+cd mysite```
 
 Ensure your currently installed python version is >3
 
 ```python manage.py runserver```
+
+
 
 Hermes should be running on your localhost at port 8000.
 
