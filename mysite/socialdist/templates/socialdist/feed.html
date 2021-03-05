@@ -4,9 +4,9 @@
 <div class='fade-bg'>
 <div class="sidebar">
   <div class="photo"></div>
-  <div class="name">Welcome back <br> <span>Robin Gale</span></div>
+  <div class="name">Welcome back <br> <span>{{user.username}}</span></div><br><br><br>
   <div class = "sidebar-links">
-    <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a><br><br><br>
+    <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
 
   <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
     <a class="mini-links"href="{% url 'profile' %}"> Profile </a><br>
