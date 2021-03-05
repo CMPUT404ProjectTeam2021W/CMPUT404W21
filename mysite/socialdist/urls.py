@@ -10,7 +10,7 @@ urlpatterns = [
   path('image_upload', views.image_view, name = 'image_upload'),
   path('success', views.success, name = 'success'),
   path('feed/', views.feed, name='feed'),
-  path('test_post/', views.create_post, name='create_post'),
+  path('create_post/', views.create_post, name='create_post'),
   path('', include('django.contrib.auth.urls'))
 
 ]
