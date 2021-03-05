@@ -10,24 +10,25 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'github_link', 'password1', 'password2', )
+        fields = ('username', 'github_link','password1', 'password2' )
 
     def save(self, commit=True):
-        user = super(SignUpForm, self).save(commit=False)
-        user.github_link = self.cleaned_data['github_link']
+        # user = super(SignUpForm, self).save(commit=False)
+        author.user = super(SignUpForm, self).save(commit=False)
+        author.github_link = self.cleaned_data['github_link']
         if commit:
-            user.save()
-        return user
+            author.user.save()
+        return author
 
 class ImageForm(forms.ModelForm):
     class Meta:
         model = Image
         fields = ['name', 'new_image']
 
-class PostTextForm(forms.ModelForm):
-    post_text = forms.CharField(widget=forms.Textarea, max_length=2500, required=True)
+class PostTextForm(forms.Form):
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea, max_length=2500, required=True)
     
-    class Meta:
-        model = PostContentText
-        fields = ('text',)
-    
+    # class Meta:
+    #     model = PostContentText
+    #     fields = ('text','user')
