@@ -130,7 +130,7 @@ STATICFILES_DIRS = (
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL = 'feed'
+LOGIN_REDIRECT_URL = 'create_post'
 LOGOUT_REDIRECT_URL = 'index'
 django_on_heroku.settings(locals()) # bottom of the file
 try:

@@ -31,6 +31,9 @@ class Post(models.Model):
     title = models.CharField(max_length=50)
     contenttype = models.CharField(max_length=1, choices=CONTENT_TYPE, default='T')
     poster = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    
 
 class PostContentText(models.Model):
     text = models.CharField(max_length=2500)

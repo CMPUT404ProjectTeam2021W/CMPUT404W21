@@ -1,15 +1,32 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import ImageForm, SignUpForm
+from .models import User
+from .forms import ImageForm, SignUpForm, PostTextForm
 
 
 # Create your views here.
 
 def index(request):
     return render(request, "socialdist/index.html")
+def create_post(request):
+
+    user = get_object_or_404(User)
+    new_post = None
+    if request.method == 'POST':
+        post_form = PostTextForm(data=request.POST)
+        new_post = post_form.save(commit=False)
+        new_post.user = request.user.username
+        new_post.save()
+    else:
+        post_form = PostTextForm()
+    return render(request, "socialdist/test_post.html", {
+        'user':user,
+        'new_post':new_post,
+        'post_form':post_form
+    })
 
 def feed(request):
     return render(request, "socialdist/feed.html")

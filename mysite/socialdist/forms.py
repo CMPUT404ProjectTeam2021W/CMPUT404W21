@@ -23,3 +23,11 @@ class ImageForm(forms.ModelForm):
     class Meta:
         model = Image
         fields = ['name', 'new_image']
+
+class PostTextForm(forms.ModelForm):
+    post_text = forms.CharField(widget=forms.Textarea, max_length=2500, required=True)
+    
+    class Meta:
+        model = PostContentText
+        fields = ('text',)
+    
