@@ -69,6 +69,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 pytestdebug.log
+*.yml
 
 # Translations
 *.mo
@@ -152,3 +153,7 @@ dmypy.json
 
 # End of https://www.toptal.com/developers/gitignore/api/django
 .vscode/
+.idea/vcs.xml
+.idea/misc.xml
+.idea/
+.DS_Store

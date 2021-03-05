@@ -1,0 +1,31 @@
+.user-settings p
+{
+  margin-top: 4%;
+  color: rgba(0,0,0,0.8);
+}
+.user-settings em {
+  color: grey;
+}
+.user-settings label{
+  color: grey;
+}
+
+#savebtn
+{
+  /* float: right; */
+  border: none;
+  margin-left: 30%;
+  background-color: #813ec7;
+  height: 45px;
+  width:200px;
+  font-size: 18px;
+  border-radius:30px;
+  transition: background-color 0.5s;
+  cursor: pointer;
+}
+
+#savebtn:hover{
+  background-color: #ccc;
+  opacity: 0.7;
+  color: white;
+}

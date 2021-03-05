@@ -1,0 +1,25 @@
+{% extends 'socialdist/base.html' %}
+{% block title %}Home{% endblock %}
+
+
+{% block content %}
+<div class='pretty-bg'>
+  <div class="hermes-big">Hermes</div>
+  <div class='big-marker'></div>
+  <div class="friendly-reminder"> your friendly neighbourhood social network </div>
+{% if user.is_authenticated %}
+<div class="signup logged-in">
+  <h1>Welcome Back {{ user.username }}!</h1>
+<p> <a href="{% url 'feed' %}"><button>Your Feed</button></a></p>
+  <p> <a href="{% url 'logout' %}"><button>Log Out</button></a></p>
+  <p> <a href="{% url 'create_post' %}"><button>Make Post</button></a></p>
+
+</div>
+{% else %}
+  <a href="{% url 'login' %}"><div class="link-box">Log In</div></a>
+  <br>
+  <a href="{% url 'signup' %}"><div class="link-box link-box-noncolor">Sign Up</div></a>
+
+{% endif %}
+</div>
+{% endblock %}

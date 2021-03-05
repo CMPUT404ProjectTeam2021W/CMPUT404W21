@@ -1,0 +1,21 @@
+{% extends '../socialdist/base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class='pretty-bg'>
+  <div class="hermes-na">Hermes</div>
+  <div class='big-marker-na'></div>
+  <div class="friendly-reminder reminder-na"> your friendly neighbourhood social network </div>
+  <div class="signup login">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="button_nav">
+    <button type="submit">Log In</button>
+  </form>
+  <div class="return"><a href="{% url 'index' %}">Return</a></div>
+  </div>
+</div>
+</div>
+
+{% endblock %}
