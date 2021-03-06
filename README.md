@@ -8,22 +8,29 @@ Deployed on Heroku at [https://hermes-cmput404.herokuapp.com/](https://hermes-cm
 
 # Installation
 
-```git clone https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21.git```
+```
+git clone https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21.git
 
-```cd mysite```
+cd mysite
 
-```python manage.py runserver```
-
-
+python manage.py runserver
+```
 
 Hermes should be running on your localhost at port 8000.
 
-You can sign up as a new user or log in using the test credentials as follows: 
+You can sign up as a new user or log in on the live version using the test credentials as follows: 
 
 ``` 
-username: 
-password: 
+username: oasis
+password: wonderwall
 ```
+Admin side for live version:
+```
+username: root
+password: toor
+
+```
+
 Once authorized, you should be redirected to your home feed
 
 # Wiki
