@@ -31,3 +31,12 @@ class Post(models.Model):
 class Image(models.Model):
     username = models.CharField(max_length=50)
     new_image = models.ImageField(upload_to='images/')
+
+class LikeButton(models.Model):
+    content = models.TextField(null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    likes = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='likes')
+
+    @property
+    def total_likes(self):
+        return self.likes.count

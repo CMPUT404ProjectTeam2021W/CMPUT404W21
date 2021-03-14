@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
@@ -18,7 +18,8 @@ class SignUpView(generic.CreateView):
     template_name = 'registration/signup.html'
 def feed(request):
     posts = Post.objects.all().order_by('-created_at')[:10]
-    return render(request, 'socialdist/feed.html', {'posts': posts})
+    likes = LikeButton.objects.all()[:10]
+    return render(request, 'socialdist/feed.html', {'posts': posts, 'likes'})
 
 def image_view(request):
     # if request.method == 'POST':
