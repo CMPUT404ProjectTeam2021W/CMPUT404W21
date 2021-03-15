@@ -36,7 +36,3 @@ class LikeButton(models.Model):
     content = models.TextField(null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     likes = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='likes')
-
-    @property
-    def total_likes(self):
-        return self.likes.count

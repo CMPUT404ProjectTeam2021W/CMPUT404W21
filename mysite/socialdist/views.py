@@ -16,10 +16,19 @@ class SignUpView(generic.CreateView):
     form_class = MyUserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
+
 def feed(request):
     posts = Post.objects.all().order_by('-created_at')[:10]
-    likes = LikeButton.objects.all()[:10]
-    return render(request, 'socialdist/feed.html', {'posts': posts, 'likes'})
+    likes = LikeButton.objects.all()
+    post_likes_dict = {}
+    for post in posts:
+        post_likes = 0
+        for like in likes:
+            if like.post.id == post.id:
+                post_likes += 1
+        post_likes_dict[post] = post_likes
+    
+    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict})
 
 def image_view(request):
     # if request.method == 'POST':
