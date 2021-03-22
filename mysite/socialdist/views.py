@@ -28,6 +28,7 @@ def feed(request):
                 post_likes += 1
         post_likes_dict[post] = post_likes
     
+
     return render(request, 'socialdist/feed.html', {'posts': post_likes_dict})
 
 def image_view(request):
@@ -82,3 +83,6 @@ def user_settings(request):
     else:
         form = ImageForm()
     return render(request, 'socialdist/user_settings.html', {'form': form})
+
+def view_post(request):
+    pass
