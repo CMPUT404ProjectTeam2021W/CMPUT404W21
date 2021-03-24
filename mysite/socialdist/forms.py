@@ -1,22 +1,22 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import *
-from .models import MyUser
+from .models import Author
 
 
 
-class MyUserCreationForm(UserCreationForm):
+class AuthorCreationForm(UserCreationForm):
     github_link = forms.URLField(required=False)
 
     class Meta:
-        model = MyUser
+        model = Author
         fields = ('username', 'github_link', )
 
 
-class MyUserChangeForm(UserChangeForm):
+class AuthorChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm):
-        model = MyUser
+        model = Author
         fields = ('username', 'github_link')
 
 

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import CreatePostForm, ImageForm, MyUserCreationForm
+from .forms import CreatePostForm, ImageForm, AuthorCreationForm
 from .models import *
 
 
@@ -13,7 +13,7 @@ def index(request):
     return render(request, "socialdist/index.html")
 
 class SignUpView(generic.CreateView):
-    form_class = MyUserCreationForm
+    form_class = AuthorCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
 def feed(request):
