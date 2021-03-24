@@ -4,6 +4,7 @@ from .models import *
 from .models import MyUser
 
 
+
 class MyUserCreationForm(UserCreationForm):
     github_link = forms.URLField(required=False)
 
@@ -25,21 +26,6 @@ class ImageForm(forms.ModelForm):
         fields = ['new_image']
 
 class CreatePostForm(forms.ModelForm):
-
-    # class Meta:
-    #     model = Post
-    #     exclude = ('poster', 'created_on')
-    #
-    # def __init__(self, poster, *args, **kwargs):
-    #     self.poster = poster
-    #
-    #     super(CreatePostForm, self).__init__(*args, **kwargs)
-    #
-    # def save(self):
-    #     post = super(CreatePostForm, self).save(commit=False)
-    #     post.poster = self.poster
-    #     post.save(commit=True)
-    #     return post
     class Meta:
         model = Post
         fields = ['contents', 'access_level']

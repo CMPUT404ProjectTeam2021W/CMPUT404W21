@@ -1,13 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django import forms
 
 # Create your models here.
 class MyUser(AbstractUser):
     github_link = models.URLField(default='')
     friends = models.TextField(default='')
-
-
 
 class Post(models.Model):
         # title = models.CharField(max_length=50)
@@ -21,8 +19,8 @@ class Post(models.Model):
             (ACCESS_PRIVATE, 'Private'),
         ]
 
-        contents = models.CharField(max_length=140, null=True, blank=True)
-
+        # contents = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
+        contents = models.TextField(max_length=140, null=True, blank=True)
         access_level = models.IntegerField(choices=ACCESS_LEVEL_CHOICES, default=ACCESS_PUBLIC)
 
         created_by = models.ForeignKey(MyUser, on_delete=models.CASCADE)
