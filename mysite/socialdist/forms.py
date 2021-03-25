@@ -49,4 +49,4 @@ class LikePostForm(forms.ModelForm):
 
     class Meta:
         model = LikeButton
-        
+        fields = ('content', )

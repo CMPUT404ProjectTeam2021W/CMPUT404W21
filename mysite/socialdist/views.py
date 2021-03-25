@@ -84,5 +84,7 @@ def user_settings(request):
         form = ImageForm()
     return render(request, 'socialdist/user_settings.html', {'form': form})
 
-def view_post(request):
-    pass
+def view_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    
+    return render(request, template_name='socialdist/view_post.html', context={'post':post_id})
