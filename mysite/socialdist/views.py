@@ -72,3 +72,8 @@ def user_settings(request):
     else:
         form = ImageForm()
     return render(request, 'socialdist/user_settings.html', {'form': form})
+
+def author_profile(request, author_id):
+    author_details = get_object_or_404(Author, id=author_id)
+    posts = Post.objects.filter(**{'created_by':author_details})
+    return render(request, 'socialdist/author_profile.html', {'posts': posts, 'author':author_details.username})
