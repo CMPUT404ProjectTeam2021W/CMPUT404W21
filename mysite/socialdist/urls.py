@@ -14,7 +14,7 @@ urlpatterns = [
   path('', include('django.contrib.auth.urls')),
   path('profile/', views.profile_posts, name='profile'),
   path('user_settings/', views.user_settings, name = 'user_settings'),
-  path('posts/<int:post_id>/view_post/', views.view_post, name='view_post')
+  path('posts/<str:post_id>/view_post/', views.view_post, name='view_post')
 
 ]
 if settings.DEBUG:

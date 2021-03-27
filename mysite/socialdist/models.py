@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django import forms
+import uuid
 
 # Create your models here.
 class Author(AbstractUser):
@@ -18,7 +19,7 @@ class Post(models.Model):
             (ACCESS_PUBLIC, 'Public'),
             (ACCESS_PRIVATE, 'Private'),
         ]
-
+        id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
         # contents = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
         contents = models.TextField(max_length=140, null=True, blank=True)
         access_level = models.IntegerField(choices=ACCESS_LEVEL_CHOICES, default=ACCESS_PUBLIC)

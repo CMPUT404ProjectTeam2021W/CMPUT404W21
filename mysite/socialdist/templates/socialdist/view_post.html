@@ -25,7 +25,7 @@
 </div>
 
 <div class='like-post'>
-    <form action="{% url 'view_post' %} " method="post">
+    <form action="{% url 'view_post' post.id %} " method="post">
     {% csrf_token %}
     {{ form }}
 </div>
