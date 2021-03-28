@@ -25,11 +25,11 @@
       {{author}}
       Profile
       </span>
-      {% if request.user.username != author %}
-      {% if request.user not in author.following.all() %}
-      <a href="/send_friend_request/{{user.id}}/"><input onclick="friendToggle()" type="button" value="+ Follow" id="follow-button"></input></a> <br> <br>
+      {% if request.user.id != author_id %}
+      {% if not following %}
+      <a href="/follow/{{author_id}}/"><input onclick="followToggle()" type="button" value="+ Follow" id="follow-button"></input></a> <br> <br>
       {% else %}
-      <a href="/unfriend/{{user.id}}/"><input onclick="unfriendToggle()" type="button" value="✓ Following" id="unfollow-button"></input></a> <br> <br>
+      <a href="/unfollow/{{author_id}}/"><input onclick="unfollowToggle()" type="button" value="✓ Following" id="unfollow-button"></input></a> <br> <br>
       {% endif %}
       {% endif %}
       <div class="posts">
