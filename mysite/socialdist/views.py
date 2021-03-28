@@ -87,8 +87,10 @@ def author_profile(request, author_id):
     author_details = get_object_or_404(Author, id=author_id)
     posts = Post.objects.filter(**{'created_by': author_details})
     following = (request.user in author_details.followers.all()) and (author_details in request.user.following.all())
+    followers_count = author_details.followers.all().count()
     return render(request, 'socialdist/author_profile.html', {'posts': posts, 'author': author_details.username,
-                                                              'author_id': author_id, 'following': following})
+                                                              'author_id': author_id, 'following': following,
+                                                              'followers_count': followers_count})
 
 
 def follow(request, author_id):
@@ -111,3 +113,9 @@ def unfollow(request, author_id):
         return redirect(request.META['HTTP_REFERER'])
     else:
         return HttpResponse('not following')
+
+def followers(request, author_id):
+    author_details = Author.objects.get(id=author_id)
+    followers_list = author_details.followers.all()
+    author_name = author_details.username
+    return render(request, 'socialdist/followers.html', {'author': author_name, 'followers': followers_list})

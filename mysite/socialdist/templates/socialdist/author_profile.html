@@ -25,6 +25,7 @@
       {{author}}
       Profile
       </span>
+    Followers: <a href="/author/{{author_id}}}}/followers/">{{followers_count}}</a>
       {% if request.user.id != author_id %}
       {% if not following %}
       <a href="/follow/{{author_id}}/"><input onclick="followToggle()" type="button" value="+ Follow" id="follow-button"></input></a> <br> <br>
