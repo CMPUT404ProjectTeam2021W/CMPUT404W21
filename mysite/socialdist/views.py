@@ -5,6 +5,8 @@ from django.urls import reverse_lazy
 from django.views import generic
 from .forms import CreatePostForm, ImageForm, AuthorCreationForm
 from .models import *
+from rest_framework import viewsets
+from .serializers import *
 
 
 # Create your views here.
@@ -77,3 +79,11 @@ def author_profile(request, author_id):
     author_details = get_object_or_404(Author, id=author_id)
     posts = Post.objects.filter(**{'created_by':author_details})
     return render(request, 'socialdist/author_profile.html', {'posts': posts, 'author':author_details.username})
+
+
+
+
+# serializers stuff
+class AuthorViewSet(viewsets.ModelViewSet):
+    queryset = Author.objects.all().order_by('id')
+    serializer_class = AuthorSerializer
