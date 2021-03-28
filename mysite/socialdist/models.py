@@ -7,7 +7,9 @@ import uuid
 class Author(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     github_link = models.URLField(default='')
-    friends = models.TextField(default='')
+    friends = models.ManyToManyField("Author", blank=True)
+    following = models.ManyToManyField("Author", blank=True)
+    followers = models.ManyToManyField("Author", blank=True)
 
 class Post(models.Model):
         # title = models.CharField(max_length=50)
@@ -31,3 +33,7 @@ class Post(models.Model):
 class Image(models.Model):
     username = models.CharField(max_length=50)
     new_image = models.ImageField(upload_to='images/')
+
+class Friend_request(models.Model):
+    from_author = models.ForeignKey(Author, related_name='from_user', on_delete=models.CASCADE())
+    to_author = models.ForeignKey(Author, related_name='to_user', on_delete=models.CASCADE())
