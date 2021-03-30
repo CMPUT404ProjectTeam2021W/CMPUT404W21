@@ -3,10 +3,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
 from . import views
-from .apiviews import *
-router = routers.DefaultRouter()
-router.register(r'authors', views.AuthorViewSet)
-router.register(r'posts', views.PostViewSet)
+from  .api.apiviews import *
+# router = routers.DefaultRouter()
+# router.register(r'authors', views.AuthorViewSet)
+# router.register(r'posts', views.PostViewSet)
 
 
 
@@ -23,9 +23,9 @@ urlpatterns = [
   path('user_settings/', views.user_settings, name = 'user_settings'),
 
   path('author/<str:author_id>/', views.author_profile, name='author_profile'),
-  path("authors/", AuthorList.as_view(), name='author_list'),
-  path("posts/", PostList.as_view(), name='post_list'),
-
+  path("api/authors/", AuthorList.as_view(), name='author_list'),
+  path("api/posts/", PostList.as_view(), name='post_list'),
+  path("api/author/<uuid:author_id>/", AuthorDetails.as_view(), name='author_detail')
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,

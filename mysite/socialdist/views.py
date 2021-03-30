@@ -83,12 +83,12 @@ def author_profile(request, author_id):
 
 
 
-# serializers stuff
-class AuthorViewSet(viewsets.ModelViewSet):
-    queryset = Author.objects.all().order_by('id')
-    serializer_class = AuthorSerializer
+# # serializers stuff
+# class AuthorViewSet(viewsets.ModelViewSet):
+#     queryset = Author.objects.all().order_by('id')
+#     serializer_class = AuthorSerializer
 
-# serializers stuff
-class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().order_by('id')
-    serializer_class = PostSerializer
+# # serializers stuff
+# class PostViewSet(viewsets.ModelViewSet):
+#     queryset = Post.objects.all().order_by('id')
+#     serializer_class = PostSerializer

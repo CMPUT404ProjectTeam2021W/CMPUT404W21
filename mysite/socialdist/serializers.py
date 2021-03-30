@@ -1,13 +1,16 @@
 from rest_framework import serializers
-
+from django.shortcuts import get_object_or_404
 from .models import *
 
-class AuthorSerializer(serializers.HyperlinkedModelSerializer):
+class AuthorSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Author
-        fields = ('id', 'username','github_link','friends')
+        fields = ('id', 'username','github_link','friends', 'url')
 
-class PostSerializer(serializers.HyperlinkedModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('contents', 'created_by','created_at')
+
+
