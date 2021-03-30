@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
@@ -87,3 +87,8 @@ def author_profile(request, author_id):
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all().order_by('id')
     serializer_class = AuthorSerializer
+
+# serializers stuff
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all().order_by('id')
+    serializer_class = PostSerializer
