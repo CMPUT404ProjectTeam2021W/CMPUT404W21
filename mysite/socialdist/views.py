@@ -19,10 +19,19 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
 
-
 def feed(request):
     posts = Post.objects.all().order_by('-created_at')[:10]
-    return render(request, 'socialdist/feed.html', {'posts': posts})
+    likes = LikeButton.objects.all()
+    post_likes_dict = {}
+    for post in posts:
+        post_likes = 0
+        for like in likes:
+            if like.post.id == post.id:
+                post_likes += 1
+        post_likes_dict[post] = post_likes
+    
+
+    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict})
 
 
 def image_view(request):
@@ -82,6 +91,12 @@ def user_settings(request):
         form = ImageForm()
     return render(request, 'socialdist/user_settings.html', {'form': form})
 
+def view_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    
+    # post = Post.objects.filter(**{"id":post_id})
+    
+    return render(request, 'socialdist/view_post.html', {'post':post})
 
 def author_profile(request, author_id):
     author_details = get_object_or_404(Author, id=author_id)

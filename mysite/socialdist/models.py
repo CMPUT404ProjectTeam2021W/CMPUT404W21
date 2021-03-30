@@ -21,7 +21,7 @@ class Post(models.Model):
             (ACCESS_PUBLIC, 'Public'),
             (ACCESS_PRIVATE, 'Private'),
         ]
-
+        id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
         # contents = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
         contents = models.TextField(max_length=140, null=True, blank=True)
         access_level = models.IntegerField(choices=ACCESS_LEVEL_CHOICES, default=ACCESS_PUBLIC)
@@ -33,3 +33,7 @@ class Image(models.Model):
     username = models.CharField(max_length=50)
     new_image = models.ImageField(upload_to='images/')
 
+class LikeButton(models.Model):
+    content = models.TextField(null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    likes = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='likes')
