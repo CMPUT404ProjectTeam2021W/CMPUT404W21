@@ -22,13 +22,18 @@ class SignUpView(generic.CreateView):
     template_name = 'registration/signup.html'
 
 def feed(request):
-    posts = Post.objects.all().order_by('-created_at')[:10]
+    # post_likes_dict - contains a count of likes on a post
+    # post_id_dict - contains the id of the post to iterate through the dictionaries
+    # post_liked - contains the boolean value of the current user's like on the post
+    posts = Post.objects.all().order_by('-created_at')
     post_likes_dict = {}
     post_id_dict = {}
+    post_liked = {}
     for post in posts:
         post_likes_dict[post] = post.likes.all().count()
+        post_liked[post] = request.user in post.likes.all()
         post_id_dict[post] = post.id
-    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict})
+    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked})
 
 
 def image_view(request):
@@ -93,9 +98,9 @@ def view_post(request, post_id):
     likes = post.likes.all()
     likes_count = likes.count()
     liked = request.user in likes
-    
+
     # post = Post.objects.filter(**{"id":post_id})
-    
+
     return render(request, 'socialdist/view_post.html', {'post':post, 'post_id': post_id, 'likes_count': likes_count,
                                                          'liked': liked})
 
@@ -105,9 +110,16 @@ def author_profile(request, author_id):
     following = author_details in request.user.following.all()
     friends = following and (author_details in request.user.followers.all())
     followers_count = author_details.followers.all().count()
-    return render(request, 'socialdist/author_profile.html', {'posts': posts, 'author': author_details.username,
+    posts = posts.order_by('-created_at')
+    post_likes_dict = {}
+    post_id_dict = {}
+    for post in posts:
+        post_likes_dict[post] = post.likes.all().count()
+        post_id_dict[post] = post.id
+    return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'author': author_details.username,
                                                               'author_id': author_id, 'following': following,
-                                                              'friends': friends, 'followers_count': followers_count})
+                                                              'friends': friends, 'followers_count': followers_count,
+                                                              'post_id': post_id_dict})
 
  
 def follow(request, author_id):
