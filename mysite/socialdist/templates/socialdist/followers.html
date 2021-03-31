@@ -10,9 +10,9 @@
     <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
 
   <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
-    <a class="mini-links"href="{% url 'profile' %}"> Profile </a><br>
+    <a class="mini-links"href="{% url 'author_profile' user.id %}"> Profile </a><br>
     <p><a class="mini-links" href="#"> Unlisted </a>  </p>
-  <a class="mini-links"href="#"> Friends </a><br>
+  <a class="mini-links"href="{% url 'followers' user.id %}"> Followers </a><br>
 
   <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
   <a class="mini-links" href="{% url 'logout' %}"> Logout </a>

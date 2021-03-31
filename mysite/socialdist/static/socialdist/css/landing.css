@@ -157,3 +157,10 @@ a{
     margin-top: 0;
   }
 }
+
+
+div#post_content.p {
+color:grey;
+display: block;
+padding-left: 1px;
+}

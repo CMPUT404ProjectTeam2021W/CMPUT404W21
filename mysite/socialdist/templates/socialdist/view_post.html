@@ -2,6 +2,9 @@
 {% block title %}Feed{% endblock %}
 {% load markdown_extras%}
 {% load templatefilter%}
+
+
+
 {% block content %}
 <div class='fade-bg'>
 <div class="sidebar">
@@ -11,9 +14,9 @@
     <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
 
   <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
-    <a class="mini-links"href="{% url 'profile' %}"> Profile </a><br>
+    <a class="mini-links"href="{% url 'author_profile' user.id %}"> Profile </a><br>
     <p><a class="mini-links" href="#"> Unlisted </a>  </p>
-  <a class="mini-links"href="#"> Friends </a><br>
+  <a class="mini-links"href="{% url 'followers' user.id %}"> Followers </a><br>
 
   <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
   <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
@@ -24,18 +27,20 @@
     <br>
 <div class="col-md-6">
     <div class="posts">
-            <p>
+            <p style = "color:grey">
               <em>
                 @<a href="{% url 'author_profile' post.created_by.id %}">{{ post.created_by.username }}</a>
               </em>
+              <div id="post_content" style="color:grey">
               {{ post.contents | markdown |safe}}
+              </div>
               <em>
                 {{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}
               </em>
               <em>
                 {{ likes_count }} likes
               </em>
-            </p>
+
            {% if not liked %}
             <a href="/like/{{post.id}}/">
               <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
@@ -50,7 +55,14 @@
     <br>
   {% endif %}
            </div>
+           {% if request.user == post.created_by%}
+           <input class="btn btn-primary" type="button" value = "✎ Edit" onclick="editPost()" id="editbutton"></input>
+           <a href="{% url 'delete_post' post.id %}">
+             <input class="btn btn-primary" type="button" value = "🗑 Delete" ></input>
+           </a>
+           {% endif %}
 </div>
 </div>
 </div>
+
 {% endblock %}

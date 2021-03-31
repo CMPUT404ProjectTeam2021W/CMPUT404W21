@@ -13,9 +13,9 @@
     <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
 
   <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
-    <a class="mini-links"href="{% url 'profile' %}"> Profile </a><br>
+    <a class="mini-links"href="{% url 'author_profile' user.id %}"> Profile </a><br>
     <p><a class="mini-links" href="#"> Unlisted </a>  </p>
-  <a class="mini-links"href="#"> Friends </a><br>
+  <a class="mini-links"href="{% url 'followers' user.id %}"> Followers </a><br>
 
   <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
   <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
@@ -58,20 +58,18 @@
                       {{ likes }} likes
                     </em>
                   </p>
-                 <a href="{% url 'view_post' post.id %}"> View Comments </a>
+                 <a href="{% url 'view_post' post.id %}"> <div class="btn btn-primary">🗩 Comments</div> </a>
                  {% if not post_liked|get_item:post %}
                   <a href="/like/{{post.id}}/">
                     <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
                   </a>
-                  <br>
-                  <br>
                   {% else %}
           <a href="/unlike/{{post.id}}/">
             <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
           </a>
-          <br>
-          <br>
         {% endif %}
+        <a href="{% url 'view_post' post.id %}"> <div class="btn btn-primary">🚀 Share</div> </a>
+
                  </div>
         {% endfor %}
       </div>

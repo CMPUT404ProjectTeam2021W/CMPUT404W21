@@ -1,6 +1,5 @@
 *
 {
-  color: white;
   font-family: 'gotham-bold';
 }
 
@@ -8,15 +7,18 @@
   margin-top: 3%;
   width: 100%;
   height: auto;
+  color:white;
 }
 .signup p{
   text-align: center;
   margin-top: 2%;
+  color:white;
 }
 
 .signup label{
   padding-right: 5%;
   text-align: left;
+  color:white;
 }
 
 
