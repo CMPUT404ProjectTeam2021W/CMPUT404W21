@@ -1,7 +1,10 @@
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework import routers
 from . import views
+from  .api.apiviews import *
+
 
 urlpatterns = [
   path('', views.index, name='index'),
@@ -17,7 +20,10 @@ urlpatterns = [
   path('posts/<str:post_id>/view_post/', views.view_post, name='view_post'),
   path('author/<str:author_id>/', views.author_profile, name='author_profile'),
   path('author/<str:author_id>/followers/', views.followers, name='followers'),
-
+  path('author/<str:author_id>/', views.author_profile, name='author_profile'),
+  path("api/authors/", AuthorList.as_view(), name='author_list'),
+  path("api/posts/", PostList.as_view(), name='post_list'),
+  path("api/author/<uuid:author_id>/", AuthorDetails.as_view(), name='author_detail'),
   path('follow/<str:author_id>/', views.follow, name='follow'),
   path('unfollow/<str:author_id>/', views.unfollow, name='unfollow'),
 

@@ -6,6 +6,8 @@ from django.urls import reverse_lazy
 from django.views import generic
 from .forms import CreatePostForm, ImageForm, AuthorCreationForm
 from .models import *
+from rest_framework import viewsets
+from .serializers import *
 
 
 # Create your views here.
@@ -119,7 +121,7 @@ def author_profile(request, author_id):
                                                               'friends': friends, 'followers_count': followers_count,
                                                               'post_id': post_id_dict})
 
-
+ 
 def follow(request, author_id):
     from_author = request.user
     to_author = Author.objects.get(id=author_id)
