@@ -43,3 +43,13 @@ class Image(models.Model):
     username = models.CharField(max_length=50)
     new_image = models.ImageField(upload_to='images/')
 
+class Node(models.Model):
+    host_url = models.URLField(max_length=500)
+
+    auth_username = models.CharField(max_length=200, null=False)
+    auth_password = models.CharField(max_length=200, null=False)
+
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Node: host={self.host_url}, username={self.auth_username}, password={self.auth_password}"
