@@ -29,6 +29,7 @@ urlpatterns = [
 
   path('like/<str:post_id>/', views.like, name='like'),
   path('unlike/<str:post_id>/', views.unlike, name='unlike'),
+  path('post_request/', views.post_request, name='post_request'),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,

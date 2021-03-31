@@ -8,7 +8,8 @@ from .forms import CreatePostForm, ImageForm, AuthorCreationForm
 from .models import *
 from rest_framework import viewsets
 from .serializers import *
-
+import requests
+from rest_framework.parsers import JSONParser
 
 # Create your views here.
 
@@ -25,11 +26,45 @@ def feed(request):
     # post_likes_dict - contains a count of likes on a post
     # post_id_dict - contains the id of the post to iterate through the dictionaries
     # post_liked - contains the boolean value of the current user's like on the post
+    s = requests.Session()
+    s.auth = ('root','root')
+    res = s.get('http://hermes-cmput404.herokuapp.com/api/posts/')
+    posts_new = []
     posts = Post.objects.all().order_by('-created_at')
+    for post in posts:
+        posts_new.append(post)
+    for item in res.json():
+        new_post = Post()
+        new_post.contents = item['contents']
+        s = requests.Session()
+        s.auth = ('root','root')
+        res = s.get('http://hermes-cmput404.herokuapp.com/api/author/'+item['created_by'])
+        new_author = Author()
+        author_info = res.json()
+        new_author.id = author_info['id']
+        new_author.username = author_info['username']
+        new_author.github_link = author_info['github_link']
+        new_author.friends = author_info['friends']
+        new_author.url = author_info['url']
+        # if author_info['following'] != '':
+        #     for following in author_info['following']:
+        #         new_author.following.set(following)
+        # if author_info['followers'] != '':
+        #     for follower in author_info['followers']:
+        #         print(follower)
+        #         new_author.followers.set(follower)
+        new_post.created_by = new_author
+        #new_post.created_by = item['created_by']
+        new_post.created_at = item['created_at']
+        posts_new.append(new_post)
+    #other_posts = JSONParser().parse(res.json()[0])
+    #print(other_posts)
+    posts = posts_new
     post_likes_dict = {}
     post_id_dict = {}
     post_liked = {}
     for post in posts:
+        print(post)
         post_likes_dict[post] = post.likes.all().count()
         post_liked[post] = request.user in post.likes.all()
         post_id_dict[post] = post.id
@@ -166,3 +201,13 @@ def unlike(request, post_id):
         return redirect(request.META['HTTP_REFERER'])
     else:
         return HttpResponse('not liked')
+
+#going to have to make this easier to adjust but heeeeey
+def post_request(request): #add node or something here
+    s = requests.Session()
+    s.auth = ('root','root')
+    response = s.get('http://hermes-cmput404.herokuapp.com/api/posts/')
+    print(response)
+    data = response.json()
+    print(data)
+    return HttpResponse("GOOOOD")
