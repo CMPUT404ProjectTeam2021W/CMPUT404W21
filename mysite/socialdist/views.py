@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedire
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import CreatePostForm, ImageForm, AuthorCreationForm
+from .forms import CreatePostForm, ImageForm, AuthorCreationForm, CreateCommentForm
 from .models import *
 from rest_framework import viewsets
 from .serializers import *
@@ -29,11 +29,13 @@ def feed(request):
     post_likes_dict = {}
     post_id_dict = {}
     post_liked = {}
+    post_shared = {}
     for post in posts:
         post_likes_dict[post] = post.likes.all().count()
         post_liked[post] = request.user in post.likes.all()
         post_id_dict[post] = post.id
-    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked})
+        post_shared[post] = request.user in post.shared_by.all()
+    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked, 'post_shared': post_shared})
 
 
 def image_view(request):
@@ -54,13 +56,8 @@ def success(request):
 
 def create_post(request):
     if request.method == 'POST':
-        # This branch runs when the user submits the form.
-        # Create an instance of the form with the submitted data.
         form = CreatePostForm(request.POST)
-        # Convert the form into a model instance.  commit=False postpones
-        # saving to the database.
         post = form.save(commit=False)
-        # Make the currently logged in user the Post creator.
         post.created_by = request.user
         # Save post in database.
         post.save()
@@ -74,13 +71,18 @@ def create_post(request):
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
-
-def profile_posts(request):
-    posts = Post.objects.filter(**{'created_by': request.user})
-    # posts = Post.objects.all().filter('-created_by'=request.user)
-
-    # posts = Post.objects.filter(created_by=request.user)
-    return render(request, 'socialdist/profile.html', {'posts': posts})
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id = post_id)
+    post.delete()
+    posts = Post.objects.all().order_by('-created_at')
+    post_likes_dict = {}
+    post_id_dict = {}
+    post_liked = {}
+    for post in posts:
+        post_likes_dict[post] = post.likes.all().count()
+        post_liked[post] = request.user in post.likes.all()
+        post_id_dict[post] = post.id
+    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked})
 
 
 def user_settings(request):
@@ -98,30 +100,47 @@ def view_post(request, post_id):
     likes = post.likes.all()
     likes_count = likes.count()
     liked = request.user in likes
+    shared = request.user in post.shared_by.all()
+    comments = None
+    try:
+        comments = Comment.objects.filter(**{'post': post_id})
+    except Comment.DoesNotExist:
+        comments = None
+    form = CreateCommentForm()
 
-    # post = Post.objects.filter(**{"id":post_id})
+    if request.method == 'GET':
+        return render(request, 'socialdist/view_post.html', {'post':post, 'post_id': post_id, 'likes_count': likes_count,'liked': liked, 'shared_post':shared, 'comments':comments, 'form':form})
+    if request.method == 'POST':
+        form = CreateCommentForm(request.POST)
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.post = post
+        comment.save()
+        form.save()
+        return redirect(request.META['HTTP_REFERER'])
 
-    return render(request, 'socialdist/view_post.html', {'post':post, 'post_id': post_id, 'likes_count': likes_count,
-                                                         'liked': liked})
+
 
 def author_profile(request, author_id):
     author_details = get_object_or_404(Author, id=author_id)
-    posts = Post.objects.filter(**{'created_by': author_details})
+    posts = Post.objects.filter(**{'created_by': author_details}) | Post.objects.filter(**{'shared_by': author_details})
     following = author_details in request.user.following.all()
     friends = following and (author_details in request.user.followers.all())
     followers_count = author_details.followers.all().count()
     posts = posts.order_by('-created_at')
     post_likes_dict = {}
     post_id_dict = {}
+    shared_by = {}
     for post in posts:
         post_likes_dict[post] = post.likes.all().count()
         post_id_dict[post] = post.id
+        shared_by[post] = request.user in post.shared_by.all()
     return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'author': author_details.username,
                                                               'author_id': author_id, 'following': following,
                                                               'friends': friends, 'followers_count': followers_count,
-                                                              'post_id': post_id_dict})
+                                                              'post_id': post_id_dict, 'shared_by': shared_by})
 
- 
+
 def follow(request, author_id):
     from_author = request.user
     to_author = Author.objects.get(id=author_id)
@@ -166,3 +185,21 @@ def unlike(request, post_id):
         return redirect(request.META['HTTP_REFERER'])
     else:
         return HttpResponse('not liked')
+
+def share(request, post_id):
+    the_post = Post.objects.get(id=post_id)
+    from_author = request.user
+    if request.user not in the_post.shared_by.all():
+        the_post.shared_by.add(from_author)
+        return redirect(request.META['HTTP_REFERER'])
+    else:
+        return HttpResponse('already shared')
+
+def unshare(request, post_id):
+    the_post = Post.objects.get(id=post_id)
+    from_author = request.user
+    if request.user in the_post.shared_by.all():
+        the_post.shared_by.remove(from_author)
+        return redirect(request.META['HTTP_REFERER'])
+    else:
+        return HttpResponse('not shared')
