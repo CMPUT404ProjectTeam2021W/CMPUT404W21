@@ -23,7 +23,15 @@
 
   <div class="feed-section">
     <span>{{author}}'s Followers</span>
-<div class="posts">
+    <br>
+    <br>
+
+
+
+<div class="posts col-md-6">
+  {% if not followers%}
+  No followers yet!
+  {%endif%}
   {% for follower in followers %}
             <p><em>@<a href="{% url 'author_profile' follower.id %}">{{ follower.username }}</a></em></p>
         {% endfor %}</div>

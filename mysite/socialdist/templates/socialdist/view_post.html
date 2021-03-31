@@ -34,7 +34,7 @@
         {{ post.contents | markdown |safe}}
               <small style="color:#add8e6; font-family:calibri; padding-right:45px" >
                 {{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}
-                {{ likes }} likes
+                {{ likes_count }} likes
             </small>
            {% if not liked %}
             <a href="/like/{{post.id}}/">
