@@ -31,3 +31,14 @@ class AuthorDetails(APIView):
         author_obj = get_object_or_404(Author, id=author_id)
         data = AuthorSerializer(author_obj).data
         return Response(data=data)
+
+class FollowerList(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated, IsAdminUser)
+    def get(self, request, author_id):
+        author_obj = get_object_or_404(Author, id=author_id)
+        followers = author_obj.followers.all()
+        data = dict()
+        data['type'] = 'followers'
+        data['items'] = AuthorSerializer(followers, many=True).data
+        return Response(data=data)
