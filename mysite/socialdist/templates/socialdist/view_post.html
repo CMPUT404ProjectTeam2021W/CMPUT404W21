@@ -27,33 +27,32 @@
     <br>
 <div class="col-md-6">
     <div class="posts">
-            <p style = "color:grey">
-              <em>
-                @<a href="{% url 'author_profile' post.created_by.id %}">{{ post.created_by.username }}</a>
-              </em>
-              <div id="post_content" style="color:grey">
-              {{ post.contents | markdown |safe}}
-              </div>
-              <em>
+      <p>
+        <em>
+          @<a href="{% url 'author_profile' post.created_by.id %}" style="color:#88e ">{{ post.created_by.username }}</a>
+        </em>
+        {{ post.contents | markdown |safe}}
+              <small style="color:#add8e6; font-family:calibri; padding-right:45px" >
                 {{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}
-              </em>
-              <em>
-                {{ likes_count }} likes
-              </em>
-
+                {{ likes }} likes
+            </small>
            {% if not liked %}
             <a href="/like/{{post.id}}/">
               <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
             </a>
-            <br>
-            <br>
             {% else %}
     <a href="/unlike/{{post.id}}/">
       <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
     </a>
-    <br>
-    <br>
   {% endif %}
+  {% if not post_shared %}
+ <a href="/share/{{post.id}}/">
+   <input onclick="shareToggle()" type="button" value="🚀 Share" id ="share-button" class="btn btn-primary"></input> </a>
+   {% else %}
+   <a href="/unshare/{{post.id}}/">
+     <input onclick="unshareToggle()" type="button" value="🚀 Shared" id="share-button" class="btn btn-primary"></input>
+   </a>
+   {% endif %}
            </div>
            {% if request.user == post.created_by%}
            <input class="btn btn-primary" type="button" value = "✎ Edit" onclick="editPost()" id="editbutton"></input>
@@ -61,6 +60,29 @@
              <input class="btn btn-primary" type="button" value = "🗑 Delete" ></input>
            </a>
            {% endif %}
+</div>
+
+<br>
+<br>
+<div class="col-md-6">
+  <div class='posts'>
+    <form action="{% url 'create_comment' post.id %} " method="post">
+                {% csrf_token %}
+                {{ form }}
+                <br>
+      <input type="submit" class="btn btn-secondary" value="Create comment" id="submitbtn"/>
+    </form>
+    <br>
+    {% if comments%}
+      {% for comment in comments %}
+        <p style="color:#88e"> {{comment.author}} <br></p><p style="color:green"> {{comment.comment}} </p>
+            <small style="color:#add8e6; font-family:calibri; padding-right:45px" > {{comment.created_at}}</small>
+            <hr>
+        {% endfor %}
+     {% else %}
+        <p style="color:grey"> No Comments posted yet </p>
+    {%endif%}
+    </div>
 </div>
 </div>
 </div>
