@@ -203,19 +203,3 @@ def unshare(request, post_id):
         return redirect(request.META['HTTP_REFERER'])
     else:
         return HttpResponse('not shared')
-
-def create_comment(request, post_id):
-    if request.method == 'POST':
-        form = CreateCommentForm(request.POST)
-        comment = form.save(commit=False)
-        comment.author = request.user
-        comment.post = post_id
-        comment.save()
-        # Rediect to post list.
-        return redirect(request.META['HTTP_REFERER'])
-    elif request.method == 'GET':
-        # GET evaluated when form loaded.
-        form = CreateCommentForm()
-        return render(request, 'socialdist/view_post.html', {'form': form})
-    else:
-        return HttpResponse('already commented')
