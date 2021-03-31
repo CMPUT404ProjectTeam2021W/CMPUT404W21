@@ -23,17 +23,12 @@ class SignUpView(generic.CreateView):
 
 def feed(request):
     posts = Post.objects.all().order_by('-created_at')[:10]
-    likes = LikeButton.objects.all()
     post_likes_dict = {}
+    post_id_dict = {}
     for post in posts:
-        post_likes = 0
-        for like in likes:
-            if like.post.id == post.id:
-                post_likes += 1
-        post_likes_dict[post] = post_likes
-    
-
-    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict})
+        post_likes_dict[post] = post.likes.all().count()
+        post_id_dict[post] = post.id
+    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict})
 
 
 def image_view(request):
@@ -95,19 +90,24 @@ def user_settings(request):
 
 def view_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+    likes = post.likes.all()
+    likes_count = likes.count()
+    liked = request.user in likes
     
     # post = Post.objects.filter(**{"id":post_id})
     
-    return render(request, 'socialdist/view_post.html', {'post':post})
+    return render(request, 'socialdist/view_post.html', {'post':post, 'post_id': post_id, 'likes_count': likes_count,
+                                                         'liked': liked})
 
 def author_profile(request, author_id):
     author_details = get_object_or_404(Author, id=author_id)
     posts = Post.objects.filter(**{'created_by': author_details})
-    following = (request.user in author_details.followers.all()) and (author_details in request.user.following.all())
+    following = author_details in request.user.following.all()
+    friends = following and (author_details in request.user.followers.all())
     followers_count = author_details.followers.all().count()
     return render(request, 'socialdist/author_profile.html', {'posts': posts, 'author': author_details.username,
                                                               'author_id': author_id, 'following': following,
-                                                              'followers_count': followers_count})
+                                                              'friends': friends, 'followers_count': followers_count})
 
  
 def follow(request, author_id):
@@ -136,3 +136,21 @@ def followers(request, author_id):
     followers_list = author_details.followers.all()
     author_name = author_details.username
     return render(request, 'socialdist/followers.html', {'author': author_name, 'followers': followers_list})
+
+def like(request, post_id):
+    the_post = Post.objects.get(id=post_id)
+    from_author = request.user
+    if request.user not in the_post.likes.all():
+        the_post.likes.add(from_author)
+        return redirect(request.META['HTTP_REFERER'])
+    else:
+        return HttpResponse('already liked')
+
+def unlike(request, post_id):
+    the_post = Post.objects.get(id=post_id)
+    from_author = request.user
+    if request.user in the_post.likes.all():
+        the_post.likes.remove(from_author)
+        return redirect(request.META['HTTP_REFERER'])
+    else:
+        return HttpResponse('not liked')

@@ -37,11 +37,9 @@ class Post(models.Model):
         created_by = models.ForeignKey(Author, on_delete=models.CASCADE)
         created_at = models.DateTimeField(auto_now_add=True)
 
+        likes = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="posts+")
+
 class Image(models.Model):
     username = models.CharField(max_length=50)
     new_image = models.ImageField(upload_to='images/')
 
-class LikeButton(models.Model):
-    content = models.TextField(null=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    likes = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='likes')

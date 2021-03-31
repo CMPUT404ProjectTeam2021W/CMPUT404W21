@@ -50,3 +50,52 @@ input#submitbtn:hover{
   opacity: 0.5;
   color: white;
 }
+
+#like-button {
+  color: #3399FF;
+  font-family: "Helvetica";
+  font-size: 10pt;
+  background-color: #ffffff;
+  border: 1px solid;
+  margin-left: 30%;
+  border-color: #3399FF;
+  border-radius: 10px;
+  width: 85px;
+  height: 30px;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#unlike-button {
+  color: #3399FF;
+  font-family: "Helvetica";
+  font-size: 10pt;
+  background-color: #ffffff;
+  border: 1px solid;
+  margin-left: 30%;
+  border-color: #3399FF;
+  border-radius: 10px;
+  width: 90px;
+  height: 30px;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#like-button:hover{
+  background-color: blue;
+  opacity: 0.6;
+  color: white;
+}
+
+#unlike-button:hover{
+  background-color: red;
+  opacity: 0.6;
+  color: white;
+  content: "Unlike";
+}

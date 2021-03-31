@@ -26,6 +26,9 @@ urlpatterns = [
   path("api/author/<uuid:author_id>/", AuthorDetails.as_view(), name='author_detail'),
   path('follow/<str:author_id>/', views.follow, name='follow'),
   path('unfollow/<str:author_id>/', views.unfollow, name='unfollow'),
+
+  path('like/<str:post_id>/', views.like, name='like'),
+  path('unlike/<str:post_id>/', views.unlike, name='unlike'),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,
