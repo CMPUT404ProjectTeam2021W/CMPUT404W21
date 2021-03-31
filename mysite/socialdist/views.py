@@ -106,13 +106,18 @@ def view_post(request, post_id):
         comments = Comment.objects.filter(**{'post': post_id})
     except Comment.DoesNotExist:
         comments = None
+    form = CreateCommentForm()
 
     if request.method == 'GET':
-        return render(request, 'socialdist/view_post.html', {'post':post, 'post_id': post_id, 'likes_count': likes_count,'liked': liked, 'shared_post':shared, 'comments':comments})
+        return render(request, 'socialdist/view_post.html', {'post':post, 'post_id': post_id, 'likes_count': likes_count,'liked': liked, 'shared_post':shared, 'comments':comments, 'form':form})
     if request.method == 'POST':
-        changed_text = request.POST['data']
-        Post.objects.filter(id=post_id).update(contents=changedText)
-        return render(request, 'socialdist/view_post.html', {'post':post, 'post_id': post_id, 'likes_count': likes_count,'liked': liked})
+        form = CreateCommentForm(request.POST)
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.post = post
+        comment.save()
+        form.save()
+        return redirect(request.META['HTTP_REFERER'])
 
 
 

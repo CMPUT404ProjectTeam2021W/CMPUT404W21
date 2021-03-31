@@ -3,11 +3,22 @@
   font-family: 'gotham-bold';
 }
 
+
 .signup{
   margin-top: 3%;
   width: 100%;
   height: auto;
   color:white;
+}
+
+.signup a {
+    text-decoration: none;
+    color: black;
+}
+.signup a:hover{
+  text-decoration: none;
+  color: black;
+
 }
 .signup p{
   text-align: center;

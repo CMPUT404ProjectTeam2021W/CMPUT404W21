@@ -66,17 +66,16 @@
 <br>
 <div class="col-md-6">
   <div class='posts'>
-    <form action="{% url 'create_comment' post.id %} " method="post">
+    <form action="{% url 'view_post' post.id %} " method="post" name ='comment_form'>
                 {% csrf_token %}
-                {{ form }}
-                <br>
-      <input type="submit" class="btn btn-secondary" value="Create comment" id="submitbtn"/>
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-secondary" value="Create comment" id="submitbtn" onclick="submitForm()"/>
     </form>
     <br>
     {% if comments%}
       {% for comment in comments %}
-        <p style="color:#88e"> {{comment.author}} <br></p><p style="color:green"> {{comment.comment}} </p>
-            <small style="color:#add8e6; font-family:calibri; padding-right:45px" > {{comment.created_at}}</small>
+        <p style="color:black; font-size:0.8em"> {{comment.author}} <br></p><p style="color:green; font-family:calibri; font-weight:lighter"> {{comment.comment}} </p>
+            <small style="color:#add8e6; font-family:calibri; padding-right:45px" > Comment posted on {{comment.created_at}}</small>
             <hr>
         {% endfor %}
      {% else %}
@@ -87,4 +86,12 @@
 </div>
 </div>
 
+<script type="text/javascript">
+
+  function submitForm() {
+   var frm = document.querySelector('id_comment');
+   frm.value('');
+}
+
+</script>
 {% endblock %}

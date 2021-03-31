@@ -343,3 +343,7 @@ textarea {
 .posts em>a {
   color: grey;
 }
+
+input#id_comment{
+  color:black;
+}
