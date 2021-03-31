@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from django.shortcuts import get_object_or_404
 from ..models import *
@@ -10,7 +10,7 @@ from django.db.models import CharField, Value
 
 class AuthorList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request):
         authors = Author.objects.all()
         data = AuthorSerializer(authors, many=True).data
@@ -18,7 +18,7 @@ class AuthorList(APIView):
 
 class PostList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request):
         posts = Post.objects.all()
         data = PostSerializer(posts, many=True, context={'request' : request}).data
@@ -26,7 +26,7 @@ class PostList(APIView):
 
 class AuthorDetails(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request, author_id):
         author_obj = get_object_or_404(Author, id=author_id)
         data = AuthorSerializer(author_obj).data
