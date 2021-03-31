@@ -29,3 +29,10 @@ class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['contents', 'access_level']
+
+class LikePostForm(forms.ModelForm):
+
+
+    class Meta:
+        model = LikeButton
+        fields = ('content', )

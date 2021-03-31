@@ -318,13 +318,20 @@ textarea {
 .posts em{
   color: grey;
 }
-.posts p
+.posts
 {
   height: auto;
   width: 40%;
   background-color: white;
   color: black;
-  margin-top: 3%;
   padding: 15px 25px;
   border-radius: 5px;
+}
+
+.posts>p{
+  color: grey;
+}
+
+.posts em>a {
+  color: grey;
 }

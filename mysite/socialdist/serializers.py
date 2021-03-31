@@ -6,7 +6,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Author
-        fields = ('id', 'username','github_link','friends', 'url')
+        fields = ('id', 'username','github_link','friends', 'url', 'following', 'followers')
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:

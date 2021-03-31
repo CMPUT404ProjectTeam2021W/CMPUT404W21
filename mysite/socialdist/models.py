@@ -10,7 +10,9 @@ class Author(AbstractUser):
     url = models.CharField(max_length=200, null=True, blank=True)
     github_link = models.URLField(default='')
     friends = models.TextField(default='')
-    
+    following = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers+")
+    followers = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="following+")
+
     def save(self, *args, **kwargs):
 
         self.url = '{}/author/{}'.format('localhost:8000', self.id) 
@@ -27,7 +29,7 @@ class Post(models.Model):
             (ACCESS_PUBLIC, 'Public'),
             (ACCESS_PRIVATE, 'Private'),
         ]
-
+        id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
         # contents = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
         contents = models.TextField(max_length=140, null=True, blank=True)
         access_level = models.IntegerField(choices=ACCESS_LEVEL_CHOICES, default=ACCESS_PUBLIC)
@@ -38,3 +40,8 @@ class Post(models.Model):
 class Image(models.Model):
     username = models.CharField(max_length=50)
     new_image = models.ImageField(upload_to='images/')
+
+class LikeButton(models.Model):
+    content = models.TextField(null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    likes = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='likes')

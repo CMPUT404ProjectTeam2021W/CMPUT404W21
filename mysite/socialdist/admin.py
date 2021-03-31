@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import AuthorCreationForm, AuthorChangeForm
-from .models import Author, Post
+from .models import Author, Post, LikeButton
 
 
 # Register your models here.
@@ -17,3 +17,4 @@ class AuthorAdmin(UserAdmin):
 
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Post)
+admin.site.register(LikeButton)
