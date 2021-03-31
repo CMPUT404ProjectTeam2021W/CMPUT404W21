@@ -20,13 +20,18 @@ class SignUpView(generic.CreateView):
     template_name = 'registration/signup.html'
 
 def feed(request):
+    # post_likes_dict - contains a count of likes on a post
+    # post_id_dict - contains the id of the post to iterate through the dictionaries
+    # post_liked - contains the boolean value of the current user's like on the post
     posts = Post.objects.all().order_by('-created_at')
     post_likes_dict = {}
     post_id_dict = {}
+    post_liked = {}
     for post in posts:
         post_likes_dict[post] = post.likes.all().count()
+        post_liked[post] = request.user in post.likes.all()
         post_id_dict[post] = post.id
-    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict})
+    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked})
 
 
 def image_view(request):

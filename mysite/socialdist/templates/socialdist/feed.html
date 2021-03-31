@@ -23,6 +23,8 @@
 
   <div class="feed-section">
     <span>Feed</span>
+    <br>
+    <br>
 <div class="col-md-6">
   {% for post, likes in posts.items %}
     <div class="posts">
@@ -39,14 +41,15 @@
               </em>
             </p>
            <a href="{% url 'view_post' post.id %}"> View Comments </a>
-           {% if likes == 0 %}
-    <a href="/like/{{post.id}}/">
-      <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
-    </a>
-    <br>
-    <br>
-  {% else %}
-    <a href="/unlike/{{post.id}}/"><input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
+           {% if not post_liked|get_item:post %}
+            <a href="/like/{{post.id}}/">
+              <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
+            </a>
+            <br>
+            <br>
+            {% else %}
+    <a href="/unlike/{{post.id}}/">
+      <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
     </a>
     <br>
     <br>

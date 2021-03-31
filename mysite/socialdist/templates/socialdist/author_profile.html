@@ -1,6 +1,8 @@
 {% extends 'socialdist/base.html' %}
 {% block title %} {{author}}'s Profile{% endblock %}
+
 {% load markdown_extras %}
+{% load templatefilter %}
 
 {% block content %}
 <div class='fade-bg'>
@@ -23,7 +25,7 @@
   </div>
 
   <div class="feed-section">
-    <span class="align-middle">
+    <span class="align-middle" style="color:black">
       {{author}}
       </span>
       <br>
@@ -57,14 +59,15 @@
                     </em>
                   </p>
                  <a href="{% url 'view_post' post.id %}"> View Comments </a>
-                 {% if likes == 0 %}
-          <a href="/like/{{post.id}}/">
-            <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
-          </a>
-          <br>
-          <br>
-        {% else %}
-          <a href="/unlike/{{post.id}}/"><input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
+                 {% if not post_liked|get_item:post %}
+                  <a href="/like/{{post.id}}/">
+                    <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
+                  </a>
+                  <br>
+                  <br>
+                  {% else %}
+          <a href="/unlike/{{post.id}}/">
+            <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
           </a>
           <br>
           <br>
