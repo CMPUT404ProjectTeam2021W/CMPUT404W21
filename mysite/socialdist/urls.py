@@ -25,6 +25,8 @@ urlpatterns = [
   path("api/posts/", PostList.as_view(), name='post_list'),
   path("api/author/<uuid:author_id>/", AuthorDetails.as_view(), name='author_detail'),
   path("api/author/<uuid:author_id>/followers", FollowerList.as_view(), name='followers_list'),
+  path("api/author/<uuid:author_id>/followers/<uuid:foreign_author_id>", FollowerAction.as_view(), name='followers_action'),
+  path("api/author/<uuid:author_id>/friends", FriendsList.as_view(), name='friends_list'),
   path('follow/<str:author_id>/', views.follow, name='follow'),
   path('unfollow/<str:author_id>/', views.unfollow, name='unfollow'),
 
