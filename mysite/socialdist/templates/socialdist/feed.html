@@ -23,20 +23,38 @@
 
   <div class="feed-section">
     <span>Feed</span>
-<div class="posts">
+<div class="col-md-6">
   {% for post, likes in posts.items %}
-            
-            <p><em>@<a href="{% url 'author_profile' post.created_by.id %}">{{ post.created_by.username }}</a></em> {{ post.contents | markdown |safe}} <em>{{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}</em> <em>{{ likes }} likes</em></p>
+    <div class="posts">
+            <p>
+              <em>
+                @<a href="{% url 'author_profile' post.created_by.id %}">{{ post.created_by.username }}</a>
+              </em>
+              {{ post.contents | markdown |safe}}
+              <em>
+                {{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}
+              </em>
+              <em>
+                {{ likes }} likes
+              </em>
+            </p>
            <a href="{% url 'view_post' post.id %}"> View Comments </a>
-  <div class='like-post'>
-    {% if likes == 0 %}
-    <a href="/like/{{post.id}}/"><input onclick="likeToggle()" type="button" value="+ Like" id="like-button"></input></a> <br> <br>
-    {% else %}
-    <a href="/unlike/{{post.id}}/"><input onclick="unlikeToggle()" type="button" value="✓ Like" id="unlike-button"></input></a> <br> <br>
-    {% endif %}
+           {% if likes == 0 %}
+    <a href="/like/{{post.id}}/">
+      <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
+    </a>
+    <br>
+    <br>
+  {% else %}
+    <a href="/unlike/{{post.id}}/"><input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
+    </a>
+    <br>
+    <br>
+  {% endif %}
+           </div>
+  {% endfor %}
 </div>
- 
-        {% endfor %}</div>
+
 </div>
 
 </div>

@@ -3,8 +3,8 @@ function likeToggle(){
   if (elem.value == null){
     console.log("whyyy");
   }
-  if (elem.value=="+ Like"){
-    elem.value = "✓ Liked";
+  if (elem.value=="❤ Like"){
+    elem.value = "❤ Liked";
     elem.width += "5px";
   }
   else
