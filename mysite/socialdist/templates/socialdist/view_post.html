@@ -15,7 +15,7 @@
 
   <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
     <a class="mini-links"href="{% url 'author_profile' user.id %}"> Profile </a><br>
-    <p><a class="mini-links" href="#"> Unlisted </a>  </p>
+    <p><a class="mini-links" href= "#"> Unlisted </a>  </p>
   <a class="mini-links"href="{% url 'followers' user.id %}"> Followers </a><br>
 
   <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
@@ -29,11 +29,11 @@
     <div class="posts">
       <p>
         <em>
-          @<a href="{% url 'author_profile' post.created_by.id %}" style="color:#88e ">{{ post.created_by.username }}</a>
+          @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a>
         </em>
-        {{ post.contents | markdown |safe}}
+        {{ post.description | markdown |safe}}
               <small style="color:#add8e6; font-family:calibri; padding-right:45px" >
-                {{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}
+                {{ post.published|date:"SHORT_DATETIME_FORMAT" }}
                 {{ likes_count }} likes
             </small>
            {% if not liked %}
@@ -54,7 +54,7 @@
    </a>
    {% endif %}
            </div>
-           {% if request.user == post.created_by%}
+           {% if request.user == post.author%}
            <input class="btn btn-primary" type="button" value = "✎ Edit" onclick="editPost()" id="editbutton"></input>
            <a href="{% url 'delete_post' post.id %}">
              <input class="btn btn-primary" type="button" value = "🗑 Delete" ></input>
@@ -75,7 +75,7 @@
     {% if comments%}
       {% for comment in comments %}
         <p style="color:black; font-size:0.8em"> {{comment.author}} <br></p><p style="color:green; font-family:calibri; font-weight:lighter"> {{comment.comment}} </p>
-            <small style="color:#add8e6; font-family:calibri; padding-right:45px" > Comment posted on {{comment.created_at}}</small>
+            <small style="color:#add8e6; font-family:calibri; padding-right:45px" > Comment posted on {{comment.published}}</small>
             <hr>
         {% endfor %}
      {% else %}
