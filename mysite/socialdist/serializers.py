@@ -4,9 +4,11 @@ from .models import *
 
 class AuthorSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField(default='author')
+    displayName = serializers.CharField(source='username')
+    github = serializers.CharField(source='github_link')
     class Meta:
         model = Author
-        fields = ('type', 'id', 'url', 'username', 'github_link')
+        fields = ('type', 'id', 'url', 'displayName', 'github')
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:

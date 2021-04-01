@@ -78,3 +78,15 @@ class FriendsList(APIView):
         data['type'] = 'friends'
         data['items'] = AuthorSerializer(friends, many=True).data
         return Response(data=data)
+
+def LikedList(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated, IsAdminUser)
+
+    def get(self, request, author_id):
+        author_obj = get_object_or_404(Author, id=author_id)
+        data = dict()
+        posts = author_obj.posts.all()
+        data['type'] = 'friends'
+        data['items'] = PostSerializer(posts, many=True).data
+        return Response(data=data)
