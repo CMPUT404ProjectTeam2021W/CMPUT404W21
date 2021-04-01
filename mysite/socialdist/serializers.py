@@ -13,4 +13,4 @@ class AuthorSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('title', 'contents', 'created_by','created_at', 'access_level', 'unlisted')
+        fields = ('title', 'contents', 'created_by','created_at', 'visibility', 'unlisted','categories')

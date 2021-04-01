@@ -26,7 +26,7 @@ def feed(request):
     # post_id_dict - contains the id of the post to iterate through the dictionaries
     # post_liked - contains the boolean value of the current user's like on the post
     posts = Post.objects.all().order_by('-created_at')
-    posts = posts.filter(access_level='public')
+    posts = posts.filter(visibility='public')
     posts = posts.filter(unlisted='False')
     post_likes_dict = {}
     post_id_dict = {}

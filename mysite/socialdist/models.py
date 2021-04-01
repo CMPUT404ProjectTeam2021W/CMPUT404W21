@@ -22,19 +22,29 @@ class Post(models.Model):
         ACCESS_PUBLIC = 'public'
         ACCESS_PRIVATE = 'private'
         ACCESS_FRIENDS = 'friends'
-        ACCESS_LEVEL_CHOICES = [
+        CATEGORY_PLAIN = 'text/plain'
+        CATEGORY_IMAGE = 'text/image'
+        CATEGORY_MARKDOWN = 'text/markdown'
+        visibility_choices = [
             (ACCESS_PUBLIC, 'Public'),
             (ACCESS_PRIVATE, 'Private'),
             (ACCESS_FRIENDS, 'Friends Only'),
+        ]
+        categories_choices = [
+        (CATEGORY_PLAIN, 'text/plain'),
+        (CATEGORY_IMAGE, 'text/image'),
+        (CATEGORY_MARKDOWN, 'text/markdown')
         ]
         id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
         # contents = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
         title = models.CharField(max_length=140, null=True, blank=True)
         contents = models.TextField(max_length=140, null=True, blank=True)
-        access_level = models.CharField(max_length=140, choices=ACCESS_LEVEL_CHOICES, default=ACCESS_PUBLIC)
+        visibility = models.CharField(max_length=140, choices=visibility_choices, default=ACCESS_PUBLIC)
         unlisted = models.BooleanField(default=False)
         created_by = models.ForeignKey(Author, on_delete=models.CASCADE)
         created_at = models.DateTimeField(auto_now_add=True)
+        categories = models.CharField(max_length=140, choices=categories_choices, default=CATEGORY_PLAIN)
+
         likes = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="posts+")
         shared_by = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="shared")
 
