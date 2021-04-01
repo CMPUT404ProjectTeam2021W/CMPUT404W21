@@ -27,7 +27,7 @@ class ImageForm(forms.ModelForm):
 class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['contents', 'access_level']
+        fields = ['title','contents', 'access_level', 'unlisted']
 
 class CreateCommentForm(forms.ModelForm):
     comment = forms.CharField(max_length=120)

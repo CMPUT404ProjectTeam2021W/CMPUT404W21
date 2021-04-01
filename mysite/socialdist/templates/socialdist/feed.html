@@ -11,7 +11,7 @@
 
   <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
     <a class="mini-links"href="{% url 'author_profile' user.id %}"> Profile </a><br>
-    <p><a class="mini-links" href="#"> Unlisted </a>  </p>
+    <p><a class="mini-links" href= "{% url 'unlisted_posts' %}"> Unlisted </a>  </p>
   <a class="mini-links"href="{% url 'followers' user.id %}"> Followers </a><br>
 
   <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>

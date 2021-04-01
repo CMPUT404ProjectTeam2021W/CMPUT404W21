@@ -26,6 +26,8 @@ def feed(request):
     # post_id_dict - contains the id of the post to iterate through the dictionaries
     # post_liked - contains the boolean value of the current user's like on the post
     posts = Post.objects.all().order_by('-created_at')
+    posts = posts.filter(access_level='public')
+    posts = posts.filter(unlisted='False')
     post_likes_dict = {}
     post_id_dict = {}
     post_liked = {}
@@ -203,3 +205,17 @@ def unshare(request, post_id):
         return redirect(request.META['HTTP_REFERER'])
     else:
         return HttpResponse('not shared')
+
+
+def unlisted_posts(request):
+        posts = Post.objects.filter(created_by=request.user).order_by('-created_at')
+        posts = posts.filter(unlisted='True')
+        post_likes_dict = {}
+        post_id_dict = {}
+        post_liked = {}
+        post_shared = {}
+        for post in posts:
+            post_likes_dict[post] = post.likes.all().count()
+            post_liked[post] = request.user in post.likes.all()
+            post_id_dict[post] = post.id
+        return render(request, 'socialdist/unlisted.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked})

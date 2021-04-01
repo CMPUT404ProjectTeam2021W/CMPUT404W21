@@ -19,21 +19,20 @@ class Author(AbstractUser):
         super(Author, self).save(*args, **kwargs)
 
 class Post(models.Model):
-        # title = models.CharField(max_length=50)
-        # poster = models.ForeignKey(Author, on_delete=models.CASCADE)
-        # body = models.CharField(max_length=2500, blank="False")
-        # created_on = models.DateTimeField(auto_now=True)
-        ACCESS_PUBLIC = 0
-        ACCESS_PRIVATE = 1
+        ACCESS_PUBLIC = 'public'
+        ACCESS_PRIVATE = 'private'
+        ACCESS_FRIENDS = 'friends'
         ACCESS_LEVEL_CHOICES = [
             (ACCESS_PUBLIC, 'Public'),
             (ACCESS_PRIVATE, 'Private'),
+            (ACCESS_FRIENDS, 'Friends Only'),
         ]
         id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
         # contents = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
+        title = models.CharField(max_length=140, null=True, blank=True)
         contents = models.TextField(max_length=140, null=True, blank=True)
-        access_level = models.IntegerField(choices=ACCESS_LEVEL_CHOICES, default=ACCESS_PUBLIC)
-
+        access_level = models.CharField(max_length=140, choices=ACCESS_LEVEL_CHOICES, default=ACCESS_PUBLIC)
+        unlisted = models.BooleanField(default=False)
         created_by = models.ForeignKey(Author, on_delete=models.CASCADE)
         created_at = models.DateTimeField(auto_now_add=True)
         likes = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="posts+")

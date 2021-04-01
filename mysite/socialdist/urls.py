@@ -37,6 +37,8 @@ urlpatterns = [
   path('unlike/<str:post_id>/', views.unlike, name='unlike'),
   path('share/<str:post_id>/', views.share, name='share'),
   path('unshare/<str:post_id>/', views.unshare, name='unshare'),
+  path('unlisted/', views.unlisted_posts, name='unlisted_posts'),
+
 
 ]
 if settings.DEBUG:
