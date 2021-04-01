@@ -12,7 +12,9 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField(default='post')
+    author = AuthorSerializer()
+    
     class Meta:
         model = Post
         fields = ('type','id','title', 'description', 'author','published', 'visibility', 'unlisted','categories')
-        depth = 1
+        
