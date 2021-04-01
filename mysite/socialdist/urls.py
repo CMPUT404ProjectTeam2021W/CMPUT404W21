@@ -40,6 +40,7 @@ urlpatterns = [
   # ------------------------------ api urls here --------------------------------------------
   path("api/authors/", AuthorList.as_view(), name='author_list'),
   path("api/posts/", PostList.as_view(), name='post_list'),
+  path("api/posts/<uuid:post_id>/", PostDetails.as_view(), name='post_detail'),
   path("api/author/<uuid:author_id>/", AuthorDetails.as_view(), name='author_detail'),
   path("api/author/<uuid:author_id>/followers/", FollowerList.as_view(), name='followers_list'),
   path("api/author/<uuid:author_id>/followers/<uuid:foreign_author_id>", FollowerAction.as_view(), name='followers_action'),

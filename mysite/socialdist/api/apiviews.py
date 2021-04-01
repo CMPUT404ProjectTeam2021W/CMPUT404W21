@@ -83,6 +83,60 @@ class PostList(APIView):
 
 
 
+class PostDetails(APIView):
+        authentication_classes = (SessionAuthentication, BasicAuthentication)
+        permission_classes = (IsAuthenticated, IsAdminUser)
+        def get(self, request, post_id):
+            posts = Post.objects.get(id=post_id)
+            data = dict()
+            data['type'] = 'post'
+            data['items'] = PostSerializer(posts, many=False).data
+            # data = PostSerializer(posts, many=True, context={'request' : request}).data
+            return Response(data=data)
+
+        def put(self, request, post_id):
+            response = dict()
+            response['type'] = 'updatePost'
+
+            try:
+                post = Post.objects.get(id=post_id)
+                current_user = request.user
+                if current_user!= post.author:
+                    response['success'] = False
+                    response['message'] = "Unauthorized:Not the original post owner"
+                    return Response(response, status=400)
+                else:
+                    description = data.get('description')
+                    title = data.get('title')
+                    visibility = data.get('visibility')
+                    unlisted = data.get('unlisted')
+                    categories = data.get('categories')
+
+                    if description and title and unlisted and visibility and categories:
+                        if unlisted == 'false':
+                            unlisted = False
+                        else:
+                            unlisted = True
+                    post.description = description
+                    post.published = datetime.datetime.now()
+                    post.title = title
+                    post.categories = categories
+                    post.visibility = visibility
+                    post.unlisted = unlisted
+                    post.save()
+
+                    response['type'] = 'updatePost'
+                    response['success'] = True
+                    response['message'] = 'Post updated'
+                    return Response(response, status = 200)
+
+            except:
+
+                response['type'] = 'updatePost'
+                response['success'] = False
+                response['message'] = 'Failed to update post to server'
+                return Response(response, status = 500)
+
 
 
 
