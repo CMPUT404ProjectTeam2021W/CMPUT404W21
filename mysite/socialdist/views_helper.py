@@ -25,8 +25,8 @@ def get_foreign_author(url,author_id): #can probably change url to node
 def get_foreign_posts(url): #can probably replace with node
     s = requests.Session()
     s.auth = ('root','root') #these will be node.username and node.password
-    res = s.get(url+'posts/') #will need to add headers before here with .headers I think? or can just do headers = blah:blah
-    posts_new = []
+    res = s.get(url+'posts/') #will need to add headers before here with .update({"blah": "true"})
+    posts_new = []              #yeah s.get(url, headers={'BLAH': 'blah', 'host': 'heroku_url'})
     for item in res.json():
         new_post = Post()
         new_post.contents = item['contents']

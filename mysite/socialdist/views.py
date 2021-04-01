@@ -174,12 +174,3 @@ def unlike(request, post_id):
     else:
         return HttpResponse('not liked')
 
-#going to have to make this easier to adjust but heeeeey
-def post_request(request): #add node or something here
-    s = requests.Session()
-    s.auth = ('root','root')
-    response = s.get('http://hermes-cmput404.herokuapp.com/api/posts/')
-    print(response)
-    data = response.json()
-    print(data)
-    return HttpResponse("GOOOOD")
