@@ -1,22 +1,22 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import *
-from .models import MyUser
 
 
-class MyUserCreationForm(UserCreationForm):
-    github_link = forms.URLField(required=False)
+
+class AuthorCreationForm(UserCreationForm):
+    github = forms.URLField(required=False)
 
     class Meta:
-        model = MyUser
-        fields = ('username', 'github_link', )
+        model = Author
+        fields = ('username', 'github', )
 
 
-class MyUserChangeForm(UserChangeForm):
+class AuthorChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm):
-        model = MyUser
-        fields = ('username', 'github_link')
+        model = Author
+        fields = ('username', 'github')
 
 
 class ImageForm(forms.ModelForm):
@@ -25,21 +25,17 @@ class ImageForm(forms.ModelForm):
         fields = ['new_image']
 
 class CreatePostForm(forms.ModelForm):
-
-    # class Meta:
-    #     model = Post
-    #     exclude = ('poster', 'created_on')
-    #
-    # def __init__(self, poster, *args, **kwargs):
-    #     self.poster = poster
-    #
-    #     super(CreatePostForm, self).__init__(*args, **kwargs)
-    #
-    # def save(self):
-    #     post = super(CreatePostForm, self).save(commit=False)
-    #     post.poster = self.poster
-    #     post.save(commit=True)
-    #     return post
     class Meta:
         model = Post
-        fields = ['contents', 'access_level']
+        fields = ['title','description', 'visibility', 'unlisted', 'categories']
+        exclude = ("origin",)
+
+class CreateCommentForm(forms.ModelForm):
+    comment = forms.CharField(max_length=120)
+    class Meta:
+        model = Comment
+        exclude = (
+            'post',
+            'author',
+            'published'
+        )

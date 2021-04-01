@@ -8,14 +8,23 @@
     <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/landing.css' %}"/>
      <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/signup.css' %}"/>
      <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/feed.css' %}"/>
-     <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/post.css' %}"/>
+     <!-- <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/post.css' %}"/>
      <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/settings.css' %}"/>
+     <link rel="stylesheet" type="text/css" href="{% static 'socialdist/css/profile.css' %}"/>  -->
+
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
      <script type="text/javascript" src="{% static 'socialdist/js/landing.js' %}"></script>
      <script type="text/javascript" src="{% static 'socialdist/js/dropdown.js' %}"></script>
-     <script type="text/javascript" src="{% static 'socialdist/js/auto_expand_text.js' %}"></script>
+     <script type="text/javascript" src="{% static 'socialdist/js/autoExpandText.js' %}"></script>
+     <script type="text/javascript" src="{% static 'socialdist/js/followToggle.js' %}"></script>
+     <script type="text/javascript" src="{% static 'socialdist/js/unfollowToggle.js' %}"></script>
+     <script type="text/javascript" src="{% static 'socialdist/js/unfriendToggle.js' %}"></script>
+     <script type="text/javascript" src="{% static 'socialdist/js/likeToggle.js' %}"></script>
+     <script type="text/javascript" src="{% static 'socialdist/js/unlikeToggle.js' %}"></script>
+
   </head>
   <body>
     <main>{% block content %} {% endblock %}</main>

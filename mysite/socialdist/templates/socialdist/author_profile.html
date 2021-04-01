@@ -1,0 +1,85 @@
+{% extends 'socialdist/base.html' %}
+{% block title %} {{author}}'s Profile{% endblock %}
+
+{% load markdown_extras %}
+{% load templatefilter %}
+
+{% block content %}
+<div class='fade-bg'>
+<div class="sidebar">
+  <div class="photo"></div>
+  <div class="name">Welcome back <br> <span>{{request.user.username}}</span></div><br><br><br>
+  <div class = "sidebar-links">
+    <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
+
+  <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
+    <a class="mini-links"href="{% url 'author_profile' user.id %}"> Profile </a><br>
+    <p><a class="mini-links" href= "#"> Unlisted </a>  </p>
+  <a class="mini-links"href="{% url 'followers' user.id %}"> Followers </a><br>
+
+  <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
+  <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
+
+  </div>
+
+  </div>
+
+  <div class="feed-section">
+    <span class="align-middle" style="color:black">
+      {{author}}
+      </span>
+      <br>
+    Followers: <a href="/author/{{author_id}}}}/followers/">{{followers_count}}</a>
+    <br>
+    <br>
+      {% if request.user.username != author %}
+        {% if not following %}
+          <a href="/follow/{{author_id}}/"><input onclick="followToggle()" type="button" value="+ Follow" id="follow-button"></input></a> <br> <br>
+        {% else %}
+          {% if not friends %}
+            <a href="/unfollow/{{author_id}}/"><input onclick="unfollowToggle()" type="button" value="✓ Following" id="unfollow-button"></input></a> <br> <br>
+          {% else %}
+            <a href="/unfollow/{{author_id}}/"><input onclick="unfriendToggle()" type="button" value=">< Friends" id="unfriend-button"></input></a> <br> <br>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+      <div class="col-md-6">
+        {% for post, likes in posts.items %}
+          <div class="posts">
+                  <p>
+                    <em>
+                      @<a href="{% url 'author_profile' post.author.id %}">{{ post.author.username }}</a>
+                    </em>
+                    {{ post.description | markdown |safe}}
+                    <small style="color:#add8e6 ">
+
+                      {{ post.published|date:"SHORT_DATETIME_FORMAT" }}
+                      {{ likes }} likes
+
+                  </small>
+                  </p>
+                 <a href="{% url 'view_post' post.id %}"> <div class="btn btn-primary">🗩 Comments</div> </a>
+                 {% if not post_liked|get_item:post %}
+                  <a href="/like/{{post.id}}/">
+                    <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
+                  </a>
+                  {% else %}
+          <a href="/unlike/{{post.id}}/">
+            <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
+          </a>
+        {% endif %}
+        {% if not post_shared|get_item:post %}
+       <a href="/share/{{post.id}}/"><input onclick="shareToggle()" value="🚀 Share" id ="share-button" class="btn btn-primary"></input> </a>
+         {% else %}
+         <a href="/unshare/{{post.id}}/">
+           <input onclick="unshareToggle()" type="button" value="🚀 Shared" id="share-button" class="btn btn-primary"></input>
+         </a>
+         {% endif %}
+
+                 </div>
+        {% endfor %}
+      </div>
+      </div>
+
+    </div>
+{% endblock %}

@@ -6,6 +6,11 @@
 
 Deployed on Heroku at [https://hermes-cmput404.herokuapp.com/](https://hermes-cmput404.herokuapp.com/)
 
+
+## API and Documentation
+API and Documentation at [https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21/wiki/API-and-Documentation](https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21/wiki/API-and-Documentation)
+
+
 # Installation
 
 ```
@@ -20,15 +25,15 @@ Hermes should be running on your localhost at port 8000.
 
 You can sign up as a new user or log in on the live version using the test credentials as follows: 
 
+
 ``` 
 username: oasis
 password: wonderwall
 ```
 Admin side for live version:
 ```
-username: root
-password: toor
-
+username: team14
+password: hermesmedia
 ```
 
 Once authorized, you should be redirected to your home feed
