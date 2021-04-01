@@ -6,6 +6,9 @@
 
 Deployed on Heroku at [https://hermes-cmput404.herokuapp.com/](https://hermes-cmput404.herokuapp.com/)
 
+## API and Documentation
+API and Documentation at [https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21/wiki/API-and-Documentation](https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21/wiki/API-and-Documentation)
+
 # Installation
 
 ```
