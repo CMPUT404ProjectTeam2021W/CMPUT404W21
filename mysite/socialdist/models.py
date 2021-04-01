@@ -36,9 +36,9 @@ class Post(models.Model):
         (CATEGORY_MARKDOWN, 'text/markdown')
         ]
         id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-        # contents = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
+        # description = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
         title = models.CharField(max_length=140, null=True, blank=True)
-        contents = models.TextField(max_length=140, null=True, blank=True)
+        description = models.TextField(max_length=140, null=True, blank=True)
         visibility = models.CharField(max_length=140, choices=visibility_choices, default=ACCESS_PUBLIC)
         unlisted = models.BooleanField(default=False)
         created_by = models.ForeignKey(Author, on_delete=models.CASCADE)

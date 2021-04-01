@@ -22,7 +22,10 @@ class PostList(APIView):
     permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request):
         posts = Post.objects.all()
-        data = PostSerializer(posts, many=True, context={'request' : request}).data
+        data = dict()
+        data['type'] = 'post'
+        data['items'] = PostSerializer(posts, many=True).data
+        # data = PostSerializer(posts, many=True, context={'request' : request}).data
         return Response(data=data)
 
 class AuthorDetails(APIView):

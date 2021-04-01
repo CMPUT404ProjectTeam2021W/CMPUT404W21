@@ -11,6 +11,8 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = ('type', 'id', 'url', 'displayName', 'github')
 
 class PostSerializer(serializers.ModelSerializer):
+    type = serializers.ReadOnlyField(default='post')
     class Meta:
         model = Post
-        fields = ('title', 'contents', 'created_by','created_at', 'visibility', 'unlisted','categories')
+        fields = ('type','id','title', 'description', 'created_by','created_at', 'visibility', 'unlisted','categories')
+        depth = 1
