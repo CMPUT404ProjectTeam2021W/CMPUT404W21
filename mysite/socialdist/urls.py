@@ -24,9 +24,10 @@ urlpatterns = [
   path("api/authors/", AuthorList.as_view(), name='author_list'),
   path("api/posts/", PostList.as_view(), name='post_list'),
   path("api/author/<uuid:author_id>/", AuthorDetails.as_view(), name='author_detail'),
-  path("api/author/<uuid:author_id>/followers", FollowerList.as_view(), name='followers_list'),
+  path("api/author/<uuid:author_id>/followers/", FollowerList.as_view(), name='followers_list'),
   path("api/author/<uuid:author_id>/followers/<uuid:foreign_author_id>", FollowerAction.as_view(), name='followers_action'),
-  path("api/author/<uuid:author_id>/friends", FriendsList.as_view(), name='friends_list'),
+  path("api/author/<uuid:author_id>/friends/", FriendsList.as_view(), name='friends_list'),
+  path("api/author/<uuid:author_id>/posts/<uuid:post_id>/", CommentsList.as_view(), name='comments_list'),
   ## path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name='liked_list'),
 
   path('follow/<str:author_id>/', views.follow, name='follow'),

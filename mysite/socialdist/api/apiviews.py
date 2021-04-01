@@ -79,6 +79,20 @@ class FriendsList(APIView):
         data['items'] = AuthorSerializer(friends, many=True).data
         return Response(data=data)
 
+'''def commentsToJson(comments):
+'''
+
+'''
+class CommentsList(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated, IsAdminUser)
+
+    def get(self, request, author_id, post_id):
+        post_obj = get_object_or_404(Post, id=post_id)
+        comments = Comment.objects.filter(post=post_obj).all()
+        data = commentsToJson(comments)
+'''
+
 ''' class LikedList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
