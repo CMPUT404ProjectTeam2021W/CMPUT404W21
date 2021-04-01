@@ -7,6 +7,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ('id', 'username','github_link','friends', 'url', 'following', 'followers')
+        #these dont work =(
         def restore_object(self, attrs, instance = None):
             if instance is not None:
                 instance.id = attrs.get('id', instance.id)
@@ -22,6 +23,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('contents', 'created_by','created_at')
+        #these dont work =(
     def restore_object(self, attrs, instance = None):
         if instance is not None:
             instance.contents = attrs.get('contents', instance.contents)
