@@ -27,7 +27,7 @@ class ImageForm(forms.ModelForm):
 class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['contents', 'access_level']
+        fields = ['title','description', 'visibility', 'unlisted', 'categories']
 
 class CreateCommentForm(forms.ModelForm):
     comment = forms.CharField(max_length=120)
@@ -36,5 +36,5 @@ class CreateCommentForm(forms.ModelForm):
         exclude = (
             'post',
             'author',
-            'created_at'
+            'published'
         )

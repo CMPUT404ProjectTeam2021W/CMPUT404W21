@@ -11,7 +11,7 @@
 
   <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
     <a class="mini-links"href="{% url 'author_profile' user.id %}"> Profile </a><br>
-    <p><a class="mini-links" href= "{% url 'unlisted_posts' %}"> Unlisted </a>  </p>
+    <p><a class="mini-links" href= "#"> Unlisted </a>  </p>
   <a class="mini-links"href="{% url 'followers' user.id %}"> Followers </a><br>
 
   <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
@@ -22,7 +22,7 @@
   </div>
 
   <div class="feed-section">
-    <span>Feed</span>
+    <span>Unlisted Posts</span>
     <br>
     <br>
 <div class="col-md-6">
@@ -50,14 +50,6 @@
       <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
     </a>
   {% endif %}
-   {% if not post_shared|get_item:post %}
-  <a href="/share/{{post.id}}/">
-    <input onclick="shareToggle()" type="button" value="🚀 Share" id ="share-button" class="btn btn-primary"></input> </a>
-    {% else %}
-    <a href="/unshare/{{post.id}}/">
-      <input onclick="unshareToggle()" type="button" value="🚀 Shared" id="share-button" class="btn btn-primary"></input>
-    </a>
-    {% endif %}
            </div>
   {% endfor %}
 </div>

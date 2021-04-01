@@ -11,7 +11,7 @@
   color: black;
 }
 
-input#id_contents{
+input#id_description{
   margin-left: 20px;
   color:black;
   outline: none;
@@ -23,7 +23,7 @@ input#id_contents{
 }
 
 
-select#id_access_level{
+select#id_visibility{
   margin-left: 20px;
   color:black;
     outline: none;
