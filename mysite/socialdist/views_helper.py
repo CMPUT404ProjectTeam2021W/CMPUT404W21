@@ -34,3 +34,13 @@ def get_foreign_posts(url): #can probably replace with node
         new_post.created_at = item['created_at']
         posts_new.append(new_post)
     return posts_new
+
+def get_foreign_comment(url, author_id, post_id): #example url 'http://hermes-cmput404.herokuapp.com/api/' but should be again a node
+    s = requests.Session()
+    s.auth = ('root','root')
+    res = s.get(url+'author/'+author_id+"/posts/"+post_id+"/comments") #god I hope this path doesnt change
+    comments = []
+    for item in res.json():
+        new_comment = Comment()
+        #add things to things like other ones
+    return comments

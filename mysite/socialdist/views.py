@@ -10,7 +10,6 @@ from rest_framework import viewsets
 from .serializers import *
 from .views_helper import *
 import requests
-from rest_framework.parsers import JSONParser
 
 # Create your views here.
 
@@ -32,6 +31,7 @@ def feed(request):
     posts_query = Post.objects.all().order_by('-created_at')
     for post in posts_query:
         posts.append(post)
+    #need to sort posts by created_at
     post_likes_dict = {}
     post_id_dict = {}
     post_liked = {}
