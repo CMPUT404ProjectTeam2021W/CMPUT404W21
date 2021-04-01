@@ -26,7 +26,9 @@ p{
     position: fixed;
     top: 0;
     left: 0;
+    color: black;
 }
+
 
 
 .hermes-big{
@@ -119,13 +121,18 @@ a{
   margin-left:42vw;
   margin-top: 6%;
   opacity: 0;
+  color: black;
 }
 .link-box:hover{
   opacity: 0.6;
 }
 
 .link-box>a{
-  color: white;
+  color: black;
+}
+.pretty-bg>a:hover{
+  text-decoration:none;
+
 }
 
 .link-box-noncolor
@@ -156,4 +163,11 @@ a{
   .link-box-noncolor{
     margin-top: 0;
   }
+}
+
+
+div#post_content.p {
+color:grey;
+display: block;
+padding-left: 1px;
 }

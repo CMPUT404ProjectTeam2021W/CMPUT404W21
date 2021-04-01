@@ -315,23 +315,35 @@ textarea {
 
 /* ------------------------------------------------------posts */
 
-.posts em{
-  color: grey;
-}
+
 .posts
 {
-  height: auto;
-  width: 40%;
-  background-color: white;
-  color: black;
-  padding: 15px 25px;
-  border-radius: 5px;
+  background-color:  white;
+  color: grey;
+  padding-left:5%;
+  padding-top: 2%;
+  border-radius: 10px 5px 5px 10px;
+  margin-bottom: 5%;
+  padding-bottom: 4%;
 }
 
+.col-md-6
+{
+
+  color: grey;
+}
 .posts>p{
   color: grey;
 }
 
+.posts em
+{
+  color:grey;
+}
 .posts em>a {
   color: grey;
+}
+
+input#id_comment{
+  color:black;
 }

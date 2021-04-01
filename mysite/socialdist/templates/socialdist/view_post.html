@@ -1,5 +1,10 @@
 {% extends 'socialdist/base.html' %}
 {% block title %}Feed{% endblock %}
+{% load markdown_extras%}
+{% load templatefilter%}
+
+
+
 {% block content %}
 <div class='fade-bg'>
 <div class="sidebar">
@@ -9,27 +14,84 @@
     <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
 
   <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
-    <a class="mini-links"href="{% url 'profile' %}"> Profile </a><br>
+    <a class="mini-links"href="{% url 'author_profile' user.id %}"> Profile </a><br>
     <p><a class="mini-links" href="#"> Unlisted </a>  </p>
-  <a class="mini-links"href="#"> Friends </a><br>
+  <a class="mini-links"href="{% url 'followers' user.id %}"> Followers </a><br>
 
   <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
   <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
-
   </div>
-
   </div>
-
-<div class='posts'>
-<p><em>@{{ post.created_by.username }}</em> {{ post.contents }} <em>{{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}</em> <em>{{ likes_count }} likes</em></p>
+  <div class="feed-section">
+    <br>
+    <br>
+<div class="col-md-6">
+    <div class="posts">
+      <p>
+        <em>
+          @<a href="{% url 'author_profile' post.created_by.id %}" style="color:#88e ">{{ post.created_by.username }}</a>
+        </em>
+        {{ post.contents | markdown |safe}}
+              <small style="color:#add8e6; font-family:calibri; padding-right:45px" >
+                {{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}
+                {{ likes_count }} likes
+            </small>
+           {% if not liked %}
+            <a href="/like/{{post.id}}/">
+              <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
+            </a>
+            {% else %}
+    <a href="/unlike/{{post.id}}/">
+      <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
+    </a>
+  {% endif %}
+  {% if not post_shared %}
+ <a href="/share/{{post.id}}/">
+   <input onclick="shareToggle()" type="button" value="🚀 Share" id ="share-button" class="btn btn-primary"></input> </a>
+   {% else %}
+   <a href="/unshare/{{post.id}}/">
+     <input onclick="unshareToggle()" type="button" value="🚀 Shared" id="share-button" class="btn btn-primary"></input>
+   </a>
+   {% endif %}
+           </div>
+           {% if request.user == post.created_by%}
+           <input class="btn btn-primary" type="button" value = "✎ Edit" onclick="editPost()" id="editbutton"></input>
+           <a href="{% url 'delete_post' post.id %}">
+             <input class="btn btn-primary" type="button" value = "🗑 Delete" ></input>
+           </a>
+           {% endif %}
 </div>
 
-<div class='like-post'>
-    {% if not liked %}
-    <a href="/like/{{post_id}}/"><input onclick="likeToggle()" type="button" value="+ Like" id="like-button"></input></a> <br> <br>
-    {% else %}
-    <a href="/unlike/{{post_id}}/"><input onclick="unlikeToggle()" type="button" value="✓ Like" id="unlike-button"></input></a> <br> <br>
-    {% endif %}
+<br>
+<br>
+<div class="col-md-6">
+  <div class='posts'>
+    <form action="{% url 'view_post' post.id %} " method="post" name ='comment_form'>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-secondary" value="Create comment" id="submitbtn" onclick="submitForm()"/>
+    </form>
+    <br>
+    {% if comments%}
+      {% for comment in comments %}
+        <p style="color:black; font-size:0.8em"> {{comment.author}} <br></p><p style="color:green; font-family:calibri; font-weight:lighter"> {{comment.comment}} </p>
+            <small style="color:#add8e6; font-family:calibri; padding-right:45px" > Comment posted on {{comment.created_at}}</small>
+            <hr>
+        {% endfor %}
+     {% else %}
+        <p style="color:grey"> No Comments posted yet </p>
+    {%endif%}
+    </div>
 </div>
 </div>
+</div>
+
+<script type="text/javascript">
+
+  function submitForm() {
+   var frm = document.querySelector('id_comment');
+   frm.value('');
+}
+
+</script>
 {% endblock %}

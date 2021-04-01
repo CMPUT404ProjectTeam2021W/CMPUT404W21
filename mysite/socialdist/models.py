@@ -6,7 +6,7 @@ import uuid
 # Create your models here.
 class Author(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    
+
     url = models.CharField(max_length=200, null=True, blank=True)
     github_link = models.URLField(default='')
     friends = models.TextField(default='')
@@ -15,7 +15,7 @@ class Author(AbstractUser):
 
     def save(self, *args, **kwargs):
 
-        self.url = '{}/author/{}'.format('localhost:8000', self.id) 
+        self.url = '{}/author/{}'.format('localhost:8000', self.id)
         super(Author, self).save(*args, **kwargs)
 
 class Post(models.Model):
@@ -36,20 +36,22 @@ class Post(models.Model):
 
         created_by = models.ForeignKey(Author, on_delete=models.CASCADE)
         created_at = models.DateTimeField(auto_now_add=True)
-
         likes = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="posts+")
+        shared_by = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="shared")
+
+class Comment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=False)
+    post = models.ForeignKey(Post, related_name='CommentPost', on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, related_name='authorComment', on_delete=models.CASCADE)
+    comment = models.TextField(default="")
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "{} - {} - {}".format(self.author, self.created_at, self.id)
+
+    def __repr__(self):
+        return "{} - {} - {} ".format(self.author, self.created_at, self.id)
 
 class Image(models.Model):
     username = models.CharField(max_length=50)
     new_image = models.ImageField(upload_to='images/')
-
-class Node(models.Model):
-    host_url = models.URLField(max_length=500)
-
-    auth_username = models.CharField(max_length=200, null=False)
-    auth_password = models.CharField(max_length=200, null=False)
-
-    date_added = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Node: host={self.host_url}, username={self.auth_username}, password={self.auth_password}"
