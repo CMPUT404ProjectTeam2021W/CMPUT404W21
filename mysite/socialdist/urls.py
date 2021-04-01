@@ -27,7 +27,7 @@ urlpatterns = [
   path("api/author/<uuid:author_id>/followers", FollowerList.as_view(), name='followers_list'),
   path("api/author/<uuid:author_id>/followers/<uuid:foreign_author_id>", FollowerAction.as_view(), name='followers_action'),
   path("api/author/<uuid:author_id>/friends", FriendsList.as_view(), name='friends_list'),
-  path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name='liked_list'),
+  ## path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name='liked_list'),
 
   path('follow/<str:author_id>/', views.follow, name='follow'),
   path('unfollow/<str:author_id>/', views.unfollow, name='unfollow'),

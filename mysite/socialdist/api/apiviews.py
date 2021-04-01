@@ -79,7 +79,7 @@ class FriendsList(APIView):
         data['items'] = AuthorSerializer(friends, many=True).data
         return Response(data=data)
 
-class LikedList(APIView):
+''' class LikedList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
@@ -90,3 +90,4 @@ class LikedList(APIView):
         data['type'] = 'friends'
         data['items'] = PostSerializer(posts, many=True).data
         return Response(data=data)
+'''
