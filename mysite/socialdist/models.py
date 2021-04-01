@@ -41,8 +41,8 @@ class Post(models.Model):
         description = models.TextField(max_length=140, null=True, blank=True)
         visibility = models.CharField(max_length=140, choices=visibility_choices, default=ACCESS_PUBLIC)
         unlisted = models.BooleanField(default=False)
-        created_by = models.ForeignKey(Author, on_delete=models.CASCADE)
-        created_at = models.DateTimeField(auto_now_add=True)
+        author = models.ForeignKey(Author, on_delete=models.CASCADE)
+        published = models.DateTimeField(auto_now_add=True)
         categories = models.CharField(max_length=140, choices=categories_choices, default=CATEGORY_PLAIN)
 
         likes = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="posts+")
@@ -53,13 +53,13 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, related_name='CommentPost', on_delete=models.CASCADE)
     author = models.ForeignKey(Author, related_name='authorComment', on_delete=models.CASCADE)
     comment = models.TextField(default="")
-    created_at = models.DateTimeField(auto_now=True)
+    published = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{} - {} - {}".format(self.author, self.created_at, self.id)
+        return "{} - {} - {}".format(self.author, self.published, self.id)
 
     def __repr__(self):
-        return "{} - {} - {} ".format(self.author, self.created_at, self.id)
+        return "{} - {} - {} ".format(self.author, self.published, self.id)
 
 class Image(models.Model):
     username = models.CharField(max_length=50)

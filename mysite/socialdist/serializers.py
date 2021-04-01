@@ -14,5 +14,5 @@ class PostSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField(default='post')
     class Meta:
         model = Post
-        fields = ('type','id','title', 'description', 'created_by','created_at', 'visibility', 'unlisted','categories')
+        fields = ('type','id','title', 'description', 'author','published', 'visibility', 'unlisted','categories')
         depth = 1

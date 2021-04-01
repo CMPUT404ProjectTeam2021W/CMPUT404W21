@@ -36,5 +36,5 @@ class CreateCommentForm(forms.ModelForm):
         exclude = (
             'post',
             'author',
-            'created_at'
+            'published'
         )

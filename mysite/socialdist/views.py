@@ -25,7 +25,7 @@ def feed(request):
     # post_likes_dict - contains a count of likes on a post
     # post_id_dict - contains the id of the post to iterate through the dictionaries
     # post_liked - contains the boolean value of the current user's like on the post
-    posts = Post.objects.all().order_by('-created_at')
+    posts = Post.objects.all().order_by('-published')
     posts = posts.filter(visibility='public')
     posts = posts.filter(unlisted='False')
     post_likes_dict = {}
@@ -60,7 +60,7 @@ def create_post(request):
     if request.method == 'POST':
         form = CreatePostForm(request.POST)
         post = form.save(commit=False)
-        post.created_by = request.user
+        post.author = request.user
         # Save post in database.
         post.save()
         # Rediect to post list.
@@ -76,7 +76,7 @@ def create_post(request):
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id = post_id)
     post.delete()
-    posts = Post.objects.all().order_by('-created_at')
+    posts = Post.objects.all().order_by('-published')
     post_likes_dict = {}
     post_id_dict = {}
     post_liked = {}
@@ -125,11 +125,11 @@ def view_post(request, post_id):
 
 def author_profile(request, author_id):
     author_details = get_object_or_404(Author, id=author_id)
-    posts = Post.objects.filter(**{'created_by': author_details}) | Post.objects.filter(**{'shared_by': author_details})
+    posts = Post.objects.filter(**{'author': author_details}) | Post.objects.filter(**{'shared_by': author_details})
     following = author_details in request.user.following.all()
     friends = following and (author_details in request.user.followers.all())
     followers_count = author_details.followers.all().count()
-    posts = posts.order_by('-created_at')
+    posts = posts.order_by('-published')
     post_likes_dict = {}
     post_id_dict = {}
     shared_by = {}
@@ -208,7 +208,7 @@ def unshare(request, post_id):
 
 
 def unlisted_posts(request):
-        posts = Post.objects.filter(created_by=request.user).order_by('-created_at')
+        posts = Post.objects.filter(author=request.user).order_by('-published')
         posts = posts.filter(unlisted='True')
         post_likes_dict = {}
         post_id_dict = {}

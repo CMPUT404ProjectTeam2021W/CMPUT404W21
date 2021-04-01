@@ -48,12 +48,12 @@
           <div class="posts">
                   <p>
                     <em>
-                      @<a href="{% url 'author_profile' post.created_by.id %}">{{ post.created_by.username }}</a>
+                      @<a href="{% url 'author_profile' post.author.id %}">{{ post.author.username }}</a>
                     </em>
                     {{ post.description | markdown |safe}}
                     <small style="color:#add8e6 ">
 
-                      {{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}
+                      {{ post.published|date:"SHORT_DATETIME_FORMAT" }}
                       {{ likes }} likes
 
                   </small>
