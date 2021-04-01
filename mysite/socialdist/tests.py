@@ -63,16 +63,16 @@ class AuthorTestCase(TestCase):
         self.assertEqual(first_commment.__str__(), "{} - {} - {}".format(first_commment.author, first_commment.published, first_commment.id))
         self.assertEqual(first_commment.__repr__(), "{} - {} - {} ".format(first_commment.author, first_commment.published, first_commment.id))
 
-    def test_get_html(self):
+    #def test_get_html(self):
 
-        new_id = 1
-        new_url = '{}/author/{}'.format('localhost:8000', new_id)
-        new_github_link = 'https://github.com/BigDawn01'
-        author = Author(id=new_id, url=new_url, github_link=new_github_link)
-        author.save()
-        current_author = Author.objects.get(id=new_id)
+        #new_id = 1
+        #new_url = '{}/author/{}'.format('localhost:8000', new_id)
+        #new_github_link = 'https://github.com/BigDawn01'
+        #author = Author(id=new_id, url=new_url, github_link=new_github_link)
+        #author.save()
+        #current_author = Author.objects.get(id=new_id)
 
-        c = Client()
+        #c = Client()
 
-        response = c.get('/login/')
-        print(response.status_code)
+        #response = c.get('/login/')
+        #print(response.status_code)
