@@ -32,7 +32,19 @@
           <em>
             @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a>
           </em>
-          {{ post.description | markdown |safe}}
+          {% if post.categories == 'text/markdown' %}
+            <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | markdown |safe}}</span>
+          {% endif %}
+          {% if post.categories == 'text/plain' %}
+            <br>
+            {{post.description}}
+            <br>
+          {% endif %}
+          {% if post.categories == 'text/image' %}
+            <br>
+            <img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/>
+            <br>
+          {% endif %}
           <small style="color:#add8e6; font-family:calibri; padding-right:45px">
             {{ post.published }}
           </small>
