@@ -6,16 +6,13 @@ import uuid
 # Create your models here.
 class Author(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
     url = models.CharField(max_length=200, null=True, blank=True)
     github = models.URLField(default='', blank=True)
     friends = models.TextField(default='')
     following = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers+")
     followers = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="following+")
-
     def save(self, *args, **kwargs):
-
-        self.url = '{}/author/{}'.format('localhost:8000', self.id)
+        self.url = '{}/author/{}'.format('http://hermes-cmput404.herokuapp.com', self.id)
         super(Author, self).save(*args, **kwargs)
 
 class Post(models.Model):

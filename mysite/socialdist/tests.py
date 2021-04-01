@@ -18,6 +18,7 @@ class AuthorTestCase(TestCase):
         current_author = Author.objects.get(id=new_id)
         self.assertEqual(current_author.url, new_url)
 
+
     def test_post_creation(self):
         new_id = 1
         new_url = '{}/author/{}'.format('localhost:8000', new_id)
@@ -29,7 +30,7 @@ class AuthorTestCase(TestCase):
         new_title = "First Post"
         new_description = "This is just a description"
         first_author = Author.objects.get(id=new_id)
-        post = Post(id=new_id, title=new_title, description=new_description, author=first_author)
+        post = Post(id=new_id, title=new_title, description=new_description, author=first_author, visibility='public', unlisted='false', category='text/plain')
         post.save()
 
         new_post = Post.objects.get(id=new_id)
@@ -37,7 +38,13 @@ class AuthorTestCase(TestCase):
         self.assertEqual(new_post.description, new_description)
         self.assertEqual(new_post.author.url, new_url)
         self.assertEqual(new_post.author.github_link, new_github_link)
-    
+        self.assertTrue(new_post.published)
+        self.assertEqual(new_post.visibility, 'public')
+        self.assertEqual(new_post.unlisted, 'false')
+        self.assertEqual(new_post.category, 'text/plain')
+
+
+
     def test_comment_creation(self):
         new_id = 1
         new_url = '{}/author/{}'.format('localhost:8000', new_id)
