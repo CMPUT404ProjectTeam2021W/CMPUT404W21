@@ -195,10 +195,7 @@ class FriendsList(APIView):
         data['items'] = AuthorSerializer(friends, many=True).data
         return Response(data=data)
 
-'''def commentsToJson(comments):
-'''
 
-'''
 class CommentsList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
@@ -206,8 +203,29 @@ class CommentsList(APIView):
     def get(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
         comments = Comment.objects.filter(post=post_obj).all()
-        data = commentsToJson(comments)
-'''
+        serializer = CommentSerializer(comments, many=True)
+        data = dict()
+        data['type'] = "comments"
+        data['items'] = serializer
+        return Response(data=data)
+
+    def post(self, request, author_id, post_id):
+        post_obj = get_object_or_404(Post, id=post_id)
+        data = request.POST
+
+        author = request.user
+        comment = data.get('comment')
+        published = data.get('published')
+        id = data.get('id')
+        response = dict()
+        if author and comment and published and id:
+            comment = Comment.object.create(id=id, post=post_obj, author=author, comment=comment, published=published)
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 ''' class LikedList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)

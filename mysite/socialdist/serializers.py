@@ -32,4 +32,13 @@ class PostDeserializer(serializers.ModelSerializer):
     origin = serializers.ReadOnlyField(default='https://chatbyte.herokuapp.com/')
     class Meta:
         model = Post
-        fields = ('id','title', 'description', 'author','published', 'visibility', 'unlisted','categories', 'origin')
+        fields = ('id', 'title', 'description', 'author', 'published', 'visibility', 'unlisted', 'categories', 'origin')
+
+class CommentSerializer(serializers.ModelSerializer):
+    type = serializers.ReadOnlyField(default='comment')
+    author = AuthorSerializer(read_only=True)
+    contentType = serializers.ReadOnlyField(default='text/markdown')
+
+    class Meta:
+        model = Comment
+        fields = ('type', 'author', 'comment', 'contentType', 'published', 'id')
