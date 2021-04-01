@@ -5,18 +5,18 @@ from .models import *
 
 
 class AuthorCreationForm(UserCreationForm):
-    github_link = forms.URLField(required=False)
+    github = forms.URLField(required=False)
 
     class Meta:
         model = Author
-        fields = ('username', 'github_link', )
+        fields = ('username', 'github', )
 
 
 class AuthorChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm):
         model = Author
-        fields = ('username', 'github_link')
+        fields = ('username', 'github')
 
 
 class ImageForm(forms.ModelForm):
@@ -28,6 +28,7 @@ class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title','description', 'visibility', 'unlisted', 'categories']
+        exclude = ("origin",)
 
 class CreateCommentForm(forms.ModelForm):
     comment = forms.CharField(max_length=120)

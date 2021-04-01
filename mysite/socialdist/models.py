@@ -8,7 +8,7 @@ class Author(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     url = models.CharField(max_length=200, null=True, blank=True)
-    github_link = models.URLField(default='')
+    github = models.URLField(default='')
     friends = models.TextField(default='')
     following = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers+")
     followers = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="following+")
@@ -44,7 +44,7 @@ class Post(models.Model):
         author = models.ForeignKey(Author, on_delete=models.CASCADE)
         published = models.DateTimeField(auto_now_add=True)
         categories = models.CharField(max_length=140, choices=categories_choices, default=CATEGORY_PLAIN)
-
+        origin = models.CharField(max_length=200, default="https://hermes-cmput404.herokuapp.com/")
         likes = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="posts+")
         shared_by = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="shared")
 
@@ -64,3 +64,9 @@ class Comment(models.Model):
 class Image(models.Model):
     username = models.CharField(max_length=50)
     new_image = models.ImageField(upload_to='images/')
+
+class Server(models.Model):
+    id = models.AutoField(primary_key=True, editable=False, blank=False)
+    hostname = models.CharField(max_length=200, null=True, blank=True)
+    username = models.CharField(max_length=200, null=True, blank=True)
+    password = models.CharField(max_length=200, null=True, blank=True)

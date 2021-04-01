@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from ..forms import CreatePostForm, ImageForm, AuthorCreationForm, CreateCommentForm
 from ..models import *
+from .views_helper import *
 
 
 
@@ -125,16 +126,33 @@ def feed(request):
     # post_likes_dict - contains a count of likes on a post
     # post_id_dict - contains the id of the post to iterate through the dictionaries
     # post_liked - contains the boolean value of the current user's like on the post
-    posts = Post.objects.all().order_by('-published')
-    posts = posts.filter(visibility='public')
-    posts = posts.filter(unlisted='False')
+    foreign_posts = get_stream(request) # get posts from other server
+    full_posts = []
+    
+    local_posts = Post.objects.all().order_by("-published")
+   
+    local_posts = local_posts.filter(visibility='public')
+    local_posts = local_posts.filter(unlisted='False')
+    
     post_likes_dict = {}
     post_id_dict = {}
     post_liked = {}
     post_shared = {}
-    for post in posts:
-        post_likes_dict[post] = post.likes.all().count()
-        post_liked[post] = request.user in post.likes.all()
-        post_id_dict[post] = post.id
-        post_shared[post] = request.user in post.shared_by.all()
+    for foreign_post in foreign_posts:
+        for a_thing in foreign_post:
+            full_posts.append(a_thing)
+
+    full_posts += list(local_posts)
+
+    for post in full_posts:
+        
+        if post.origin == "https://hermes-cmput404.herokuapp.com/":
+            post_likes_dict[post] = post.likes.all().count()
+            post_liked[post] = request.user in post.likes.all()
+            post_id_dict[post] = post.id
+            post_shared[post] = request.user in post.shared_by.all()
+        else:
+            post_likes_dict[post] = -1
+
+    
     return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked, 'post_shared': post_shared})
