@@ -8,7 +8,7 @@ class Author(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     url = models.CharField(max_length=200, null=True, blank=True)
-    github = models.URLField(default='')
+    github = models.URLField(default='', blank=True)
     friends = models.TextField(default='')
     following = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers+")
     followers = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="following+")

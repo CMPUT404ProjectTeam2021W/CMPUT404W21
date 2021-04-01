@@ -27,6 +27,65 @@ class PostList(APIView):
         data['items'] = PostSerializer(posts, many=True).data
         # data = PostSerializer(posts, many=True, context={'request' : request}).data
         return Response(data=data)
+    def post(self, request):
+        author = request.user
+        data = request.POST
+
+        description = data.get('description')
+        title = data.get('title')
+        visibility = data.get('visibility')
+        unlisted = data.get('unlisted')
+        categories = data.get('categories')
+        origin = data.get('origin')
+        response = dict()
+        if description and title and unlisted and visibility and categories:
+            if unlisted == 'false':
+                unlisted = False
+            else:
+                unlisted = True
+            if origin:
+                post = Post.objects.create(
+                author=author, title=title, description=description,
+                visibility=visibility, categories=categories,
+                unlisted=unlisted, origin=origin)
+
+                if post:
+                    response['type'] = 'addedPost'
+                    response['success'] = True
+                    response['message'] = 'Post added'
+                    return Response(response, status = 200)
+                else:
+                    response['type'] = 'addedPost'
+                    response['success'] = False
+                    response['message'] = 'Failed to add post to server'
+                    return Response(response, status = 500)
+
+            else:
+                post = Post.objects.create(
+                author=author, title=title, description=description, visibility=visibility,
+                categories=categories, unlisted=unlisted)
+                if post:
+                    response['type'] = 'addedPost'
+                    response['success'] = True
+                    response['message'] = 'Post added'
+                    return Response(response, status = 200)
+                else:
+                    response['type'] = 'addedPost'
+                    response['success'] = True
+                    response['message'] = 'Failed to add post to server'
+                    return Response(response, status = 500)
+
+        else:
+
+            response['type'] = 'addedPost'
+            response['success'] = False
+            response['message'] = 'Missing fields'
+
+
+
+
+
+
 
 class AuthorDetails(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)

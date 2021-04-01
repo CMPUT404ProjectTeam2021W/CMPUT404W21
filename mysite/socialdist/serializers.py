@@ -5,20 +5,19 @@ from .models import *
 class AuthorSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField(default='author')
     displayName = serializers.CharField(source='username')
-    github = serializers.CharField(source='github')
     class Meta:
         model = Author
         fields = ('type', 'id', 'url', 'displayName', 'github')
 
 class PostSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField(default='post')
-    author = AuthorSerializer()
-    
+    author = AuthorSerializer(read_only=True)
+
     class Meta:
         model = Post
         fields = ('type','id','title', 'description', 'author','published', 'visibility', 'unlisted','categories')
 
-       
+
 class AuthorDeserializer(serializers.ModelSerializer):
     username = serializers.CharField(source='displayName')
 
@@ -34,4 +33,3 @@ class PostDeserializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('id','title', 'description', 'author','published', 'visibility', 'unlisted','categories', 'origin')
- 
