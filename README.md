@@ -26,9 +26,8 @@ password: wonderwall
 ```
 Admin side for live version:
 ```
-username: root
-password: toor
-
+username: team14
+password: hermesmedia
 ```
 
 Once authorized, you should be redirected to your home feed
