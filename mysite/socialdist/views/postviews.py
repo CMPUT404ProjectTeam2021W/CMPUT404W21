@@ -144,6 +144,7 @@ def feed(request):
         full_posts.append(foreign_post)
 
     full_posts += list(local_posts)
+    full_posts.sort(key=lambda x: x.published, reverse=True)
     # print(full_posts)
     for post in full_posts:
 

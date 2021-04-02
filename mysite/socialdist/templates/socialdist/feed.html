@@ -37,8 +37,8 @@
       <div class="posts">
         <p>
           <em>
-            @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a>
-            {% if likes == -1 %}</em>
+            @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a></em>
+            {% if likes == -1 %}
             <span style="color:rgba(34, 167, 240, 1); font-size:1.3em; cursor:pointer" title="Post from another server: {{post.origin}}">☁</span>
             {% endif %}
             <p id="post-title">

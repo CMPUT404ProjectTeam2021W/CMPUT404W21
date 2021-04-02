@@ -5,6 +5,8 @@ from collections import OrderedDict
 from requests.auth import HTTPBasicAuth
 from ..serializers import *
 from ..models import Server
+from django.utils.dateparse import parse_datetime
+
 
 def get_foreign_author(url,author_id): #can probably change url to node
     s = requests.Session()
@@ -93,7 +95,7 @@ def deserialize_json(json_response, server):
         new_post.author.url = obj_temp["author"]["url"]
         new_post.author.username = obj_temp["author"]["username"]
         new_post.author.github = obj_temp["author"]["github"]
-        new_post.published = obj_temp["published"]
+        new_post.published = parse_datetime(obj_temp["published"])
 
         new_post.visibility = obj_temp["visibility"]
         new_post.categories = obj_temp["categories"]
@@ -101,11 +103,15 @@ def deserialize_json(json_response, server):
 
         get_index = obj_temp["author"]["id"].find('author/')
         check = obj_temp["author"]["id"][get_index+len('author/'):]
+
         if check not in temp:
             new_post.author.id = check
             temp[check] = check
             author_list.append(new_post.author)
+        if check in temp:
+            new_post.author.id = temp[check]
         post_list.append(new_post)
+
     data_list.append(post_list)
     data_list.append(author_list)
 

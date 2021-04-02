@@ -27,9 +27,7 @@ def author_profile(request, author_id):
         posts = posts.order_by('-published')
         origin = 'host'
     except:
-
         remote_posts = get_stream(request)
-
         for authors in remote_posts[1]:
             if author_id == authors.id:
                 author_details = authors
