@@ -2,6 +2,8 @@
 {% block title %}Feed{% endblock %}
 {% load markdown_extras %}
 {% block content %}
+{% load bootstrap4 %}
+
 <div class='fade-bg'>
   <div class="sidebar">
     <div class="photo"></div>
@@ -27,12 +29,16 @@
     <br>
     <div class="col-md-6">
       {% for post, likes in posts.items %}
+
       <div class="posts">
         <p>
+
           <em>
             @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a>
+            {% if likes == -1 %}</em>
+            <span style="color:rgba(34, 167, 240, 1); font-size:1.3em; cursor:pointer" title="Post from another server: {{post.origin}}">☁</span>
+            {% endif %}
 
-          </em>
           {{ post.description | markdown |safe}}
           <small style="color:#add8e6; font-family:calibri; padding-right:45px">
             {{ post.published }}
