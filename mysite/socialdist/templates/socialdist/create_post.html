@@ -58,9 +58,11 @@
     <span>New Post</span>
     <div class="post-body">
       <form action="{% url 'create_post' %} " method="post">
-        {% csrf_token %} {% bootstrap_form form %} {% buttons %}
+        <div class ="col-md-6">
+        {% csrf_token %} {% bootstrap_form  form %} {% buttons %}
         <input type="submit" value="Create post" id="submitbtn" />
         {% endbuttons %}
+        </div>
       </form>
     </div>
   </div>

@@ -18,6 +18,3 @@ class SignUpView(generic.CreateView):
     form_class = AuthorCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
-    @method_decorator(login_required(login_url=''))
-    def dispatch(self, *args, **kwargs):
-        return super(SignUpView, self).dispatch(*args, **kwargs)

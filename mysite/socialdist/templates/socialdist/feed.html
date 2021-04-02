@@ -10,11 +10,15 @@
     <div class="name">Welcome back <br> <span>{{user.username}}</span></div><br><br><br>
     <div class="sidebar-links">
       <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
-
-      <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
-      <a class="mini-links" href="{% url 'author_profile' user.id %}"> Profile </a><br>
-      <p><a class="mini-links" href="{% url 'unlisted_posts' %}"> Unlisted </a> </p>
-      <a class="mini-links" href="{% url 'followers' user.id %}"> Followers </a><br>
+      <br>
+      <a class="mini-links" href="{% url 'feed' %}"> Feed </a>
+      <br>
+      <a class="mini-links" href="{% url 'author_profile' user.id %}"> Profile </a>
+      <br>
+      <a class="mini-links" href="{% url 'unlisted_posts' %}"> Unlisted </a>
+      <br>
+      <a class="mini-links" href="{% url 'followers' user.id %}"> Followers </a>
+      <br>
 
       <a class="mini-links" href="{% url 'user_settings' %}"> Settings </a><br>
       <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
@@ -32,17 +36,17 @@
 
       <div class="posts">
         <p>
-
           <em>
             @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a>
             {% if likes == -1 %}</em>
             <span style="color:rgba(34, 167, 240, 1); font-size:1.3em; cursor:pointer" title="Post from another server: {{post.origin}}">☁</span>
             {% endif %}
-
-          {{ post.description | markdown |safe}}
-          <small style="color:#add8e6; font-family:calibri; padding-right:45px">
-            {{ post.published }}
-          </small>
+            <p id="post-title">
+            {{post.title}}</p>
+            <div id = "post-description">{{ post.description | markdown |safe}}</div>
+            <small style="color:#add8e6; font-family:calibri; padding-right:45px">
+              {{ post.published }}
+            </small>
 
           {% if likes >= 0 %}
           <small style="color:#add8e6; font-family:calibri; padding-right:45px">
