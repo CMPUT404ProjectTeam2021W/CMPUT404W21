@@ -29,6 +29,7 @@
       {{author}}
       </span>
       <br>
+      {% if origin == 'host' %}
     Followers: <a href="/author/{{author_id}}}}/followers/">{{followers_count}}</a>
     <br>
     <br>
@@ -43,43 +44,61 @@
           {% endif %}
         {% endif %}
       {% endif %}
+      {% endif %}
+
+      <br>
+      <br>
+      
       <div class="col-md-6">
         {% for post, likes in posts.items %}
           <div class="posts">
                   <p>
                     <em>
-                      @<a href="{% url 'author_profile' post.author.id %}">{{ post.author.username }}</a>
+                      @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a>
+
                     </em>
                     {{ post.description | markdown |safe}}
-                    <small style="color:#add8e6 ">
+                    <small style="color:#add8e6; font-family:calibri; padding-right:45px">
+                      {{ post.published }}
+                    </small>
 
-                      {{ post.published|date:"SHORT_DATETIME_FORMAT" }}
+                    {% if likes >= 0 %}
+                    <small style="color:#add8e6; font-family:calibri; padding-right:45px">
                       {{ likes }} likes
-
-                  </small>
-                  </p>
-                 <a href="{% url 'view_post' post.id %}"> <div class="btn btn-primary">🗩 Comments</div> </a>
+                    </small>
+                    <a href="{% url 'view_post' post.id %}">
+                      <div class="btn btn-primary">🗩 Comments</div>
+                    </a>
                  {% if not post_liked|get_item:post %}
                   <a href="/like/{{post.id}}/">
                     <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
                   </a>
                   {% else %}
-          <a href="/unlike/{{post.id}}/">
-            <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
-          </a>
-        {% endif %}
-        {% if not post_shared|get_item:post %}
-       <a href="/share/{{post.id}}/"><input onclick="shareToggle()" value="🚀 Share" id ="share-button" class="btn btn-primary"></input> </a>
-         {% else %}
-         <a href="/unshare/{{post.id}}/">
-           <input onclick="unshareToggle()" type="button" value="🚀 Shared" id="share-button" class="btn btn-primary"></input>
-         </a>
-         {% endif %}
 
-                 </div>
-        {% endfor %}
-      </div>
-      </div>
 
-    </div>
+                            <a href="/unlike/{{post.id}}/">
+                              <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button"
+                                class="btn btn-primary"></input>
+                            </a>
+                            {% endif %}
+                            {% if not post_shared|get_item:post %}
+                            <a href="/share/{{post.id}}/">
+                              <input onclick="shareToggle()" type="button" value="🚀 Share" id="share-button"
+                                class="btn btn-primary"></input> </a>
+                            {% else %}
+                            <a href="/unshare/{{post.id}}/">
+                              <input onclick="unshareToggle()" type="button" value="🚀 Shared" id="share-button"
+                                class="btn btn-primary"></input>
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+
+
+                        {% endfor %}
+                      </div>
+
+                    </div>
+
+                  </div>
 {% endblock %}

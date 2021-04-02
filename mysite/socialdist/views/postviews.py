@@ -7,6 +7,7 @@ from django.views import generic
 from ..forms import CreatePostForm, ImageForm, AuthorCreationForm, CreateCommentForm
 from ..models import *
 from .views_helper import *
+from .authenticationviews import *
 
 
 
@@ -127,25 +128,25 @@ def feed(request):
     # post_id_dict - contains the id of the post to iterate through the dictionaries
     # post_liked - contains the boolean value of the current user's like on the post
     foreign_posts = get_stream(request) # get posts from other server
+
     full_posts = []
-    
+
     local_posts = Post.objects.all().order_by("-published")
-   
+
     local_posts = local_posts.filter(visibility='public')
     local_posts = local_posts.filter(unlisted='False')
-    
+
     post_likes_dict = {}
     post_id_dict = {}
     post_liked = {}
     post_shared = {}
-    for foreign_post in foreign_posts:
-        for a_thing in foreign_post:
-            full_posts.append(a_thing)
+    for foreign_post in foreign_posts[0]:
+        full_posts.append(foreign_post)
 
     full_posts += list(local_posts)
-
+    # print(full_posts)
     for post in full_posts:
-        
+
         if post.origin == "https://hermes-cmput404.herokuapp.com/":
             post_likes_dict[post] = post.likes.all().count()
             post_liked[post] = request.user in post.likes.all()
@@ -154,5 +155,5 @@ def feed(request):
         else:
             post_likes_dict[post] = -1
 
-    
+
     return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked, 'post_shared': post_shared})
