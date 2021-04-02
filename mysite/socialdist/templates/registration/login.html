@@ -2,8 +2,11 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class='pretty-bg'>
-  <div class="hermes-na">Hermes</div>
+
+<div id="particles-js"></div>
+<div class="pretty-bg">
+
+    <div class="hermes-na">Hermes</div>
   <div class='big-marker-na'></div>
   <div class="friendly-reminder reminder-na"> your friendly neighbourhood social network </div>
   <div class="signup login">
@@ -11,11 +14,14 @@
     {% csrf_token %}
     {{ form.as_p }}
     <div class="button_nav">
+      <a href="{% url 'index' %}"><div class="return" style="margin-right:30px">Return</div></a>
     <button type="submit">Log In</button>
-  </form>
-  <div class="return"><a href="{% url 'index' %}">Return</a></div>
+
   </div>
+  </form>
+
 </div>
 </div>
+
 
 {% endblock %}

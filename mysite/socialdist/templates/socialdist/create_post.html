@@ -1,66 +1,41 @@
-{% extends 'socialdist/base.html' %}
-{% block title %}Post{% endblock %}
-{% block content %}
+{% extends 'socialdist/base.html' %} {% block title %}Post{% endblock %} {%block content %} {% load bootstrap4 %}
 
-<!-- from Ahmet Aksungur (https://codepen.io/ahmetaksungur) at https://codepen.io/ahmetaksungur/pen/MWaVxyd  -->
-<!-- <form method="post">
-{% csrf_token %}
-{{ form.as_p }}
-<label class="ui-form-input-container">
-  <div class="outer-container">
-<textarea class="ui-form-input" placeholder="How are you doing today?">
-</textarea>
-<div class="button-div">
-  <div class="switch">
-<input id="switch-it" type="checkbox" class="switch-input" />
-<label for="switch-it" class="switch-label"></label>
+<div class="fade-bg">
+  <div class="sidebar">
+    <div class="photo"></div>
+    <div class="name">
+      Welcome back <br />
+      <span>{{user.username}}</span>
+    </div>
+    <br /><br /><br />
+    <div class="sidebar-links">
+      <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
+      <br>
+      <a class="mini-links" href="{% url 'feed' %}"> Feed </a>
+      <br>
+      <a class="mini-links" href="{% url 'author_profile' user.id %}"> Profile </a>
+      <br>
+      <a class="mini-links" href="{% url 'unlisted_posts' %}"> Unlisted </a>
+      <br>
+      <a class="mini-links" href="{% url 'followers' user.id %}"> Followers </a>
+      <br>
+
+      <a class="mini-links" href="{% url 'user_settings' %}"> Settings </a><br>
+      <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
+    </div>
   </div>
-  Unlisted Post
-  <div class="dropdown">
-<button onclick="privacy_controls()" class="dropbtn">&#x2699 Post Privacy</button>
-<div id="myDropdown" class="dropdown-content">
-<a href="#">Public</a>
-<a href="#">Friends</a>
-<a href="#">Only Me</a>
-</div>
-</div>
-  <button class="submitbtn" type="submit"> Submit </button>
-
-</div>
+  <div class="feed-section">
+    <span>New Post</span>
+    <div class="post-body">
+      <form action="{% url 'create_post' %} " method="post">
+        <div class ="col-md-6">
+        {% csrf_token %} {% bootstrap_form  form %} {% buttons %}
+        <input type="submit" value="Create post" id="submitbtn" />
+        {% endbuttons %}
+        </div>
+      </form>
+    </div>
   </div>
 
-</label>
-</form> -->
-
-<div class='fade-bg'>
-<div class="sidebar">
-  <div class="photo"></div>
-  <div class="name">Welcome back <br> <span>{{user.username}}</span></div><br><br><br>
-  <div class = "sidebar-links">
-    <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
-
-  <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
-    <a class="mini-links"href="{% url 'author_profile' user.id %}"> Profile </a><br>
-    <p><a class="mini-links" href= "#"> Unlisted </a>  </p>
-  <a class="mini-links"href="{% url 'followers' user.id %}"> Followers </a><br>
-
-  <a class="mini-links"href="{% url 'user_settings' %}"> Settings </a><br>
-  <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
-
-  </div>
+  {% endblock content %}
 </div>
-    <div class="feed-section">
-        <span>New Post</span>
-<div class="post-body">
-
-  <form action="{% url 'create_post' %} " method="post">
-              {% csrf_token %}
-              {{ form.as_p }}
-              <br>
-    <input type="submit" value="Create post" id="submitbtn"/>
-  </form>
-
-</div>
-</div>
-
-{% endblock content %}

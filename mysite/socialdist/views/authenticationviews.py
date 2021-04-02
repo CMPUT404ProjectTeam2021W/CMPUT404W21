@@ -6,6 +6,8 @@ from django.urls import reverse_lazy
 from django.views import generic
 from ..forms import CreatePostForm, ImageForm, AuthorCreationForm, CreateCommentForm
 from ..models import *
+from django.utils.decorators import method_decorator
+
 
 
 def index(request):

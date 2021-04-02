@@ -2,17 +2,23 @@
 {% block title %}Feed{% endblock %}
 {% load markdown_extras %}
 {% block content %}
+{% load bootstrap4 %}
+
 <div class='fade-bg'>
   <div class="sidebar">
     <div class="photo"></div>
     <div class="name">Welcome back <br> <span>{{user.username}}</span></div><br><br><br>
     <div class="sidebar-links">
       <a class="mini-links" href="{% url 'create_post' %}"> Create Post</a>
-
-      <p><a class="mini-links" href="{% url 'feed' %}"> Feed </a></p>
-      <a class="mini-links" href="{% url 'author_profile' user.id %}"> Profile </a><br>
-      <p><a class="mini-links" href="{% url 'unlisted_posts' %}"> Unlisted </a> </p>
-      <a class="mini-links" href="{% url 'followers' user.id %}"> Followers </a><br>
+      <br>
+      <a class="mini-links" href="{% url 'feed' %}"> Feed </a>
+      <br>
+      <a class="mini-links" href="{% url 'author_profile' user.id %}"> Profile </a>
+      <br>
+      <a class="mini-links" href="{% url 'unlisted_posts' %}"> Unlisted </a>
+      <br>
+      <a class="mini-links" href="{% url 'followers' user.id %}"> Followers </a>
+      <br>
 
       <a class="mini-links" href="{% url 'user_settings' %}"> Settings </a><br>
       <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
@@ -27,28 +33,31 @@
     <br>
     <div class="col-md-6">
       {% for post, likes in posts.items %}
+
       <div class="posts">
         <p>
           <em>
-            @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a>
-          </em>
-          {% if post.categories == 'text/markdown' %}
+            @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a></em>
+            {% if likes == -1 %}
+            <span style="color:rgba(34, 167, 240, 1); font-size:1.3em; cursor:pointer" title="Post from another server: {{post.origin}}">☁</span>
+            {% endif %}
+            <p id="post-title">
+            {{post.title}}</p>
+           {% if post.categories == 'text/markdown' %}
             <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | markdown |safe}}</span>
-          {% endif %}
-          {% if post.categories == 'text/plain' %}
-            <br>
-            {{post.description}}
-            <br>
           {% endif %}
           {% if post.categories == 'text/image' %}
             <br>
             <img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/>
             <br>
+          {% else %}
+            <br>
+            {{post.description}}
+            <br>
           {% endif %}
-          <small style="color:#add8e6; font-family:calibri; padding-right:45px">
-            {{ post.published }}
-          </small>
-         
+            <small style="color:#add8e6; font-family:calibri; padding-right:45px">
+              {{ post.published }}
+            </small>
           {% if likes >= 0 %}
           <small style="color:#add8e6; font-family:calibri; padding-right:45px">
             {{ likes }} likes
@@ -83,7 +92,7 @@
           {% endif %}
           {% endif %}
       </div>
-      
+
 
       {% endfor %}
     </div>
