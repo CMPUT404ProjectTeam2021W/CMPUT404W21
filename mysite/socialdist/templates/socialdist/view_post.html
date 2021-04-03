@@ -33,8 +33,20 @@
       <p>
         <em>
           @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a>
-        </em>
-        {{ post.description | markdown |safe}}
+        </em></p>
+        <span class ="post-title">{{post.title}}</span>
+       {% if post.categories == 'text/markdown' %}
+        <span class = "post editable_text" style="color:black; background-color: blueviolet;">{{ post.description | markdown |safe}}</span>
+      {% endif %}
+      {% if post.categories == 'text/image' %}
+        <br>
+        <span class ="editable_text"><img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/></span>
+        <br>
+      {% else %}
+        <br>
+        <span class ="editable_text">{{post.description}}</span>
+        <br>
+      {% endif %}
               <small style="color:#add8e6; font-family:calibri; padding-right:45px" >
                 {{ post.published|date:"SHORT_DATETIME_FORMAT" }}
                 {{ likes_count }} likes
@@ -58,7 +70,7 @@
    {% endif %}
            </div>
            {% if request.user == post.author%}
-           <input class="btn btn-primary" type="button" value = "✎ Edit" onclick="editPost()" id="editbutton"></input>
+           <input class="btn btn-primary" type="button" value = "✎ Edit" id = "editButton" data = "{{post.id}}"></input>
            <a href="{% url 'delete_post' post.id %}">
              <input class="btn btn-primary" type="button" value = "🗑 Delete" ></input>
            </a>
