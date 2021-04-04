@@ -140,6 +140,7 @@ def feed(request):
     post_id_dict = {}
     post_liked = {}
     post_shared = {}
+    friend_requests = []
     for foreign_post in foreign_posts[0]:
         full_posts.append(foreign_post)
 
@@ -156,5 +157,12 @@ def feed(request):
         else:
             post_likes_dict[post] = -1
 
+    try:
+        friend_requests.append(FriendRequest.objects.get(to_author=request.user))
+    except FriendRequest.DoesNotExist:
+        friend_requests = []
 
-    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked, 'post_shared': post_shared})
+
+    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict,
+                                                    'post_liked': post_liked, 'post_shared': post_shared,
+                                                    'friend_requests': friend_requests})

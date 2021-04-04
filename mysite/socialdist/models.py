@@ -67,6 +67,7 @@ class Server(models.Model):
     password = models.CharField(max_length=200, null=True, blank=True)
 
 class FriendRequest(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=False)
     from_author = models.ForeignKey(Author, related_name='from_author', on_delete=models.CASCADE)
     to_author = models.ForeignKey(Author, related_name='to_author', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)

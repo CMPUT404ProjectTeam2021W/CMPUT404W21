@@ -39,7 +39,11 @@
     <br>
       {% if request.user.username != author %}
         {% if not friend_status %}
-          <a href="/send_friend_request/{{author_id}}/"><input onclick="friendToggle()" type="button" value="+ Send friend request" id="friend-bfolloutton"></input></a> <br> <br>
+            {% if not friend_request_status %}
+                <a href="/send_friend_request/{{author_id}}/"><input onclick="friendToggle()" type="button" value="+ Send friend request" id="friend-button"></input></a> <br> <br>
+            {% else %}
+                <a href="/cancel_friend_request/{{author_id}}/"><input onclick="cancelRequestToggle()" type="button" value="- Cancel friend request" id="cancel-button"></input></a> <br> <br>
+            {% endif %}
         {% else %}
           <a href="/unfriend/{{author_id}}/"><input onclick="unfriendToggle()" type="button" value=">< Friends" id="unfriend-button"></input></a> <br> <br>
         {% endif %}

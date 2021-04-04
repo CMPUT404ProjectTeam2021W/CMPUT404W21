@@ -33,10 +33,11 @@ urlpatterns = [
   path('author/<str:author_id>/', author_profile, name='author_profile'),
   path('author/<str:author_id>/friends/', friends, name='friends'),
   path('author/<str:author_id>/', author_profile, name='author_profile'),
-  path('send_friend_request/<str:author_id>/', send_friend_request, name='send_friend_request'),
-  path('accept_friend_request/<str:request_id>/', accept_friend_request, name='accept_friend_request'),
-  path('reject_friend_request/<str:request_id>/', reject_friend_request, name='reject_friend_request'),
-  path('unfriend/<str:author_id>/', unfriend, name='unfriend'),
+  path('send_friend_request/<uuid:author_id>/', send_friend_request, name='send_friend_request'),
+  path('accept_friend_request/<uuid:request_id>/', accept_friend_request, name='accept_friend_request'),
+  path('reject_friend_request/<uuid:request_id>/', reject_friend_request, name='reject_friend_request'),
+  path('cancel_friend_request/<uuid:author_id>/', cancel_friend_request, name='cancel_friend_request'),
+  path('unfriend/<uuid:author_id>/', unfriend, name='unfriend'),
 
 
   # ------------------------------ api urls here --------------------------------------------

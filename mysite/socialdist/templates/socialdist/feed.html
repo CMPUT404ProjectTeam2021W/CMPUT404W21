@@ -27,6 +27,36 @@
 
   </div>
 
+  <div class="friend_request_section" id="accordion">
+    <div class="card">
+      <div class="card-header" id="headingOne">
+        <h5 class="mb-0">
+          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#requests" aria-expanded="true" aria-controls="collapseOne">
+            Friend Requests: {{friend_requests|length}}
+          </button>
+        </h5>
+      </div>
+
+      <div id="requests" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body">
+          <div class="col-md-6">
+            {% for friend_request in friend_requests %}
+            <div class="friend-requests">
+              <p id="request-title">{{friend_request.from_author.username}} wants to follow {{friend_request.to_author.username}}</p>
+              <a href="/accept_friend_request/{{friend_request.id}}/">
+                <input onclick="acceptRequestToggle()" type="button" value="+ Accept" id="accept-button" class="btn btn-primary"></input>
+              </a>
+              <a href="/reject_friend_request/{{friend_request.id}}/">
+                <input onclick="rejectRequestToggle()" type="button" value=">< Reject" id="reject-button" class="btn btn-primary"></input>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="feed-section">
     <span>Feed</span>
     <br>

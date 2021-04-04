@@ -17,11 +17,17 @@ def author_profile(request, author_id):
     author_details = None
     friends_count = ''
     friends = ''
+    friend_request_status = False
     try:
         author_details = get_object_or_404(Author, id=author_id)
         posts = Post.objects.filter(**{'author': author_details}) | Post.objects.filter(**{'shared_by': author_details})
         friends = request.user.friends.all()
         friend_status = author_details in friends
+        try:
+            FriendRequest.objects.get(from_author=request.user, to_author=author_details)
+            friend_request_status = True
+        except FriendRequest.DoesNotExist:
+            friend_request_status = False
         friends_count = friends.count()
         posts = posts.order_by('-published')
         origin = 'host'
@@ -47,6 +53,7 @@ def author_profile(request, author_id):
             post_likes_dict[post] = -1
     return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'author': author_details.username,
                                                               'author_id': author_id, 'friend_status': friend_status,
+                                                              'friend_request_status': friend_request_status,
                                                               'friends_count': friends_count, 'post_id': post_id_dict,
                                                               'shared_by': shared_by, 'origin': origin})
 
@@ -65,9 +72,9 @@ def send_friend_request(request, author_id):
 
 def accept_friend_request(request, request_id):
     friend_request = FriendRequest.objects.get(id=request_id)
-    if friend_request.to_user == request.user:
-        friend_request.to_user.add(friend_request.from_user)
-        friend_request.from_user.add(friend_request.to_user)
+    if friend_request.to_author == request.user:
+        friend_request.to_author.friends.add(friend_request.from_author)
+        friend_request.from_author.friends.add(friend_request.to_author)
         friend_request.delete()
         return redirect(request.META['HTTP_REFERER'])
     else:
@@ -76,7 +83,17 @@ def accept_friend_request(request, request_id):
 
 def reject_friend_request(request, request_id):
     friend_request = FriendRequest.objects.get(id=request_id)
-    if friend_request.to_user == request.user:
+    if friend_request.to_author == request.user:
+        friend_request.delete()
+        return redirect(request.META['HTTP_REFERER'])
+    else:
+        return HttpResponse("The author does not have this request")
+
+
+def cancel_friend_request(request, author_id):
+    to_author_obj = Author.objects.get(id=author_id)
+    friend_request = FriendRequest.objects.get(to_author=to_author_obj)
+    if friend_request.from_author == request.user:
         friend_request.delete()
         return redirect(request.META['HTTP_REFERER'])
     else:
