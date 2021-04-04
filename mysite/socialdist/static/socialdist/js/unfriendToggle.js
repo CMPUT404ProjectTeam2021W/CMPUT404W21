@@ -4,8 +4,8 @@ function unfriendToggle(){
     console.log("whyyy");
   }
   if (elem.value==">< Friends"){
-    elem.value = "+ Follow";
-    elem.width -= "5px";
+    elem.value = "+ Send friend request";
+    elem.width += "15px";
   }
   else
   {

@@ -154,7 +154,7 @@ class FollowerList(APIView):
     permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request, author_id):
         author_obj = get_object_or_404(Author, id=author_id)
-        followers = author_obj.followers.all()
+        followers = author_obj.friends.all()
         data = dict()
         data['type'] = 'followers'
         data['items'] = AuthorSerializer(followers, many=True).data
@@ -167,7 +167,7 @@ class FollowerAction(APIView):
     def get(self, request, author_id, foreign_author_id):
         author_obj = get_object_or_404(Author, id=author_id)
         data = dict()
-        if author_obj.followers.filter(id=foreign_author_id).exists():
+        if author_obj.friends.filter(id=foreign_author_id).exists():
             data['detail'] = 'true'
         else:
             data['detail'] = 'false'
@@ -175,25 +175,11 @@ class FollowerAction(APIView):
 
     def delete(self, request, author_id, foreign_author_id):
         author_obj = get_object_or_404(Author, id=author_id)
-        if author_obj.followers.filter(id=foreign_author_id).exists():
-            author_obj.followers.remove(Author.objects.get(id=foreign_author_id))
+        if author_obj.friends.filter(id=foreign_author_id).exists():
+            author_obj.friends.remove(Author.objects.get(id=foreign_author_id))
             return Response(status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-class FriendsList(APIView):
-    authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated, IsAdminUser)
-
-    def get(self, request, author_id):
-        author_obj = get_object_or_404(Author, id=author_id)
-        followers = author_obj.followers.all()
-        following = author_obj.following.all()
-        friends = [i for i in followers if i in following]
-        data = dict()
-        data['type'] = 'friends'
-        data['items'] = AuthorSerializer(friends, many=True).data
-        return Response(data=data)
 
 
 class CommentsList(APIView):
