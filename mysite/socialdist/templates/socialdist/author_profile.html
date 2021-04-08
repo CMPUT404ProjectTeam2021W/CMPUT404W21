@@ -101,9 +101,12 @@
                             {% endif %}
                             {% endif %}
                         </div>
-
-
                         {% endfor %}
+                        {% if git_user %}
+                        {% for event in git_user %}
+                        <p>{{ event.type }} to {{event.repo.name}} at {{ event.created_at }}</p>
+                        {% endfor %}
+                        {% endif %}
                       </div>
 
                     </div>
