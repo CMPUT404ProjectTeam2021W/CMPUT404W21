@@ -37,10 +37,13 @@ urlpatterns = [
 
   # author profile urls here
   path('author/<str:author_id>/', author_profile, name='author_profile'),
-  path('author/<str:author_id>/followers/', followers, name='followers'),
+  path('author/<str:author_id>/friends/', friends, name='friends'),
   path('author/<str:author_id>/', author_profile, name='author_profile'),
-  path('follow/<str:author_id>/', follow, name='follow'),
-  path('unfollow/<str:author_id>/', unfollow, name='unfollow'),
+  path('send_friend_request/<uuid:author_id>/', send_friend_request, name='send_friend_request'),
+  path('accept_friend_request/<uuid:request_id>/', accept_friend_request, name='accept_friend_request'),
+  path('reject_friend_request/<uuid:request_id>/', reject_friend_request, name='reject_friend_request'),
+  path('cancel_friend_request/<uuid:author_id>/', cancel_friend_request, name='cancel_friend_request'),
+  path('unfriend/<uuid:author_id>/', unfriend, name='unfriend'),
 
 
   # ------------------------------ api urls here --------------------------------------------
@@ -51,7 +54,6 @@ urlpatterns = [
   path("api/author/<uuid:author_id>/followers/", FollowerList.as_view(), name='followers_list'),
   path("api/author/<uuid:author_id>/followers/<uuid:foreign_author_id>/", FollowerAction.as_view(), name='followers_action'),
   path("api/author/<uuid:author_id>/posts/<uuid:post_id>/comments/", CommentsList.as_view(), name='comments_list'),
-  path("api/author/<uuid:author_id>/friends/", FriendsList.as_view(), name='friends_list'),
    ## path("api/author/<uuid:author_id>/posts/<uuid:post_id>/", CommentsList.as_view(), name='comments_list'),
    ## path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name='liked_list'),
 

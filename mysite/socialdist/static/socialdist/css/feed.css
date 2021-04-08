@@ -137,3 +137,14 @@
 input#id_comment{
   color:black;
 }
+
+.friend-requests
+{
+  background-color:  white;
+  color: grey;
+  padding-left:5%;
+  padding-top: 2%;
+  border-radius: 10px 5px 5px 10px;
+  margin-bottom: 5%;
+  padding-bottom: 4%;
+}

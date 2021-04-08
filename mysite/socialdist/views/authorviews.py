@@ -15,15 +15,20 @@ def author_profile(request, author_id):
     origin = ''
     posts = []
     author_details = None
-    followers_count = ''
+    friends_count = ''
     friends = ''
-    following = ''
+    friend_request_status = False
     try:
         author_details = get_object_or_404(Author, id=author_id)
         posts = Post.objects.filter(**{'author': author_details}) | Post.objects.filter(**{'shared_by': author_details})
-        following = author_details in request.user.following.all()
-        friends = following and (author_details in request.user.followers.all())
-        followers_count = author_details.followers.all().count()
+        friends = request.user.friends.all()
+        friend_status = author_details in friends
+        try:
+            FriendRequest.objects.get(from_author=request.user, to_author=author_details)
+            friend_request_status = True
+        except FriendRequest.DoesNotExist:
+            friend_request_status = False
+        friends_count = friends.count()
         posts = posts.order_by('-published')
         origin = 'host'
     except:
@@ -47,39 +52,70 @@ def author_profile(request, author_id):
         else:
             post_likes_dict[post] = -1
     return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'author': author_details.username,
-                                                              'author_id': author_id, 'following': following,
-                                                              'friends': friends, 'followers_count': followers_count,
-                                                              'post_id': post_id_dict, 'shared_by': shared_by, 'origin':origin})
+                                                              'author_id': author_id, 'friend_status': friend_status,
+                                                              'friend_request_status': friend_request_status,
+                                                              'friends_count': friends_count, 'post_id': post_id_dict,
+                                                              'shared_by': shared_by, 'origin': origin})
 
 
 
 
-def follow(request, author_id):
+def send_friend_request(request, author_id):
     from_author = request.user
     to_author = Author.objects.get(id=author_id)
-    if (from_author not in to_author.followers.all()) and (to_author not in from_author.following.all()):
-        from_author.following.add(to_author)
-        to_author.followers.add(from_author)
+    friend_request, created = FriendRequest.objects.get_or_create(from_author=from_author, to_author=to_author)
+    if (not created) or (to_author in from_author.friends.all()):
+        return HttpResponse("Request already sent OR The author is your friend")
+    else:
+        return redirect(request.META['HTTP_REFERER'])
+
+
+def accept_friend_request(request, request_id):
+    friend_request = FriendRequest.objects.get(id=request_id)
+    if friend_request.to_author == request.user:
+        friend_request.to_author.friends.add(friend_request.from_author)
+        friend_request.from_author.friends.add(friend_request.to_author)
+        friend_request.delete()
         return redirect(request.META['HTTP_REFERER'])
     else:
-        return HttpResponse('already following')
+        return HttpResponse("The author does not have this request")
 
 
-def unfollow(request, author_id):
+def reject_friend_request(request, request_id):
+    friend_request = FriendRequest.objects.get(id=request_id)
+    if friend_request.to_author == request.user:
+        friend_request.delete()
+        return redirect(request.META['HTTP_REFERER'])
+    else:
+        return HttpResponse("The author does not have this request")
+
+
+def cancel_friend_request(request, author_id):
+    to_author_obj = Author.objects.get(id=author_id)
+    friend_request = FriendRequest.objects.get(to_author=to_author_obj)
+    if friend_request.from_author == request.user:
+        friend_request.delete()
+        return redirect(request.META['HTTP_REFERER'])
+    else:
+        return HttpResponse("The author does not have this request")
+
+
+def unfriend(request, author_id):
     from_author = request.user
     to_author = Author.objects.get(id=author_id)
-    if (from_author in to_author.followers.all()) and (to_author in from_author.following.all()):
-        from_author.following.remove(to_author)
-        to_author.followers.remove(from_author)
+    if to_author in from_author.friends.all():
+        from_author.friends.remove(to_author)
+        to_author.friends.remove(from_author)
         return redirect(request.META['HTTP_REFERER'])
     else:
-        return HttpResponse('not following')
+        return HttpResponse('You are not friends')
 
-def followers(request, author_id):
+def friends(request, author_id):
     author_details = Author.objects.get(id=author_id)
-    followers_list = author_details.followers.all()
+    friends_list = author_details.friends.all()
     author_name = author_details.username
-    return render(request, 'socialdist/followers.html', {'author': author_name, 'followers': followers_list})
+    return render(request, 'socialdist/friends.html', {'author': author_name, 'friends': friends_list})
+
 
 
 @login_required
