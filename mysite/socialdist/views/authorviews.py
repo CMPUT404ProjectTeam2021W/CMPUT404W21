@@ -59,7 +59,8 @@ def author_profile(request, author_id):
         username = user_name.split('/')[-1]
         url = 'https://api.github.com/users/%s/events' % username
         response = requests.get(url)
-        user = response.json()
+        user = fix_git_datetime(response.json())
+        
     return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'author': author_details.username,
                                                               'author_id': author_id, 'friend_status': friend_status,
                                                               'friend_request_status': friend_request_status,
