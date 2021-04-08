@@ -101,12 +101,22 @@
                             {% endif %}
                             {% endif %}
                         </div>
-
-
                         {% endfor %}
+
                       </div>
 
                     </div>
-
+                    
                   </div>
+
+                  <div class="sidebar-right">
+                    {% if git_user %}
+                    <br>
+                    {% for event in git_user %}
+                    <div class="sidebar-right-links">
+                    <p>{{ event.type }} to <br>{{event.repo.name}} at <br>{{ event.created_at }}</p>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div> 
 {% endblock %}
