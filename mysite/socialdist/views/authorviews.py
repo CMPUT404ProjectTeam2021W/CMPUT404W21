@@ -43,15 +43,21 @@ def author_profile(request, author_id):
 
     post_likes_dict = {}
     post_id_dict = {}
+    post_liked = {}
     shared_by = {}
     for post in posts:
         if origin == 'host':
-            post_likes_dict[post] = post.likes.all().count()
+            post_likes_dict[post] = Like.objects.filter(**{'object': post}).count()
+            try:
+                post_liked[post] = Like.objects.get(author=request.user, object=post)
+            except Like.DoesNotExist:
+                post_liked[post] = False
             post_id_dict[post] = post.id
             shared_by[post] = request.user in post.shared_by.all()
         else:
             post_likes_dict[post] = -1
-    return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'author': author_details.username,
+    return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'post_liked': post_liked,
+                                                              'author': author_details.username,
                                                               'author_id': author_id, 'friend_status': friend_status,
                                                               'friend_request_status': friend_request_status,
                                                               'friends_count': friends_count, 'post_id': post_id_dict,

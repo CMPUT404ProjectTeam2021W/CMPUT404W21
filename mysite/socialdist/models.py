@@ -42,7 +42,6 @@ class Post(models.Model):
         published = models.DateTimeField(auto_now_add=True)
         categories = models.CharField(max_length=140, choices=categories_choices, default=CATEGORY_PLAIN)
         origin = models.CharField(max_length=200, default="https://hermes-cmput404.herokuapp.com/")
-        likes = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="posts+")
         shared_by = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="shared")
 
 class Comment(models.Model):
@@ -72,4 +71,10 @@ class FriendRequest(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=False)
     from_author = models.ForeignKey(Author, related_name='from_author', on_delete=models.CASCADE)
     to_author = models.ForeignKey(Author, related_name='to_author', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now=True)
+
+class Like(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=False)
+    author = models.ForeignKey(Author, related_name='liked_author', on_delete=models.CASCADE)
+    object = models.ForeignKey(Post, related_name='liked_object', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
