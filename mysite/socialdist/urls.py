@@ -1,3 +1,4 @@
+#from mysite.mysite.settings import MEDIA_ROOT, MEDIA_URL, STATIC_ROOT, STATIC_URL
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -5,6 +6,8 @@ from rest_framework import routers
 from .views.authenticationviews import *
 from .views.authorviews import *
 from .views.postviews import *
+from django.conf.urls import url, include
+from markdownx import urls as markdownx
 
 from  .api.apiviews import *
 
@@ -15,7 +18,10 @@ urlpatterns = [
   path('',  include('django.contrib.auth.urls')),
   # path('image_upload', image_view, name='image_upload'),
   # path('success', success, name='success'),
-
+  #url(r'^markdownx/', include(markdownx)), #see how this works lol
+  path('markdownx/', include('markdownx.urls')),
+  #static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
+  #static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
   path('',  include('django.contrib.auth.urls')),
   path('user_settings/', user_settings, name = 'user_settings'),
   # post urls here
@@ -52,7 +58,7 @@ urlpatterns = [
    ## path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name='liked_list'),
 
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,
                               document_root=settings.MEDIA_ROOT)

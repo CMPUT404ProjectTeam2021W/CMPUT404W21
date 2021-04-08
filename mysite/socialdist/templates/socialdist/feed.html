@@ -1,6 +1,7 @@
 {% extends 'socialdist/base.html' %}
 {% block title %}Feed{% endblock %}
 {% load markdown_extras %}
+{% load base %} 
 {% block content %}
 {% load bootstrap4 %}
 
@@ -62,8 +63,10 @@
             {% if likes == -1 %}
             <span style="color:rgba(34, 167, 240, 1); font-size:1.3em; cursor:pointer" title="Post from another server: {{post.origin}}">☁</span>
             {% endif %}
-            <p id="post-title">
-            {{post.title}}</p>
+            {% if post.title != None %}
+              <p id="post-title">
+              {{post.title}}</p>
+            {% endif %}
            {% if post.categories == 'text/markdown' %}
             <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | markdown |safe}}</span>
           {% endif %}
@@ -73,7 +76,7 @@
             <br>
           {% else %}
             <br>
-            {{post.description}}
+            {{ post.description | custom_markdown }}
             <br>
           {% endif %}
             <small style="color:#add8e6; font-family:calibri; padding-right:45px">
