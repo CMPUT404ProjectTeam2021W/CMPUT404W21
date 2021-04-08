@@ -53,7 +53,11 @@ def get_foreign_comment(url, author_id, post_id): #example url 'http://hermes-cm
         new_comment = Comment()
         #add things to things like other ones
     return comments
-
+def fix_git_datetime(git_list):
+    for event in git_list:
+        event['created_at'] = parse_datetime(event['created_at'])
+    return git_list
+    
 def get_stream(request):
 
     servers = Server.objects.all()

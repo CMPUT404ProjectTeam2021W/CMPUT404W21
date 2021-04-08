@@ -8,7 +8,7 @@ from ..forms import CreatePostForm, ImageForm, AuthorCreationForm, CreateComment
 from .views_helper import *
 from .authenticationviews import *
 from ..models import *
-
+import requests
 
 @login_required
 def author_profile(request, author_id):
@@ -56,14 +56,25 @@ def author_profile(request, author_id):
             shared_by[post] = request.user in post.shared_by.all()
         else:
             post_likes_dict[post] = -1
-    return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'post_liked': post_liked,
-                                                              'author': author_details.username,
+
+    #adapted from https://simpleisbetterthancomplex.com/tutorial/2018/02/03/how-to-use-restful-apis-with-django.html
+    #author Vitor Freitas
+    user_name = Author.objects.get(id=author_id).github
+    user = {}
+    if user_name != '':
+        username = user_name.split('/')[-1]
+        url = 'https://api.github.com/users/%s/events' % username
+        response = requests.get(url)
+        user = fix_git_datetime(response.json())
+        
+    return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'author': author_details.username, 
+                                                              'post_liked': post_liked,
                                                               'author_id': author_id, 'friend_status': friend_status,
                                                               'friend_request_status': friend_request_status,
                                                               'friends_count': friends_count, 'post_id': post_id_dict,
-                                                              'shared_by': shared_by, 'origin': origin})
+                                                              'shared_by': shared_by, 'origin': origin, 'git_user': user})
 
-
+#https://api.github.com/users/{username}/events
 
 
 def send_friend_request(request, author_id):
@@ -134,3 +145,8 @@ def user_settings(request):
     else:
         form = ImageForm()
     return render(request, 'socialdist/user_settings.html', {'form': form})
+
+
+
+#adapted from https://simpleisbetterthancomplex.com/tutorial/2018/02/03/how-to-use-restful-apis-with-django.html
+#author Vitor Freitas
