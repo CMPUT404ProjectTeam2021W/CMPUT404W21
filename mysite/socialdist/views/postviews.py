@@ -174,3 +174,52 @@ def feed(request):
     return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict,
                                                     'post_liked': post_liked, 'post_shared': post_shared,
                                                     'friend_requests': friend_requests})
+
+@login_required
+def friends_feed(request):
+    # post_likes_dict - contains a count of likes on a post
+    # post_id_dict - contains the id of the post to iterate through the dictionaries
+    # post_liked - contains the boolean value of the current user's like on the post
+    foreign_posts = get_stream(request) # get posts from other server
+
+    full_posts = []
+
+    local_posts = Post.objects.all().order_by("-published")
+
+    local_posts = local_posts.filter(visibility='friends')
+    local_posts = local_posts.filter(unlisted='False')
+
+    post_likes_dict = {}
+    post_id_dict = {}
+    post_liked = {}
+    post_shared = {}
+    friend_requests = list()
+    for foreign_post in foreign_posts[0]:
+        if foreign_post.visibility == 'friends only':
+            full_posts.append(foreign_post)
+
+    full_posts += list(local_posts)
+    full_posts.sort(key=lambda x: x.published, reverse=True)
+    # print(full_posts)
+    for post in full_posts:
+
+        if post.origin == "https://hermes-cmput404.herokuapp.com/":
+            post_likes_dict[post] = Like.objects.filter(**{'object': post}).count()
+            try:
+                post_liked[post] = Like.objects.get(author=request.user, object=post)
+            except Like.DoesNotExist:
+                post_liked[post] = False
+            post_id_dict[post] = post.id
+            post_shared[post] = request.user in post.shared_by.all()
+        else:
+            post_likes_dict[post] = -1
+
+    try:
+        friend_requests = FriendRequest.objects.filter(**{'to_author': request.user})
+    except FriendRequest.DoesNotExist:
+        friend_requests = list()
+
+
+    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict,
+                                                    'post_liked': post_liked, 'post_shared': post_shared,
+                                                    'friend_requests': friend_requests})

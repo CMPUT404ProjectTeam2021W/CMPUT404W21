@@ -26,6 +26,7 @@ urlpatterns = [
   path('user_settings/', user_settings, name = 'user_settings'),
   # post urls here
   path('feed/', feed, name='feed'),
+  path('friends_feed/', friends_feed, name='friends_feed'),
   path('create_post/', create_post, name='create_post'),
   path('posts/<str:post_id>/view_post/', view_post, name='view_post'),
   path('posts/<str:post_id>/delete/', delete_post, name='delete_post'),
