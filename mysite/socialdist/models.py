@@ -9,6 +9,7 @@ class Author(AbstractUser):
     url = models.CharField(max_length=200, null=True, blank=True)
     github = models.URLField(default='', blank=True)
     friends = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="friends+")
+    is_active = models.BooleanField(default=True)
     def save(self, *args, **kwargs):
         self.url = '{}/author/{}'.format('http://hermes-cmput404.herokuapp.com', self.id)
         super(Author, self).save(*args, **kwargs)

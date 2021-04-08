@@ -9,7 +9,7 @@ class AuthorAdmin(UserAdmin):
     add_form = AuthorCreationForm
     form = AuthorChangeForm
     model = Author
-    list_display = ['username', 'github']
+    list_display = ['username', 'github', 'is_active']
     fieldsets = UserAdmin.fieldsets + (
             (None, {'fields': ['github']}),
     )

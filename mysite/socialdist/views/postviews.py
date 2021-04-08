@@ -158,11 +158,7 @@ def feed(request):
             post_likes_dict[post] = -1
 
     try:
-        requests = FriendRequest.objects.get(to_author=request.user)
-        if not isinstance(requests, list):
-            friend_requests.append(requests)
-        else:
-            friend_requests = requests
+        friend_requests = FriendRequest.objects.filter(**{'to_author': request.user})
     except FriendRequest.DoesNotExist:
         friend_requests = list()
 
