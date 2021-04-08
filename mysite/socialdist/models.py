@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django import forms
 import uuid
+from markdownx.models import MarkdownxField
 
 # Create your models here.
 class Author(AbstractUser):
@@ -35,7 +36,7 @@ class Post(models.Model):
         id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
         # description = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
         title = models.CharField(max_length=140, null=True, blank=True)
-        description = models.TextField(max_length=140, null=True, blank=True)
+        description = MarkdownxField() #models.TextField(max_length=140, null=True, blank=True)
         visibility = models.CharField(max_length=140, choices=visibility_choices, default=ACCESS_PUBLIC)
         unlisted = models.BooleanField(default=False)
         author = models.ForeignKey(Author, on_delete=models.CASCADE)
