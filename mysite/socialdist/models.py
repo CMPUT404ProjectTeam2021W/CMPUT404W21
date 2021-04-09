@@ -2,15 +2,15 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django import forms
 import uuid
+from markdownx.models import MarkdownxField
 
 # Create your models here.
 class Author(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     url = models.CharField(max_length=200, null=True, blank=True)
     github = models.URLField(default='', blank=True)
-    friends = models.TextField(default='')
-    following = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers+")
-    followers = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="following+")
+    friends = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="friends+")
+    is_active = models.BooleanField(default=True)
     def save(self, *args, **kwargs):
         self.url = '{}/author/{}'.format('http://hermes-cmput404.herokuapp.com', self.id)
         super(Author, self).save(*args, **kwargs)
@@ -35,14 +35,13 @@ class Post(models.Model):
         id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
         # description = models.CharField(widgets=forms.Textarea, max_length=140, null=True, blank=True)
         title = models.CharField(max_length=140, null=True, blank=True)
-        description = models.TextField(max_length=140, null=True, blank=True)
+        description = MarkdownxField() #models.TextField(max_length=140, null=True, blank=True)
         visibility = models.CharField(max_length=140, choices=visibility_choices, default=ACCESS_PUBLIC)
         unlisted = models.BooleanField(default=False)
         author = models.ForeignKey(Author, on_delete=models.CASCADE)
         published = models.DateTimeField(auto_now_add=True)
         categories = models.CharField(max_length=140, choices=categories_choices, default=CATEGORY_PLAIN)
         origin = models.CharField(max_length=200, default="https://hermes-cmput404.herokuapp.com/")
-        likes = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="posts+")
         shared_by = models.ManyToManyField(Author, symmetrical=False, blank=True, related_name="shared")
 
 class Comment(models.Model):
@@ -67,3 +66,15 @@ class Server(models.Model):
     hostname = models.CharField(max_length=200, null=True, blank=True)
     username = models.CharField(max_length=200, null=True, blank=True)
     password = models.CharField(max_length=200, null=True, blank=True)
+
+class FriendRequest(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=False)
+    from_author = models.ForeignKey(Author, related_name='from_author', on_delete=models.CASCADE)
+    to_author = models.ForeignKey(Author, related_name='to_author', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now=True)
+
+class Like(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=False)
+    author = models.ForeignKey(Author, related_name='liked_author', on_delete=models.CASCADE)
+    object = models.ForeignKey(Post, related_name='liked_object', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now=True)

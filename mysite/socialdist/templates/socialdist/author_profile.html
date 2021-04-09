@@ -14,11 +14,13 @@
     <br>
     <a class="mini-links" href="{% url 'feed' %}"> Feed </a>
     <br>
+    <a class="mini-links" href="{% url 'friends_feed' %}"> Friends Feed </a>
+    <br>
     <a class="mini-links" href="{% url 'author_profile' user.id %}"> Profile </a>
     <br>
     <a class="mini-links" href="{% url 'unlisted_posts' %}"> Unlisted </a>
     <br>
-    <a class="mini-links" href="{% url 'followers' user.id %}"> Followers </a>
+    <a class="mini-links" href="{% url 'friends' user.id %}"> Friends </a>
     <br>
 
     <a class="mini-links" href="{% url 'user_settings' %}"> Settings </a><br>
@@ -34,18 +36,18 @@
       </span>
       <br>
       {% if origin == 'host' %}
-    Followers: <a href="/author/{{author_id}}}}/followers/">{{followers_count}}</a>
+    Friends: <a href="/author/{{author_id}}}}/friends/">{{friends_count}}</a>
     <br>
     <br>
       {% if request.user.username != author %}
-        {% if not following %}
-          <a href="/follow/{{author_id}}/"><input onclick="followToggle()" type="button" value="+ Follow" id="follow-button"></input></a> <br> <br>
+        {% if not friend_status %}
+            {% if not friend_request_status %}
+                <a href="/send_friend_request/{{author_id}}/"><input onclick="friendToggle()" type="button" value="+ Send friend request" id="friend-button"></input></a> <br> <br>
+            {% else %}
+                <a href="/cancel_friend_request/{{author_id}}/"><input onclick="cancelRequestToggle()" type="button" value="- Cancel friend request" id="cancel-button"></input></a> <br> <br>
+            {% endif %}
         {% else %}
-          {% if not friends %}
-            <a href="/unfollow/{{author_id}}/"><input onclick="unfollowToggle()" type="button" value="✓ Following" id="unfollow-button"></input></a> <br> <br>
-          {% else %}
-            <a href="/unfollow/{{author_id}}/"><input onclick="unfriendToggle()" type="button" value=">< Friends" id="unfriend-button"></input></a> <br> <br>
-          {% endif %}
+          <a href="/unfriend/{{author_id}}/"><input onclick="unfriendToggle()" type="button" value=">< Friends" id="unfriend-button"></input></a> <br> <br>
         {% endif %}
       {% endif %}
       {% endif %}
@@ -101,12 +103,22 @@
                             {% endif %}
                             {% endif %}
                         </div>
-
-
                         {% endfor %}
+
                       </div>
 
                     </div>
-
+                    
                   </div>
+
+                  <div class="sidebar-right">
+                    {% if git_user %}
+                    <br>
+                    {% for event in git_user %}
+                    <div class="sidebar-right-links">
+                    <p>{{ event.type }} to <br>{{event.repo.name}} at <br>{{ event.created_at }}</p>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div> 
 {% endblock %}
