@@ -77,8 +77,16 @@ class Migration(migrations.Migration):
                 ('categories', models.CharField(choices=[('text/plain', 'text/plain'), ('text/image', 'text/image'), ('text/markdown', 'text/markdown')], default='text/plain', max_length=140)),
                 ('origin', models.CharField(default='https://hermes-cmput404.herokuapp.com/', max_length=200)),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('likes', models.ManyToManyField(blank=True, related_name='_post_likes_+', to=settings.AUTH_USER_MODEL)),
                 ('shared_by', models.ManyToManyField(blank=True, related_name='shared', to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Like',
+            fields=[
+                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('date', models.DateTimeField(auto_now=True)),
+                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='liked_author', to=settings.AUTH_USER_MODEL)),
+                ('object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='liked_object', to='socialdist.post')),
             ],
         ),
         migrations.CreateModel(
