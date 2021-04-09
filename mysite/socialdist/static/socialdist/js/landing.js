@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 $(document).on("click", "#editButton", function() {
   var title_original = $('.post-title').text()
-  var new_title = $("<textarea class=\"form-control editTitle\" style=\"resize: none;overflow: hidden;\"oninput=\"auto_grow(this)\"/>");
+  var new_title = $("<form method=\"POST\" id=\"post-form\"> <textarea class=\"form-control editTitle\" style=\"resize: none;overflow: hidden;\"oninput=\"auto_grow(this)\"/>");
   new_title.val(title_original);
   $('.post-title').replaceWith(new_title);
 
@@ -38,15 +38,34 @@ $(document).on("click", "#editButton", function() {
   $('.editable_text').replaceWith(new_input);
 
   var pass_data = $('#editButton')[0].getAttribute("data");
+  const url = $('#editButton')[0].getAttribute("url");
   var new_button = $("<input type =\"submit\" class=\"btn btn-primary saveButton\" value =\"🖬 Save\"/>");
   $('#editButton').replaceWith(new_button)
   $('.saveButton')[0].setAttribute("data", pass_data)
-  answer = $('.saveButton')[0].getAttribute("data");
+  $('.saveButton')[0].setAttribute("url", url)
   new_input.focus();
 });
 
-$(document).on("click", ".saveButton", function() {
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
+
+$(document).on("click", ".saveButton", function() {
+  var post_id = $('.saveButton')[0].getAttribute("data");
+  var url = $('.saveButton')[0].getAttribute("url");
   var new_input = $('.editArea').val();
   var updated_text = $("<span class=\"editable_text\">");
   updated_text.text(new_input);
@@ -57,13 +76,11 @@ $(document).on("click", ".saveButton", function() {
   updated_title.text(new_title);
   $('.editTitle').replaceWith(updated_title);
 
-
   var new_button = $(" <input class=\"btn btn-primary\" type=\"button\" value =\"✎ Edit\" id = \"editButton\"/>");
-  var pass_data = $('.saveButton')[0].getAttribute("data");
-  $('.saveButton').replaceWith(new_button);
-  $('#editButton')[0].setAttribute("data", pass_data);
-  create_post(pass_data);
 
+  $('.saveButton').replaceWith(new_button);
+  $('#editButton')[0].setAttribute("data", post_id);
+  create_post(post_id, url, new_title, new_input)
 });
 
 function auto_grow(element) {
@@ -72,25 +89,32 @@ function auto_grow(element) {
 }
 
 
-function create_post(post_id) {
-    console.log("create post is working!") // sanity check
-    console.log(post_id);
-    $.ajax({
-        // url : "", // the endpoint
-        type : "POST", // http method
-        data : { title : $('.post-title').val(), post: $('.editable_text').val() }, // data sent with the post request
+function create_post(post_id, url, new_title, new_input) {
+  console.log(new_title)
+  const csrftoken = getCookie('csrftoken');
+  $.ajax({
+      url : url, // the endpoint
+      type : "POST", // http method
+      headers: {'X-CSRFToken': csrftoken},
+      data : {
+            // csrfmiddlewaretoken:$('[name=csrfmiddlewaretoken]').val(),
+            action: 'post',
+            post_id: post_id,
+            title : new_title,
+            description: new_input }, // data sent with the post request
 
-        // handle a successful response
-        success : function(json) {
-            console.log(json); // log the returned json to the console
-            console.log("success"); // another sanity check
-        },
+      // handle a successful response
+      success : function(json) {
+          console.log(json); // log the returned json to the console
+          console.log("success"); // another sanity check
+      },
 
-        // handle a non-successful response
-        error : function(xhr,errmsg,err) {
-            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-        }
-    });
+      // handle a non-successful response
+      error : function(xhr,errmsg,err) {
+          $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+              " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+      }
+  });
+
 };

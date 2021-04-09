@@ -1,7 +1,7 @@
 {% extends 'socialdist/base.html' %}
 {% block title %}Feed{% endblock %}
 {% load markdown_extras %}
-{% load base %} 
+{% load base %}
 {% block content %}
 {% load bootstrap4 %}
 
@@ -66,8 +66,8 @@
             <span style="color:rgba(34, 167, 240, 1); font-size:1.3em; cursor:pointer" title="Post from another server: {{post.origin}}">☁</span>
             {% endif %}
             {% if post.title != None %}
-              <p id="post-title">
-              {{post.title}}</p>
+              <h2 id="post-title">
+              {{post.title}}</h2>
             {% endif %}
            {% if post.categories == 'text/markdown' %}
             <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | markdown |safe}}</span>
@@ -77,9 +77,8 @@
             <img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/>
             <br>
           {% else %}
-            <br>
-            {{ post.description | custom_markdown }}
-            <br>
+          <div style="font-family:Gotham-Light; font-size:0.7em">{{ post.description | custom_markdown }}</div>
+
           {% endif %}
             <small style="color:#add8e6; font-family:calibri; padding-right:45px">
               {{ post.published }}
