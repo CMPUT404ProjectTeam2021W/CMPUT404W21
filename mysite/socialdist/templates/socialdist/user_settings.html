@@ -1,6 +1,7 @@
 {% extends 'socialdist/base.html' %}
 {% block title %}Profile{% endblock %}
 {% block content %}
+
 <div class='fade-bg'>
 <div class="sidebar">
   <div class="photo"></div>
@@ -22,25 +23,23 @@
     <a class="mini-links" href="{% url 'user_settings' %}"> Settings </a><br>
     <a class="mini-links" href="{% url 'logout' %}"> Logout </a>
   </div>
-
   </div>
 
   <div class="feed-section user-settings">
     <span>
       User Settings
-      </span>
-      <p> <em> Username: </em> {{user.username}}
-        <p> <em> Github Link: </em> {{user.github}}
-          <br>
-          <form method = "post" enctype="multipart/form-data">
-              {% csrf_token %}
-              {{ form.as_p }}
-              <br>
-              <br>
-              <br>
+    </span>
+    <p> <em> Username: </em> {{user.username}}
+    <p> <em> Github Link: </em> {{user.github}}
+    <br>
 
-            <input type="submit" value="Save changes" id="savebtn"/>
-          </form>
-          </div>
-          </div>
+    <form method = "post">
+      <p>Change Password
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <input type="submit" value="Save changes" id="savebtn"/>
+    </form>
+  </div>
+</div>
 {% endblock %}

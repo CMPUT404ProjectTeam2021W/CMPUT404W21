@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedire
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from ..forms import CreatePostForm, ImageForm, AuthorCreationForm, CreateCommentForm
+from ..forms import CreatePostForm, ImageForm, AuthorCreationForm, CreateCommentForm, SettingChangeForm
 from .views_helper import *
 from .authenticationviews import *
 from ..models import *
@@ -133,18 +133,35 @@ def friends(request, author_id):
     author_name = author_details.username
     return render(request, 'socialdist/friends.html', {'author': author_name, 'friends': friends_list})
 
+#def github_settings(request):
+#
+#    if request.method == 'POST':
+#        form = GithubChangeForm(request.POST, request.FILES)
+#        if form.is_valid():
+#            form.save(request.user.id)
+#            return redirect(request.META['HTTP_REFERER'])
+#
+#    elif request.method == 'GET':
+#        form = GithubChangeForm()
+#        return render(request, 'socialdist/user_settings.html', {'form': form})
+#    
+#    else:
+#        return HttpResponseNotAllowed(['GET', 'POST'])
 
+def user_settings(request):    
 
-@login_required
-def user_settings(request):
     if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
+        form = SettingChangeForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('success')
+            form.save(request.user.id)
+            return redirect(request.META['HTTP_REFERER'])
+    
+    elif request.method == 'GET':
+        form = SettingChangeForm()
+        return render(request, 'socialdist/user_settings.html', {'form': form})
+
     else:
-        form = ImageForm()
-    return render(request, 'socialdist/user_settings.html', {'form': form})
+        return HttpResponseNotAllowed(['GET', 'POST'])
 
 
 
