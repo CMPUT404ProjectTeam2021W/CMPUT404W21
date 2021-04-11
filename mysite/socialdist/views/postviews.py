@@ -19,7 +19,12 @@ def create_post(request):
         post = form.save(commit=False)
         post.author = request.user
         if post.categories == 'image/jpeg' or post.categories == 'image/png':
-            post.description = image_as_post(post.description)
+            new_post_descript = image_as_post(post.description)
+            if new_post_descript == post.description:
+                post.categories = 'text/plain'
+            else:
+                post.description = image_as_post(post.description)
+            
         # Save post in database.
         post.save()
         # Rediect to post list.
