@@ -8,6 +8,8 @@ from ..forms import CreatePostForm, ImageForm, AuthorCreationForm, CreateComment
 from ..models import *
 from .views_helper import *
 from .authenticationviews import *
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 
@@ -27,6 +29,22 @@ def create_post(request):
         return render(request, 'socialdist/create_post.html', {'form': form})
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
+
+def edit_post(request):
+    if request.method == 'POST':
+        print("yes were here")
+        data = request.POST
+        post_found = Post.objects.get(id=data['post_id'])
+        post_found.title = data['title']
+        print(data['title'])
+        post_found.description = data['description']
+        post_found.save()
+        print("yesss")
+        return HttpResponse('Profile Updated')
+    else:
+        print("noooo")
+        return HttpResponse('Failure')
+
 
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id = post_id)
@@ -105,13 +123,18 @@ def view_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     likes = Like.objects.filter(**{'object': post})
     likes_count = likes.count()
-    liked = Like.objects.get(author=request.user, object=post)
+
     shared = request.user in post.shared_by.all()
     comments = None
     try:
+
         comments = Comment.objects.filter(**{'post': post})
     except Comment.DoesNotExist:
         comments = None
+    try:
+        liked = Like.objects.get(author=request.user, object=post)
+    except Like.DoesNotExist:
+        liked = None
     form = CreateCommentForm()
 
     if request.method == 'GET':

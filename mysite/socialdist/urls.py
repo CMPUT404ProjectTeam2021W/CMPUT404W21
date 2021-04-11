@@ -28,6 +28,7 @@ urlpatterns = [
   path('feed/', feed, name='feed'),
   path('friends_feed/', friends_feed, name='friends_feed'),
   path('create_post/', create_post, name='create_post'),
+  path('edit_post/', edit_post, name = 'edit_post'),
   path('posts/<str:post_id>/view_post/', view_post, name='view_post'),
   path('posts/<str:post_id>/delete/', delete_post, name='delete_post'),
   path('like/<str:post_id>/', like, name='like'),

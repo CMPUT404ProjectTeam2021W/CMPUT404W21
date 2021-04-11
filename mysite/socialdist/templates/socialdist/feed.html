@@ -1,7 +1,7 @@
 {% extends 'socialdist/base.html' %}
 {% block title %}Feed{% endblock %}
 {% load markdown_extras %}
-{% load base %} 
+{% load base %}
 {% block content %}
 {% load bootstrap4 %}
 
@@ -29,7 +29,6 @@
     </div>
 
   </div>
-
 
   <div class="feed-section">
     <div class="friend_request_section" id="accordion">
@@ -66,8 +65,8 @@
             <span style="color:rgba(34, 167, 240, 1); font-size:1.3em; cursor:pointer" title="Post from another server: {{post.origin}}">☁</span>
             {% endif %}
             {% if post.title != None %}
-              <p id="post-title">
-              {{post.title}}</p>
+              <h2 id="post-title">
+              {{post.title}}</h2>
             {% endif %}
            {% if post.categories == 'text/markdown' %}
             <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | markdown |safe}}</span>
@@ -77,16 +76,15 @@
             <img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/>
             <br>
           {% else %}
-            <br>
-            {{ post.description | custom_markdown }}
-            <br>
+          <div style="font-family:Gotham-Light; font-size:0.7em">{{ post.description | custom_markdown }}</div>
+
           {% endif %}
             <small style="color:#add8e6; font-family:calibri; padding-right:45px">
               {{ post.published }}
             </small>
           {% if likes >= 0 %}
           <small style="color:#add8e6; font-family:calibri; padding-right:45px">
-            {{ likes }} likes
+            <span id='likes-{{post.id}}'>{{ likes }}</span> likes
           </small>
           <a href="{% url 'view_post' post.id %}">
             <div class="btn btn-primary">🗩 Comments</div>
@@ -94,27 +92,19 @@
 
 
           {% if not post_liked|get_item:post %}
-          <a href="/like/{{post.id}}/">
-            <input onclick="likeToggle()" type="button" value="❤ Like" id="like-button" class="btn btn-primary"></input>
-          </a>
+            <input onclick="likeToggle('{{post.id}}')" type="button" value="❤ Like" id="like-button-{{post.id}}" class="btn btn-primary" url="{%url 'like' post.id %}" data="{{post.id}}"></input>
           {% else %}
-
-
-
-          <a href="/unlike/{{post.id}}/">
-            <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button"
-              class="btn btn-primary"></input>
-          </a>
+            <input onclick="unlikeToggle('{{post.id}}')" type="button" value="❤ Liked" id="unlike-button-{{post.id}}"
+              class="btn btn-primary" url="{% url 'unlike' post.id %}" data="{{post.id}}"></input>
           {% endif %}
           {% if not post_shared|get_item:post %}
-          <a href="/share/{{post.id}}/">
-            <input onclick="shareToggle()" type="button" value="🚀 Share" id="share-button"
-              class="btn btn-primary"></input> </a>
+
+            <input onclick="shareToggle('{{post.id}}')" type="button" value="🚀 Share" id="share-button-{{post.id}}"
+              class="btn btn-primary" url="{% url 'share' post.id %}"></input>
           {% else %}
-          <a href="/unshare/{{post.id}}/">
-            <input onclick="unshareToggle()" type="button" value="🚀 Shared" id="share-button"
-              class="btn btn-primary"></input>
-          </a>
+            <input onclick="unshareToggle('{{post.id}}')" type="button" value="🚀 Shared" id="unshare-button-{{post.id}}"
+              class="btn btn-primary" url="{% url 'unshare' post.id %}"></input>
+
           {% endif %}
           {% endif %}
       </div>
