@@ -129,7 +129,7 @@ def image_as_post(image_path):
     with open(image_path, "rb") as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
         file_size = (len(image_data) * 6 - image_data.count('=') * 8) / 8
-        max_size = 4 * 1024 * 1024 #1MB maybe smaller?
+        max_size = 1 * 1024 * 1024 #1MB maybe smaller?
         if file_size > max_size:
              return image_path 
         #check filesize in bits
