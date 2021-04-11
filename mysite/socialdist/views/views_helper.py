@@ -6,6 +6,8 @@ from requests.auth import HTTPBasicAuth
 from ..serializers import *
 from ..models import Server
 from django.utils.dateparse import parse_datetime
+import base64
+
 
 
 def get_foreign_author(url,author_id): #can probably change url to node
@@ -120,3 +122,8 @@ def deserialize_json(json_response, server):
     data_list.append(author_list)
 
     return data_list
+
+def image_as_post(image_path):
+    with open(image_path, "rb") as image_file:
+        image_data = base64.b64encode(image_file.read()).decode('utf-8')
+    return image_data

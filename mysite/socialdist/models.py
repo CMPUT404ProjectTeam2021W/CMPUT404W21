@@ -20,7 +20,8 @@ class Post(models.Model):
         ACCESS_PRIVATE = 'private'
         ACCESS_FRIENDS = 'friends'
         CATEGORY_PLAIN = 'text/plain'
-        CATEGORY_IMAGE = 'text/image'
+        CATEGORY_IMAGE_PNG = 'image/png'
+        CATEGORY_IMAGE_JPEG = 'image/jpeg'
         CATEGORY_MARKDOWN = 'text/markdown'
         visibility_choices = [
             (ACCESS_PUBLIC, 'Public'),
@@ -29,7 +30,8 @@ class Post(models.Model):
         ]
         categories_choices = [
         (CATEGORY_PLAIN, 'text/plain'),
-        (CATEGORY_IMAGE, 'text/image'),
+        (CATEGORY_IMAGE_PNG, 'image/png'),
+        (CATEGORY_IMAGE_JPEG, 'image/jpeg'),
         (CATEGORY_MARKDOWN, 'text/markdown')
         ]
         id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

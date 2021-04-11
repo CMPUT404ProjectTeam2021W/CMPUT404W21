@@ -9,7 +9,7 @@ from ..models import *
 from ..serializers import *
 from django.db.models import CharField, Value
 
-class AuthorList(APIView):
+class AuthorList(APIView): #need to add POST: update profile
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request):
@@ -149,7 +149,7 @@ class AuthorDetails(APIView):
         data = AuthorSerializer(author_obj).data
         return Response(data=data)
 
-class FollowerList(APIView):
+class FollowerList(APIView): 
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request, author_id):
@@ -160,7 +160,7 @@ class FollowerList(APIView):
         data['items'] = AuthorSerializer(followers, many=True).data
         return Response(data=data)
 
-class FollowerAction(APIView):
+class FollowerAction(APIView): #NEED PUT: Add a follower (must be authenticated)
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
