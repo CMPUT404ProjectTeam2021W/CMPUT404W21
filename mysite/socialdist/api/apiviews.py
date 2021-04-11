@@ -7,6 +7,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from django.shortcuts import get_object_or_404
 from ..models import *
 from ..serializers import *
+from ..pagination import *
 from django.db.models import CharField, Value
 
 class AuthorList(APIView): #need to add POST: update profile
@@ -22,9 +23,11 @@ class PostList(APIView):
     permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request):
         posts = Post.objects.all()
+        paginator = CustomPagination()
+        result_page = paginator.paginate_queryset(posts, request)
         data = dict()
         data['type'] = 'post'
-        data['items'] = PostSerializer(posts, many=True).data
+        data['items'] = PostSerializer(result_page, many=True).data
         # data = PostSerializer(posts, many=True, context={'request' : request}).data
         return Response(data=data)
     def post(self, request):
