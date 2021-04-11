@@ -123,6 +123,8 @@ def deserialize_json(json_response, server):
 
     return data_list
 
+#adapted from: https://nemecek.be/blog/8/django-how-to-send-image-file-as-part-of-response
+#Author: Filip Němeček https://twitter.com/nemecek_f
 def image_as_post(image_path):
     with open(image_path, "rb") as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
