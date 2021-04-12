@@ -123,8 +123,16 @@ def unlisted_posts(request):
         post_liked = {}
         post_shared = {}
         for post in posts:
-            post_likes_dict[post] = post.likes.all().count()
-            post_liked[post] = request.user in post.likes.all()
+            if post.origin == "https://hermes-cmput404.herokuapp.com/":
+                post_likes_dict[post] = Like.objects.filter(**{'object': post}).count()
+                try:
+                    post_liked[post] = Like.objects.get(author=request.user, object=post)
+                except Like.DoesNotExist:
+                    post_liked[post] = False
+                post_id_dict[post] = post.id
+                post_shared[post] = request.user in post.shared_by.all()
+            else:
+                post_likes_dict[post] = -1
             post_id_dict[post] = post.id
         return render(request, 'socialdist/unlisted.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked})
 
@@ -218,10 +226,13 @@ def friends_feed(request):
 
     full_posts = []
 
+    friends = request.user.friends.all()
+
     local_posts = Post.objects.all().order_by("-published")
 
     local_posts = local_posts.filter(visibility='friends')
     local_posts = local_posts.filter(unlisted='False')
+
 
     post_likes_dict = {}
     post_id_dict = {}
@@ -229,10 +240,15 @@ def friends_feed(request):
     post_shared = {}
     friend_requests = list()
     for foreign_post in foreign_posts[0]:
-        if foreign_post.visibility == 'friends only':
+        if foreign_post.visibility == 'friends':
             full_posts.append(foreign_post)
 
     full_posts += list(local_posts)
+
+    for post in full_posts:
+        if post.author not in friends:
+            full_posts.remove(post)
+
     full_posts.sort(key=lambda x: x.published, reverse=True)
     # print(full_posts)
     for post in full_posts:
