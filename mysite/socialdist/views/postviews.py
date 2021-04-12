@@ -233,15 +233,15 @@ def friends_feed(request):
     local_posts = local_posts.filter(visibility='friends')
     local_posts = local_posts.filter(unlisted='False')
 
-
     post_likes_dict = {}
     post_id_dict = {}
     post_liked = {}
     post_shared = {}
     friend_requests = list()
-    for foreign_post in foreign_posts[0]:
-        if foreign_post.visibility == 'friends':
-            full_posts.append(foreign_post)
+    if len(foreign_posts) != 0:
+        for foreign_post in foreign_posts[0]:
+            if foreign_post.visibility == 'friends':
+                full_posts.append(foreign_post)
 
     full_posts += list(local_posts)
 
