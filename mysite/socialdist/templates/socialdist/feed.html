@@ -69,7 +69,7 @@
               {{post.title}}</h2>
             {% endif %}
            {% if post.categories == 'text/markdown' %}
-            <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | markdown |safe}}</span>
+            <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | custom_markdown }}</span>
           {% endif %}
           {% if post.categories == 'image/png' %}
             <br>
@@ -84,7 +84,7 @@
             <br>
           {% endif %}
           {% if post.categories == 'text/plain' %}
-          <div style="font-family:Gotham-Light; font-size:0.7em">{{ post.description | custom_markdown }}</div>
+          <div style="font-family:Gotham-Light; font-size:0.7em">{{ post.description  }}</div>
 
           {% endif %}
             <small style="color:#add8e6; font-family:calibri; padding-right:45px">

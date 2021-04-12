@@ -126,11 +126,14 @@ def deserialize_json(json_response, server):
 #adapted from: https://nemecek.be/blog/8/django-how-to-send-image-file-as-part-of-response
 #Author: Filip Němeček https://twitter.com/nemecek_f
 def image_as_post(image_path):
-    with open(image_path, "rb") as image_file:
-        image_data = base64.b64encode(image_file.read()).decode('utf-8')
-        file_size = (len(image_data) * 6 - image_data.count('=') * 8) / 8
-        max_size = 1 * 1024 * 1024 #1MB maybe smaller?
-        if file_size > max_size:
-             return image_path 
+    try:
+        with open(image_path, "rb") as image_file:
+            image_data = base64.b64encode(image_file.read()).decode('utf-8')
+            file_size = (len(image_data) * 6 - image_data.count('=') * 8) / 8
+            max_size = 1 * 1024 * 1024 #1MB maybe smaller?
+            if file_size > max_size:
+                return 100 
         #check filesize in bits
-    return image_data
+        return image_data
+    except:
+        return 110
