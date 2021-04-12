@@ -22,8 +22,8 @@ def create_post(request):
             new_post_descript = image_as_post(post.description)
             if new_post_descript == post.description:
                 post.categories = 'text/plain'
-                post.description = 'image size too large, please reduce size and try again' #can probably redirect here or something better
-            else:
+                post.description = 'image size too large, please reduce size and try again' #can probably redirecthere or something better 
+            else:                                                                           # maybe redirect with error message showing
                 post.description = image_as_post(post.description)
             
         # Save post in database.

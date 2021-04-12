@@ -192,7 +192,9 @@ class CommentsList(APIView):
     def get(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
         comments = Comment.objects.filter(post=post_obj).all()
-        serializer = CommentSerializer(comments, many=True)
+        paginator = CustomPagination()
+        result_page = paginator.paginate_queryset(comments, request)
+        serializer = CommentSerializer(result_page, many=True)
         data = dict()
         data['type'] = "comments"
         data['items'] = serializer
