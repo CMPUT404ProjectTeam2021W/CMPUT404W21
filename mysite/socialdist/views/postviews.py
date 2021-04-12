@@ -18,6 +18,17 @@ def create_post(request):
         form = CreatePostForm(request.POST)
         post = form.save(commit=False)
         post.author = request.user
+        if post.categories == 'image/jpeg' or post.categories == 'image/png':
+            new_post_descript = image_as_post(post.description)
+            if new_post_descript == 100:
+                post.categories = 'text/plain'
+                post.description = 'image size too large, please reduce size and try again' #can probably redirecthere or something better 
+            elif new_post_descript == 110:
+                post.categories = 'text/plain'
+                post.description = 'Wrong format'
+            else:                                                                          # maybe redirect with error message showing
+                post.description = new_post_descript
+            
         # Save post in database.
         post.save()
         # Rediect to post list.

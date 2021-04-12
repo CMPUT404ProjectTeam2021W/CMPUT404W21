@@ -7,9 +7,10 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from django.shortcuts import get_object_or_404
 from ..models import *
 from ..serializers import *
+from ..pagination import *
 from django.db.models import CharField, Value
 
-class AuthorList(APIView):
+class AuthorList(APIView): #need to add POST: update profile
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request):
@@ -22,9 +23,11 @@ class PostList(APIView):
     permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request):
         posts = Post.objects.all()
+        paginator = CustomPagination()
+        result_page = paginator.paginate_queryset(posts, request)
         data = dict()
         data['type'] = 'post'
-        data['items'] = PostSerializer(posts, many=True).data
+        data['items'] = PostSerializer(result_page, many=True).data
         # data = PostSerializer(posts, many=True, context={'request' : request}).data
         return Response(data=data)
     def post(self, request):
@@ -149,7 +152,7 @@ class AuthorDetails(APIView):
         data = AuthorSerializer(author_obj).data
         return Response(data=data)
 
-class FollowerList(APIView):
+class FollowerList(APIView): 
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
     def get(self, request, author_id):
@@ -160,7 +163,7 @@ class FollowerList(APIView):
         data['items'] = AuthorSerializer(followers, many=True).data
         return Response(data=data)
 
-class FollowerAction(APIView):
+class FollowerAction(APIView): #NEED PUT: Add a follower (must be authenticated)
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
@@ -189,7 +192,9 @@ class CommentsList(APIView):
     def get(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
         comments = Comment.objects.filter(post=post_obj).all()
-        serializer = CommentSerializer(comments, many=True)
+        paginator = CustomPagination()
+        result_page = paginator.paginate_queryset(comments, request)
+        serializer = CommentSerializer(result_page, many=True)
         data = dict()
         data['type'] = "comments"
         data['items'] = serializer
