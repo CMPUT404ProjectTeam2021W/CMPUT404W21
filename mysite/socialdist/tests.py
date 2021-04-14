@@ -6,7 +6,7 @@ from .models import Author, Post, Comment
 
 # Create your tests here.
 
-class AuthorTestCase(TestCase):
+class ModelTestCase(TestCase):
 
     def test_author_creation(self):
         new_username = "Test123"
@@ -18,8 +18,24 @@ class AuthorTestCase(TestCase):
 
         current_author = Author.objects.get(username=author.username)
         self.assertEqual(current_author.id, author.id)
+        self.assertEqual(current_author.username, new_username)
+        self.assertEqual(current_author.github, new_github)
         self.assertEqual(current_author.url, author.url)
         self.assertEqual(True, author.check_password(new_password))
+
+        new_password2 = "ThisISpass12345"
+        new_github2 = 'https://www.github.com/BigDawn02'
+        current_author.github = new_github2
+        current_author.set_password(new_password2)
+        current_author.save()
+
+        current_author = Author.objects.get(username=author.username)
+        self.assertEqual(current_author.id, author.id)
+        self.assertEqual(current_author.username, new_username)
+        self.assertEqual(current_author.github, new_github2)
+        self.assertEqual(current_author.url, author.url)
+        self.assertEqual(True, current_author.check_password(new_password2))
+
 
     def test_post_creation(self):
         new_username = "Test123"
