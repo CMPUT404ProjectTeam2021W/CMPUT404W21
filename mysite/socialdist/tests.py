@@ -162,7 +162,6 @@ class ModelTestCase(TestCase):
         self.assertEqual(new_like.object.title, new_title)
         self.assertEqual(new_like.object.description, new_description)
 
-
     #def test_get_html(self):
 
         #new_id = 1
