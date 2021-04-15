@@ -69,9 +69,12 @@ class SettingChangeForm(forms.ModelForm):
         return password2
 
     def save(self, user_id):
-        author = Author.objects.get(id=user_id)
-        modified = False
-
+        try:
+            author = Author.objects.get(id=user_id)
+            modified = False
+        except Author.DoesNotExist:
+            return False
+        
         passowrd_valid = author.check_password(self.cleaned_data.get("password"))
         if passowrd_valid:
             modified == True

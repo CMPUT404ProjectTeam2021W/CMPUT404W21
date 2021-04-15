@@ -158,8 +158,11 @@ def user_settings(request):
     if request.method == 'POST':
         form = SettingChangeForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save(request.user.id)
-            return redirect(request.META['HTTP_REFERER'])
+            setting_changed = form.save(request.user.id)
+            if setting_changed: 
+                return redirect(request.META['HTTP_REFERER'])
+            else:
+                return HttpResponse('required an author')
     
     elif request.method == 'GET':
         form = SettingChangeForm()
