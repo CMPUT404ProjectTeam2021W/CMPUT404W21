@@ -152,6 +152,7 @@ def friends(request, author_id):
 #    else:
 #        return HttpResponseNotAllowed(['GET', 'POST'])
 
+@login_required
 def user_settings(request):    
 
     if request.method == 'POST':
