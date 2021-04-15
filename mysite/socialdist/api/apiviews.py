@@ -7,26 +7,34 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from django.shortcuts import get_object_or_404
 from ..models import *
 from ..serializers import *
+from ..pagination import *
 from django.db.models import CharField, Value
 
-class AuthorList(APIView):
+
+class AuthorList(APIView):  # need to add POST: update profile
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
+
     def get(self, request):
         authors = Author.objects.all()
         data = AuthorSerializer(authors, many=True).data
         return Response(data)
 
+
 class PostList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
+
     def get(self, request):
         posts = Post.objects.all()
+        paginator = CustomPagination()
+        result_page = paginator.paginate_queryset(posts, request)
         data = dict()
         data['type'] = 'post'
-        data['items'] = PostSerializer(posts, many=True).data
+        data['items'] = PostSerializer(result_page, many=True).data
         # data = PostSerializer(posts, many=True, context={'request' : request}).data
         return Response(data=data)
+
     def post(self, request):
         author = request.user
         data = request.POST
@@ -45,35 +53,35 @@ class PostList(APIView):
                 unlisted = True
             if origin:
                 post = Post.objects.create(
-                author=author, title=title, description=description,
-                visibility=visibility, categories=categories,
-                unlisted=unlisted, origin=origin)
+                    author=author, title=title, description=description,
+                    visibility=visibility, categories=categories,
+                    unlisted=unlisted, origin=origin)
 
                 if post:
                     response['type'] = 'addedPost'
                     response['success'] = True
                     response['message'] = 'Post added'
-                    return Response(response, status = 200)
+                    return Response(response, status=200)
                 else:
                     response['type'] = 'addedPost'
                     response['success'] = False
                     response['message'] = 'Failed to add post to server'
-                    return Response(response, status = 500)
+                    return Response(response, status=500)
 
             else:
                 post = Post.objects.create(
-                author=author, title=title, description=description, visibility=visibility,
-                categories=categories, unlisted=unlisted)
+                    author=author, title=title, description=description, visibility=visibility,
+                    categories=categories, unlisted=unlisted)
                 if post:
                     response['type'] = 'addedPost'
                     response['success'] = True
                     response['message'] = 'Post added'
-                    return Response(response, status = 200)
+                    return Response(response, status=200)
                 else:
                     response['type'] = 'addedPost'
                     response['success'] = True
                     response['message'] = 'Failed to add post to server'
-                    return Response(response, status = 500)
+                    return Response(response, status=500)
 
         else:
 
@@ -82,76 +90,76 @@ class PostList(APIView):
             response['message'] = 'Missing fields'
 
 
-
 class PostDetails(APIView):
-        authentication_classes = (SessionAuthentication, BasicAuthentication)
-        permission_classes = (IsAuthenticated, IsAdminUser)
-        def get(self, request, post_id):
-            posts = Post.objects.get(id=post_id)
-            data = dict()
-            data['type'] = 'post'
-            data['items'] = PostSerializer(posts, many=False).data
-            # data = PostSerializer(posts, many=True, context={'request' : request}).data
-            return Response(data=data)
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated, IsAdminUser)
 
-        def put(self, request, post_id):
-            response = dict()
-            response['type'] = 'updatePost'
+    def get(self, request, post_id):
+        posts = Post.objects.get(id=post_id)
+        data = dict()
+        data['type'] = 'post'
+        data['items'] = PostSerializer(posts, many=False).data
+        # data = PostSerializer(posts, many=True, context={'request' : request}).data
+        return Response(data=data)
 
-            try:
-                post = Post.objects.get(id=post_id)
-                current_user = request.user
-                if current_user!= post.author:
-                    response['success'] = False
-                    response['message'] = "Unauthorized:Not the original post owner"
-                    return Response(response, status=400)
-                else:
-                    description = data.get('description')
-                    title = data.get('title')
-                    visibility = data.get('visibility')
-                    unlisted = data.get('unlisted')
-                    categories = data.get('categories')
+    def put(self, request, post_id):
+        response = dict()
+        response['type'] = 'updatePost'
 
-                    if description and title and unlisted and visibility and categories:
-                        if unlisted == 'false':
-                            unlisted = False
-                        else:
-                            unlisted = True
-                    post.description = description
-                    post.published = datetime.datetime.now()
-                    post.title = title
-                    post.categories = categories
-                    post.visibility = visibility
-                    post.unlisted = unlisted
-                    post.save()
+        try:
+            post = Post.objects.get(id=post_id)
+            current_user = request.user
+            if current_user != post.author:
+                response['success'] = False
+                response['message'] = "Unauthorized:Not the original post owner"
+                return Response(response, status=400)
+            else:
+                description = data.get('description')
+                title = data.get('title')
+                visibility = data.get('visibility')
+                unlisted = data.get('unlisted')
+                categories = data.get('categories')
 
-                    response['type'] = 'updatePost'
-                    response['success'] = True
-                    response['message'] = 'Post updated'
-                    return Response(response, status = 200)
-
-            except:
+                if description and title and unlisted and visibility and categories:
+                    if unlisted == 'false':
+                        unlisted = False
+                    else:
+                        unlisted = True
+                post.description = description
+                post.published = datetime.datetime.now()
+                post.title = title
+                post.categories = categories
+                post.visibility = visibility
+                post.unlisted = unlisted
+                post.save()
 
                 response['type'] = 'updatePost'
-                response['success'] = False
-                response['message'] = 'Failed to update post to server'
-                return Response(response, status = 500)
+                response['success'] = True
+                response['message'] = 'Post updated'
+                return Response(response, status=200)
 
+        except:
 
-
+            response['type'] = 'updatePost'
+            response['success'] = False
+            response['message'] = 'Failed to update post to server'
+            return Response(response, status=500)
 
 
 class AuthorDetails(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
+
     def get(self, request, author_id):
         author_obj = get_object_or_404(Author, id=author_id)
         data = AuthorSerializer(author_obj).data
         return Response(data=data)
 
+
 class FollowerList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
+
     def get(self, request, author_id):
         author_obj = get_object_or_404(Author, id=author_id)
         followers = author_obj.friends.all()
@@ -160,7 +168,8 @@ class FollowerList(APIView):
         data['items'] = AuthorSerializer(followers, many=True).data
         return Response(data=data)
 
-class FollowerAction(APIView):
+
+class FollowerAction(APIView):  # NEED PUT: Add a follower (must be authenticated)
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
@@ -189,7 +198,9 @@ class CommentsList(APIView):
     def get(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
         comments = Comment.objects.filter(post=post_obj).all()
-        serializer = CommentSerializer(comments, many=True)
+        paginator = CustomPagination()
+        result_page = paginator.paginate_queryset(comments, request)
+        serializer = CommentSerializer(result_page, many=True)
         data = dict()
         data['type'] = "comments"
         data['items'] = serializer
@@ -211,17 +222,45 @@ class CommentsList(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+class InboxAction(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated, IsAdminUser)
+
+    def post(self, request, author_id):
+        data = request.POST
+        if data.get('type') == "Like":
+            get_index = data.get('author')['id'].find('author/')
+            like_author_id = data.get('author')['id'][get_index + len('author/'):]
+            author_obj, created = Author.objects.get_or_create(id=like_author_id,
+                                                               username=data.get('author')['displayName'],
+                                                               url=data.get('author')['url'],
+                                                               github=data.get('author')['github'])
+            get_index = data.get('object').find('posts/')
+            post_id = data.get('object')[get_index + len('posts/'):]
+            post_obj = Post.objects.get(id=post_id)
+            like_obj = Like.object.create(author=author_obj, object=post_obj)
+            return Response(status=status.HTTP_200_OK)
 
 
-''' class LikedList(APIView):
+class LikesList(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated, IsAdminUser)
+
+    def get(self, request, author_id, post_id):
+        post_obj = get_object_or_404(Post, id=post_id)
+        like_obj_list = Like.objects.filter(object=post_obj).all()
+        serializer = LikeSerializer(like_obj_list, many=True)
+        return Response(data=serializer.data)
+
+
+class LikedList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
     def get(self, request, author_id):
         author_obj = get_object_or_404(Author, id=author_id)
-        data = dict()
-        posts = author_obj.posts.all()
-        data['type'] = 'friends'
-        data['items'] = PostSerializer(posts, many=True).data
-        return Response(data=data)
-'''
+        like_obj_list = Like.objects.filter(author=author_obj)
+        serializer = LikeSerializer(like_obj_list, many=True)
+        return Response(data=serializer.data)
+
+

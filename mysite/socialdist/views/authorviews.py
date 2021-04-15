@@ -41,6 +41,10 @@ def author_profile(request, author_id):
             if remote_post.author == author_details:
                 posts.append(remote_post)
 
+    friends = request.user.friends.all()
+    if (author_details != request.user):
+        local_posts = posts.filter(visibility='public')
+
     post_likes_dict = {}
     post_id_dict = {}
     post_liked = {}

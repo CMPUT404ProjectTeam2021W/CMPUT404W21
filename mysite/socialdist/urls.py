@@ -28,6 +28,7 @@ urlpatterns = [
   path('feed/', feed, name='feed'),
   path('friends_feed/', friends_feed, name='friends_feed'),
   path('create_post/', create_post, name='create_post'),
+  path('edit_post/', edit_post, name = 'edit_post'),
   path('posts/<str:post_id>/view_post/', view_post, name='view_post'),
   path('posts/<str:post_id>/delete/', delete_post, name='delete_post'),
   path('like/<str:post_id>/', like, name='like'),
@@ -55,6 +56,9 @@ urlpatterns = [
   path("api/author/<uuid:author_id>/followers/", FollowerList.as_view(), name='followers_list'),
   path("api/author/<uuid:author_id>/followers/<uuid:foreign_author_id>/", FollowerAction.as_view(), name='followers_action'),
   path("api/author/<uuid:author_id>/posts/<uuid:post_id>/comments/", CommentsList.as_view(), name='comments_list'),
+  path("api/author/<uuid:author_id>/inbox/", InboxAction.as_view(), name="inbox_action"),
+  path("api/author/<uuid:author_id>/post/<uuid:post_id>/likes/", LikesList.as_view(), name="likes_list"),
+  path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name="liked_list")
    ## path("api/author/<uuid:author_id>/posts/<uuid:post_id>/", CommentsList.as_view(), name='comments_list'),
    ## path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name='liked_list'),
 

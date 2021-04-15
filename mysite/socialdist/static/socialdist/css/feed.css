@@ -138,6 +138,16 @@ input#id_comment{
   color:black;
 }
 
+
+.text_editor {
+  border: none;
+  background: #ddd;
+  color: #000;
+  font-size: 14px;
+  font-family: arial;
+  width: 200px;
+  cursor: text;
+}
 .friend-requests
 {
   background-color:  white;

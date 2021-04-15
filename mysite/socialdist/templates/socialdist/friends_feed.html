@@ -70,17 +70,24 @@
               {{post.title}}</p>
             {% endif %}
            {% if post.categories == 'text/markdown' %}
-            <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | markdown |safe}}</span>
+            <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | custom_markdown }}</span>
           {% endif %}
-          {% if post.categories == 'text/image' %}
+          {% if post.categories == 'image/png' %}
             <br>
-            <img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/>
-            <br>
-          {% else %}
-            <br>
-            {{ post.description | custom_markdown }}
+            <img style="max-width: 800px; max-height: 600px;" src="data:image/png;base64,{{ post.description }}">
+            <!-- <img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/> -->
             <br>
           {% endif %}
+          {% if post.categories == 'image/jpeg' %}
+            <br>
+            <img style="max-width: 800px; max-height: 600px;" src="data:image/jpeg;base64,{{ post.description }}">
+            <!-- <img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/> -->
+            <br>
+          {% endif %}
+          {% if post.categories == 'text/plain' %}
+          <div style="font-family:Gotham-Light; font-size:0.7em">{{ post.description  }}</div>
+
+          {% endif %} <!--might need an endif here-->
             <small style="color:#add8e6; font-family:calibri; padding-right:45px">
               {{ post.published }}
             </small>

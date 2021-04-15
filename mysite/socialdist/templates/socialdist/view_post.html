@@ -1,6 +1,7 @@
 {% extends 'socialdist/base.html' %}
 {% block title %}Feed{% endblock %}
-{% load markdown_extras%}
+{% load markdown_extras %}
+{% load base %}
 {% load templatefilter%}
 
 
@@ -35,8 +36,26 @@
       <p>
         <em>
           @<a href="{% url 'author_profile' post.author.id %}" style="color:#88e ">{{ post.author.username }}</a>
-        </em>
-        {{ post.description | markdown |safe}}
+        </em></p>
+        <span class ="post-title">{{post.title}}</span>
+        {% if post.categories == 'text/markdown' %}
+          <span class = "post" style="color:black; background-color: blueviolet;">{{ post.description | custom_markdown }}</span>
+        {% endif %}
+        {% if post.categories == 'image/png' %}
+          <br>
+          <img style="max-width: 800px; max-height: 600px;" src="data:image/png;base64,{{ post.description }}">
+          <!-- <img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/> -->
+          <br>
+        {% endif %}
+        {% if post.categories == 'image/jpeg' %}
+          <br>
+          <img style="max-width: 800px; max-height: 600px;" src="data:image/jpeg;base64,{{ post.description }}">
+          <!-- <img style="max-width: 800px; max-height: 600px" src="{{ post.description }}"/> -->
+          <br>
+        {% endif %}
+        {% if post.categories == 'text/plain' %}
+          <div style="font-family:Gotham-Light; font-size:0.7em">{{ post.description  }}</div>
+        {% endif %}
               <small style="color:#add8e6; font-family:calibri; padding-right:45px" >
                 {{ post.published|date:"SHORT_DATETIME_FORMAT" }}
                 {{ likes_count }} likes
@@ -60,7 +79,7 @@
    {% endif %}
            </div>
            {% if request.user == post.author%}
-           <input class="btn btn-primary" type="button" value = "✎ Edit" onclick="editPost()" id="editbutton"></input>
+           <input class="btn btn-primary" type="button" value = "✎ Edit" id = "editButton" data = "{{post.id}}" url = "{% url 'edit_post' %}" type="{{post.categories}}"></input>
            <a href="{% url 'delete_post' post.id %}">
              <input class="btn btn-primary" type="button" value = "🗑 Delete" ></input>
            </a>

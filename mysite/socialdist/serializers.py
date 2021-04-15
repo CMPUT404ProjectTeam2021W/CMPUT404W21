@@ -42,3 +42,15 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('type', 'author', 'comment', 'contentType', 'published', 'id')
+
+class LikeSerializer(serializers.ModelSerializer):
+    type = serializers.ReadOnlyField(default='Like')
+    summary = serializers.SerializerMethodField('get_summary')
+    author = AuthorSerializer(read_only=True)
+
+    def get_summary(self, obj):
+        return obj.author.username + "Likes your post"
+
+    class Meta:
+        model = Like
+        fields = ('summary', 'type', 'author', 'object')
