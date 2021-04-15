@@ -9,6 +9,7 @@ class Author(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     url = models.CharField(max_length=200, null=True, blank=True)
     github = models.URLField(default='', blank=True)
+    image = models.ImageField(default='../img/face.svg', upload_to='images/')
     friends = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="friends+")
     is_active = models.BooleanField(default=True)
     def save(self, *args, **kwargs):
