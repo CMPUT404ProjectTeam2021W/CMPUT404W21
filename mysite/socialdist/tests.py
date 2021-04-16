@@ -61,11 +61,11 @@ class ModelTestCase(TestCase):
         author2.set_password(password2)
         author2.save()
 
-        new_id = 1
+        new_id = "06335e84-2872-4914-8c5d-3ed07d2a2f16"
         new_title = "First Post"
         new_description = "This is just a description"
         first_author = Author.objects.get(username=new_username)
-        post = Post(id=1, title=new_title, description=new_description, author=first_author, visibility='public', unlisted=False)
+        post = Post(id="06335e84-2872-4914-8c5d-3ed07d2a2f16", title=new_title, description=new_description, author=first_author, visibility='public', unlisted=False)
         post.shared_by.add(author1)
         post.shared_by.add(author2)
         post.save()
@@ -88,11 +88,11 @@ class ModelTestCase(TestCase):
         author.set_password(new_password)
         author.save()
 
-        new_id = 1
+        new_id = "06335e84-2872-4914-8c5d-3ed07d2a2f16"
         new_title = "First Post"
         new_description = "This is just a description"
         first_author = Author.objects.get(username=new_username)
-        post = Post(id=1, title=new_title, description=new_description, author=first_author, visibility='public', unlisted=False)
+        post = Post(id="06335e84-2872-4914-8c5d-3ed07d2a2f16", title=new_title, description=new_description, author=first_author, visibility='public', unlisted=False)
         post.save()
 
         comment = Comment(id=new_id, post=post, author=author, comment="This is the comment")
@@ -132,7 +132,7 @@ class ModelTestCase(TestCase):
         author2.set_password(password2)
         author2.save()
 
-        request_id = 1
+        request_id = "06335e84-2872-4914-8c5d-3ed07d2a2f16"
         friend_request = FriendRequest(id=request_id, from_author=author1, to_author=author2)
         friend_request.save()
 
@@ -148,14 +148,14 @@ class ModelTestCase(TestCase):
         author1.set_password(password1)
         author1.save()        
 
-        new_id = 1
+        new_id = "06335e84-2872-4914-8c5d-3ed07d2a2f16"
         new_title = "First Post"
         new_description = "This is just a description"
         first_author = Author.objects.get(username=username1)
         post = Post(id=1, title=new_title, description=new_description, author=first_author, visibility='public', unlisted=False)
         post.save()
 
-        like_id = 1
+        like_id = "06335e84-2872-4914-8c5d-3ed07d2a2f16"
         like = Like(id=new_id, author=author1, object=post)
         like.save()
 
@@ -224,6 +224,9 @@ class ViewTestCase(TestCase):
         self.post = Post.objects.create(id="06335e84-2872-4914-8c5d-3ed07d2a2f16", title="Test Post", description="This is a description", author=self.author)
         self.post.save()
 
+        self.post2 = Post.objects.create(id="06335e84-2872-4914-8c5d-3ed07d2a2f12", title="Test Post 2", description="This is a description 2", author=self.author2)
+        self.post2.save()
+
     def test_feed(self):
         response = self.client.get('/feed/')
         self.assertEqual(response.status_code, 200)
@@ -275,6 +278,97 @@ class ViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, template_name='socialdist/view_post.html')
+
+    def test_post_edit(self):
+        url = "/edit_post/"
+        response = self.client.post(url, {"post_id": "06335e84-2872-4914-8c5d-3ed07d2a2f16", "title": "edited title", "description": "edited description"})
+        self.assertEqual(response.status_code, 200)
+
+        edited_post = Post.objects.get(id="06335e84-2872-4914-8c5d-3ed07d2a2f16")
+        self.assertEqual(edited_post.title, "edited title")
+        self.assertEqual(edited_post.description, "edited description")
+
+    ''' need update postview to work properly
+    def test_post_delete(self):
+        url = "/posts/06335e84-2872-4914-8c5d-3ed07d2a2f16/delete/"
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Post.objects.count(), 1)
+
+    def test_like(self):
+        url_like = "/like/06335e84-2872-4914-8c5d-3ed07d2a2f12/"
+        url_unlike = "/like/06335e84-2872-4914-8c5d-3ed07d2a2f12/"
+
+        response = self.client.post(url_like)
+        self.assertEqual(response.status_code, 200)
+
+        like = Like.objects.get(post=self.post2)
+        self.assertEqual(like.author.id, self.author.id)
+        self.assertEqual(like.author.username, self.author.username)
+        self.assertEqual(like.post.id, self.post2.id)
+        self.assertEqual(like.post.title, self.post2.title)
+        self.assertEqual(like.post.description, self.post2.description)
+
+        response = self.client.post(url_unlike)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Like.objects.count(), 0)
+
+    def test_share(self):
+        url_share = "/like/06335e84-2872-4914-8c5d-3ed07d2a2f12/"
+        url_unshare = "/like/06335e84-2872-4914-8c5d-3ed07d2a2f12/"
+
+        response = self.client.post(url_share)
+        self.assertEqual(response.status_code, 200)
+
+        new_post = Post.objects.get(id=self.post2.id)
+        correct = 0
+        for shared in new_post.shared_by.all():
+            if shared.id == self.author.id:
+                correct = 1
+                break
+        self.assertEqual(correct, 1)
+
+        response = self.client.post(url_unshare)
+        self.assertEqual(response.status_code, 200)
+
+        new_post = Post.objects.get(id=self.post2.id)
+        self.assertEqual(new_post.shared_by.all().count(), 0)   
+    '''
+
+    # ------------------ API Test ------------------ #
+
+    #def test_api_author(self):
+        #url = "/api/authors/"
+        #response = self.client.get(url)
+        #self.assertEqual(response.status_code, 200)
+        #response = self.client.post(url, {"github": "http://www.github.com/apitest"})
+        #self.assertEqual(response.status_code, 200)
+
+    #def test_api_posts(self):
+    #    url = "/api/posts/"
+    #    response = self.client.get(url)
+    #    self.assertEqual(response.status_code, 200)
+
+    #def test_api_author_post(self):
+    #    url = "/api/author/" + str(self.author.id) + "/posts/" + str(self.post.id) + "/"
+    #    response = self.client.get(url)
+    #    self.assertEqual(response.status_code, 200)
+
+    #def test_api_author(self):
+    #    url = "/api/author/" + str(self.author.id) + "/"
+    #    response = self.client.get(url)
+    #    self.assertEqual(response.status_code, 200)
+
+  #path("api/authors/", AuthorList.as_view(), name='author_list'),
+  #path("api/posts/", PostList.as_view(), name='post_list'),
+  #path("api/author/<uuid:author_id>/posts/<uuid:post_id>/", PostDetails.as_view(), name='post_detail'),
+  #path("api/author/<uuid:author_id>/", AuthorDetails.as_view(), name='author_detail'),
+  #path("api/author/<uuid:author_id>/followers/", FollowerList.as_view(), name='followers_list'),
+  #path("api/author/<uuid:author_id>/followers/<uuid:foreign_author_id>/", FollowerAction.as_view(), name='followers_action'),
+  #path("api/author/<uuid:author_id>/posts/<uuid:post_id>/comments/", CommentsList.as_view(), name='comments_list'),
+  #path("api/author/<uuid:author_id>/inbox/", InboxAction.as_view(), name="inbox_action"),
+  #path("api/author/<uuid:author_id>/post/<uuid:post_id>/likes/", LikesList.as_view(), name="likes_list"),
+  #path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name="liked_list")
 
     #def test_signup(self):
     #    response = self.client.post(reverse('signup'), 
