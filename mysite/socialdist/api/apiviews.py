@@ -227,15 +227,8 @@ class CommentsList(APIView):
         if previous_page == None:
             previous_page = ""
 
-        
-        result = {'count':paginator.page.paginator.count,
-        'next':next_page,
-        'previous':previous_page,
-        'comments':serializer.data
-        }
 
-
-        result = {'count': paginator.page.paginator.count(),
+        result = {'count': paginator.page.paginator.count,
                   'next': next_page,
                   'previous': previous_page,
                   'comments': serializer.data
