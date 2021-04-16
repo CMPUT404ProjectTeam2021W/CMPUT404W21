@@ -1,5 +1,6 @@
 import json
 
+from requests.auth import HTTPBasicAuth
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -30,7 +31,7 @@ class PostList(APIView):
 
     def get(self, request):
         posts = Post.objects.all()
-        paginator = CustomPagination() #PageNumberPagination()
+        paginator = CustomPagination()  # PageNumberPagination()
         paged_results = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(paged_results, many=True)
 
@@ -191,12 +192,29 @@ class FollowerAction(APIView):  # NEED PUT: Add a follower (must be authenticate
 
     def get(self, request, author_id, foreign_author_id):
         author_obj = get_object_or_404(Author, id=author_id)
-        data = dict()
         if author_obj.friends.filter(id=foreign_author_id).exists():
-            data['detail'] = 'true'
+            return Response(status.HTTP_200_OK)
         else:
-            data['detail'] = 'false'
-        return Response(data=data)
+            return Response(status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, author_id, foreign_author_id):
+        author_obj = get_object_or_404(Author, id=author_id)
+        if Author.objects.filter(id=foreign_author_id).exists():
+            foreign_author_obj = Author.objects.get(id=foreign_author_id)
+        else:
+            hostname = "https://chatbyte.herokuapp.com/"
+            url = hostname + "author/" + foreign_author_id + "/"
+            headers = {'Origin': hostname, 'X-Request-User': url}
+            response = request.get(url, headers=headers, auth=HTTPBasicAuth("chatbyte", "jeremychoo"))
+            foreign_author_json = response.json()
+            get_index = foreign_author_json["id"].find('author/')
+            foreign_author_id = foreign_author_json["id"][get_index + len('author/'):]
+            foreign_author_obj = Author.objects.create(id=foreign_author_id,
+                                                       username=foreign_author_json['displayName'],
+                                                       url=foreign_author_json['url'],
+                                                       github=foreign_author_json['github'])
+        author_obj.friends.add(foreign_author_obj)
+        return Response(status.HTTP_200_OK)
 
     def delete(self, request, author_id, foreign_author_id):
         author_obj = get_object_or_404(Author, id=author_id)
@@ -214,7 +232,7 @@ class CommentsList(APIView):
     def get(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
         comments = Comment.objects.filter(post=post_obj).all()
-        paginator = CustomPagination() #PageNumberPagination()
+        paginator = CustomPagination()  # PageNumberPagination()
         result_page = paginator.paginate_queryset(comments, request)
         serializer = CommentSerializer(result_page, many=True)
 
@@ -227,13 +245,11 @@ class CommentsList(APIView):
         if previous_page == None:
             previous_page = ""
 
-        
-        result = {'count':paginator.page.paginator.count,
-        'next':next_page,
-        'previous':previous_page,
-        'comments':serializer.data
-        }
-
+        result = {'count': paginator.page.paginator.count,
+                  'next': next_page,
+                  'previous': previous_page,
+                  'comments': serializer.data
+                  }
 
         result = {'count': paginator.page.paginator.count(),
                   'next': next_page,
@@ -263,7 +279,6 @@ class InboxAction(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
-
     def get(self, request, author_id):
         author_obj = get_object_or_404(Author, id=author_id)
         public_posts = Post.objects.filter(visibility='public', unlisted='False').all()
@@ -277,9 +292,6 @@ class InboxAction(APIView):
         data['author'] = author_obj.url
         data['items'] = PostSerializer(all_posts, many=True).data
         return Response(data=data)
-
-
-
 
     def post(self, request, author_id):
         data = request.POST

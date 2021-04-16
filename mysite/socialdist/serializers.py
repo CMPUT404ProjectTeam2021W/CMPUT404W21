@@ -23,6 +23,10 @@ class AuthorSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField(default='post')
     author = AuthorSerializer(read_only=True)
+    id = serializers.SerializerMethodField('get_object_address')
+
+    def get_object_address(self, obj):
+        return "http://hermes-cmput404.herokuapp.com/author/" + str(obj.author.id) + "/posts/" + str(obj.id)
 
     class Meta:
         model = Post
