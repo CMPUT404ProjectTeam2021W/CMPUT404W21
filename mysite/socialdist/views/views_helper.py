@@ -83,28 +83,29 @@ def get_stream(request):
     data_list.append(author_list)
 
     return data_list
-
+import pprint
 def deserialize_json(json_response, server):
-
-    x = PostDeserializer(json_response, many=True).data
+    #x = PostDeserializer(json_response, many=True).data
+    #from pprint import pprint
+    #pprint(json_response[0])
     data_list = []
     temp = {}
     author_list = []
     post_list = []
-    for obj_temp in x:
+    for obj_temp in json_response:
 
         new_post = Post()
         new_post.title = obj_temp["title"]
         new_post.description = obj_temp["description"]
         new_post.id = obj_temp["id"]
         new_post.author = Author()
-        new_post.author.url = obj_temp["author"]["url"]
-        new_post.author.username = obj_temp["author"]["username"]
+        new_post.author.url = obj_temp["author"]["id"]
+        new_post.author.username = obj_temp["author"]["displayName"]
         new_post.author.github = obj_temp["author"]["github"]
         new_post.published = parse_datetime(obj_temp["published"])
 
         new_post.visibility = obj_temp["visibility"]
-        new_post.categories = obj_temp["categories"]
+        new_post.categories = obj_temp["contentType"] #add ifs if their content type stuff is different than our catigores 
         new_post.origin = obj_temp["origin"]
 
         get_index = obj_temp["author"]["id"].find('author/')
