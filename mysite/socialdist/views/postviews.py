@@ -58,19 +58,9 @@ def edit_post(request):
 
 
 def delete_post(request, post_id):
-    post = get_object_or_404(Post, id = post_id)
+    post = get_object_or_404(Post, id=post_id)
     post.delete()
-    posts = Post.objects.all().order_by('-published')
-    post_likes_dict = {}
-    post_id_dict = {}
-    post_liked = {}
-    for post in posts:
-        post_likes_dict[post] = post.likes.all().count()
-        post_liked[post] = request.user in post.likes.all()
-        post_id_dict[post] = post.id
-    return render(request, 'socialdist/feed.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked})
-
-
+    return redirect('/feed')
 
 
 def like(request, post_id):
@@ -134,7 +124,8 @@ def unlisted_posts(request):
             else:
                 post_likes_dict[post] = -1
             post_id_dict[post] = post.id
-        return render(request, 'socialdist/unlisted.html', {'posts': post_likes_dict, 'post_id': post_id_dict, 'post_liked': post_liked})
+        return render(request, 'socialdist/unlisted.html', {'posts': post_likes_dict, 'post_id': post_id_dict,
+                                                            'post_liked': post_liked})
 
 
 @login_required
