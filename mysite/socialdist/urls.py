@@ -38,9 +38,8 @@ urlpatterns = [
   path('unlisted/', unlisted_posts, name='unlisted_posts'),
 
   # author profile urls here
-  path('author/<str:author_id>/', author_profile, name='author_profile'),
+  path('author/<str:author_id>/profile/', author_profile, name='author_profile'),
   path('author/<str:author_id>/friends/', friends, name='friends'),
-  path('author/<str:author_id>/', author_profile, name='author_profile'),
   path('send_friend_request/<uuid:author_id>/', send_friend_request, name='send_friend_request'),
   path('accept_friend_request/<uuid:request_id>/', accept_friend_request, name='accept_friend_request'),
   path('reject_friend_request/<uuid:request_id>/', reject_friend_request, name='reject_friend_request'),
@@ -58,10 +57,20 @@ urlpatterns = [
   path("api/author/<uuid:author_id>/posts/<uuid:post_id>/comments/", CommentsList.as_view(), name='comments_list'),
   path("api/author/<uuid:author_id>/inbox/", InboxAction.as_view(), name="inbox_action"),
   path("api/author/<uuid:author_id>/post/<uuid:post_id>/likes/", LikesList.as_view(), name="likes_list"),
-  path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name="liked_list")
+  path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name="liked_list"),
    ## path("api/author/<uuid:author_id>/posts/<uuid:post_id>/", CommentsList.as_view(), name='comments_list'),
    ## path("api/author/<uuid:author_id>/liked", LikedList.as_view(), name='liked_list'),
-
+  path("authors/", AuthorList.as_view(), name='author_list'),
+  path("posts/", PostList.as_view(), name='post_list'),
+  path("author/<uuid:author_id>/posts/<uuid:post_id>/", PostDetails.as_view(), name='post_detail'),
+  path("author/<uuid:author_id>/", AuthorDetails.as_view(), name='author_detail'),
+  path("author/<uuid:author_id>/followers/", FollowerList.as_view(), name='followers_list'),
+  path("author/<uuid:author_id>/followers/<uuid:foreign_author_id>/", FollowerAction.as_view(), name='followers_action'),
+  path("author/<uuid:author_id>/posts/<uuid:post_id>/comments/", CommentsList.as_view(), name='comments_list'),
+  path("author/<uuid:author_id>/inbox/", InboxAction.as_view(), name="inbox_action"),
+  path("author/<uuid:author_id>/post/<uuid:post_id>/likes/", LikesList.as_view(), name="likes_list"),
+  path("author/<uuid:author_id>/liked", LikedList.as_view(), name="liked_list")
+  
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:

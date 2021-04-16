@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import get_object_or_404
 from ..models import *
 from ..serializers import *
@@ -27,13 +28,26 @@ class PostList(APIView):
 
     def get(self, request):
         posts = Post.objects.all()
-        paginator = CustomPagination()
-        result_page = paginator.paginate_queryset(posts, request)
-        data = dict()
-        data['type'] = 'post'
-        data['items'] = PostSerializer(result_page, many=True).data
-        # data = PostSerializer(posts, many=True, context={'request' : request}).data
-        return Response(data=data)
+        paginator = PageNumberPagination()
+        paged_results = paginator.paginate_queryset(posts, request)
+        serializer = PostSerializer(paged_results, many=True)
+        
+        next_page = paginator.get_next_link()
+        if next_page == None:
+            next_page = ""
+        
+        previous_page = paginator.get_previous_link()
+
+        if previous_page == None:
+            previous_page = ""
+        
+        result = {'count':paginator.page.paginator.count,
+        'next':next_page,
+        'previous':previous_page,
+        'posts':serializer.data
+        }
+
+        return Response(data=result)
 
     def post(self, request):
         author = request.user
@@ -198,13 +212,27 @@ class CommentsList(APIView):
     def get(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
         comments = Comment.objects.filter(post=post_obj).all()
-        paginator = CustomPagination()
+        paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(comments, request)
         serializer = CommentSerializer(result_page, many=True)
-        data = dict()
-        data['type'] = "comments"
-        data['items'] = serializer
-        return Response(data=data)
+        
+        next_page = paginator.get_next_link()
+        if next_page == None:
+            next_page = ""
+        
+        previous_page = paginator.get_previous_link()
+
+        if previous_page == None:
+            previous_page = ""
+        
+        result = {'count':paginator.page.paginator.count(),
+        'next':next_page,
+        'previous':previous_page,
+        'comments':serializer.data
+        }
+
+        return Response(data=result)
+
 
     def post(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
