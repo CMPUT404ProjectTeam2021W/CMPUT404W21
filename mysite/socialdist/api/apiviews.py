@@ -30,7 +30,7 @@ class PostList(APIView):
 
     def get(self, request):
         posts = Post.objects.all()
-        paginator = PageNumberPagination()
+        paginator = CustomPagination() #PageNumberPagination()
         paged_results = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(paged_results, many=True)
 
@@ -110,7 +110,7 @@ class PostDetails(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
-    def get(self, request, post_id):
+    def get(self, request, post_id, author_id):
         posts = Post.objects.get(id=post_id)
         data = dict()
         data['type'] = 'post'
@@ -214,7 +214,7 @@ class CommentsList(APIView):
     def get(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
         comments = Comment.objects.filter(post=post_obj).all()
-        paginator = PageNumberPagination()
+        paginator = CustomPagination() #PageNumberPagination()
         result_page = paginator.paginate_queryset(comments, request)
         serializer = CommentSerializer(result_page, many=True)
 
@@ -226,6 +226,14 @@ class CommentsList(APIView):
 
         if previous_page == None:
             previous_page = ""
+
+        
+        result = {'count':paginator.page.paginator.count,
+        'next':next_page,
+        'previous':previous_page,
+        'comments':serializer.data
+        }
+
 
         result = {'count': paginator.page.paginator.count(),
                   'next': next_page,
