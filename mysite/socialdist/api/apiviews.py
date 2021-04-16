@@ -108,7 +108,7 @@ class PostDetails(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
-    def get(self, request, post_id):
+    def get(self, request, post_id, author_id):
         posts = Post.objects.get(id=post_id)
         data = dict()
         data['type'] = 'post'
