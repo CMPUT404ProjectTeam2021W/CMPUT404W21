@@ -288,7 +288,6 @@ class ViewTestCase(TestCase):
         self.assertEqual(edited_post.title, "edited title")
         self.assertEqual(edited_post.description, "edited description")
 
-    ''' need update postview to work properly
     def test_post_delete(self):
         url = "/posts/06335e84-2872-4914-8c5d-3ed07d2a2f16/delete/"
         response = self.client.post(url)
@@ -333,7 +332,6 @@ class ViewTestCase(TestCase):
 
         new_post = Post.objects.get(id=self.post2.id)
         self.assertEqual(new_post.shared_by.all().count(), 0)   
-    '''
 
     # ------------------ API Test ------------------ #
 
