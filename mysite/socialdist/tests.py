@@ -3,6 +3,9 @@ from django.test import TestCase, Client
 # Create your tests here.
 from django.test import TestCase
 from .models import Author, Post, Comment, Server, FriendRequest, Like
+from .forms import AuthorCreationForm
+from django.urls import reverse
+import uuid
 
 # Create your tests here.
 
@@ -35,7 +38,6 @@ class ModelTestCase(TestCase):
         self.assertEqual(current_author.github, new_github2)
         self.assertEqual(current_author.url, author.url)
         self.assertEqual(True, current_author.check_password(new_password2))
-
 
     def test_post_creation(self):
         new_username = "Test123"
@@ -175,3 +177,169 @@ class ModelTestCase(TestCase):
 
         #response = c.get('/login/')
         #print(response.status_code)
+
+class LoginTestCase(TestCase):
+
+    def setUp(self) -> None:
+        self.username = 'test'
+        self.github = 'Http://www.github.com/test'
+        self.password = 'Password12345'
+
+    def test_index_page_url(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/index.html')
+
+    def test_signup_page_url(self):
+        response = self.client.get('/signup/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='registration/signup.html')
+
+    def test_signup_page_view_name(self):
+        response = self.client.get(reverse('signup'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='registration/signup.html')
+
+    def test_login_page_url(self):
+        response = self.client.get('/login/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='registration/login.html')
+
+class ViewTestCase(TestCase):
+
+    def setUp(self) -> None:
+        self.username = 'test'
+        self.github = 'Http://www.github.com/test'
+        self.password = 'Password12345'
+
+        self.author = Author.objects.create(username=self.username, github=self.github)
+        self.author.set_password(self.password)
+        self.author.save()
+        self.client.login(username=self.username, password=self.password)
+
+        self.author2 = Author.objects.create(username='test2', github='Http://www.github.com/test2')
+        self.author2.set_password(self.password)
+        self.author2.save()
+
+        self.post = Post.objects.create(id="06335e84-2872-4914-8c5d-3ed07d2a2f16", title="Test Post", description="This is a description", author=self.author)
+        self.post.save()
+
+    def test_feed(self):
+        response = self.client.get('/feed/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/feed.html')
+
+    def test_user_settings(self):
+        response = self.client.get('/user_settings/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/user_settings.html')
+
+    def test_author_profile(self):
+        url = "/author/" + str(self.author.id) + "/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/author_profile.html')
+
+    def test_other_author_profile(self):
+        url = "/author/" + str(self.author2.id) + "/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/author_profile.html')
+
+    def test_author_friend(self):
+        url = "/author/" + str(self.author.id) + "/friends/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/friends.html')
+
+    def test_author_friend(self):
+        url = "/create_post/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/create_post.html')
+
+    def test_author_friend_feed(self):
+        url = "/friends_feed/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/feed.html')
+
+    def test_author_unlisted(self):
+        url = "/unlisted/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/unlisted.html')
+
+    def test_view_post(self):
+        url = "/posts/06335e84-2872-4914-8c5d-3ed07d2a2f16/view_post/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, template_name='socialdist/view_post.html')
+
+    #def test_signup(self):
+    #    response = self.client.post(reverse('signup'), 
+    #    data={
+    #        'username': self.username,
+    #        'github': self.github,
+    #        'password1': self.password,
+    #        'password2': self.password,
+    #    })
+    #    self.assertEqual(response.status_code, 200)
+        
+        #authors = Author.objects.all()
+        #self.assertEqual(authors.count(), 1)
+
+    #def test_login(self):
+    #    author = Author.objects.create(username=self.username, github=self.github)
+    #    author.set_password(self.password)
+    #    author.save()
+
+        #login = self.client.login(username=self.username, password=self.password)
+        #self.assertEqual(login, True)
+
+    #def test_login_signup(self):
+
+#        response = self.client.get('/')
+#        self.assertEqual(response.status_code, 200)
+
+#        response = self.client.get('/signup/')
+#        self.assertEqual(response.status_code, 200)
+
+#        response = self.client.post('/signup/', {'username': 'test', 'password': 'Super123456', 'github':'Http://www.github.com/test'})
+#        self.assertEqual(response.status_code, 200)
+#        print(response.content)
+
+        #response = self.client.get('/signup/')
+        #self.assertEqual(response.status_code, 200)
+
+        #response = self.client.post('/signup/', {'username': 'test', 'password': 'Super123456', 'github':'Http://www.github.com/test'})
+        #self.assertEqual(response.status_code, 200)
+
+        #response = self.client.get('/login/')
+        #self.assertEqual(response.status_code, 200)
+
+        #response = self.client.post('/login/', {'username': 'test', 'password': 'Super123456'})
+        #self.assertEqual(response.status_code, 200)
+
+        #response = self.client.get('/feed/')
+        #self.assertEqual(response.status_code, 200)
+
+    #def test_setting(self):
+        
+    #    author = Author()
+    #    author.username = 'test'
+    #    author.github = 'Http://www.github.com/test'
+    #    author.set_password('Super123456')
+
+#class FormTestCase(TestCase):
+#    def test_author_creation_github(self):
+#        form = AuthorCreationForm(data={"username": "Test123456", "github": "123", "password": "Super123456"})
+#        self.assertEqual(
+#            form.errors["github"], ["Enter a valid URL."]
+#        )
+#    def test_author_creation_github(self):
+#        form = AuthorCreationForm(data={"username": "Test123456", "github": "123", "password": "Test123456"})
+#        print(form.errors["password"])
+#        self.assertEqual(
+#            form.errors["password"], ["password"]
+#        )
