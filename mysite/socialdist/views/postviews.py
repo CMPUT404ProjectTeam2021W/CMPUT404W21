@@ -166,13 +166,6 @@ def feed(request):
     # post_id_dict - contains the id of the post to iterate through the dictionaries
     # post_liked - contains the boolean value of the current user's like on the post
     foreign_posts = get_stream(request) # get posts from other server
-    print("id: "+foreign_posts[0][0].id)
-    print("unlisted: " , foreign_posts[0][0].unlisted)
-    print("published: ", foreign_posts[0][0].published)
-    print("title: "+foreign_posts[0][0].title)
-    print("visibility: "+foreign_posts[0][0].visibility)
-    print("description: "+foreign_posts[0][0].description)
-    print("categories: ", foreign_posts[0][0].categories)
 
     full_posts = []
 

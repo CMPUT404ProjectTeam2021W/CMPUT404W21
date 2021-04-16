@@ -85,8 +85,6 @@ def get_stream(request):
     return data_list
 import pprint
 def deserialize_json(json_response, server):
-    from pprint import pprint
-    pprint(json_response)
     #x = PostDeserializer(json_response, many=True).data
     data_list = []
     temp = {}
