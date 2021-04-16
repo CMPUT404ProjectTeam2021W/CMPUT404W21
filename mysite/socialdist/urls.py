@@ -68,8 +68,9 @@ urlpatterns = [
   path("author/<uuid:author_id>/followers/<uuid:foreign_author_id>/", FollowerAction.as_view(), name='followers_action'),
   path("author/<uuid:author_id>/posts/<uuid:post_id>/comments/", CommentsList.as_view(), name='comments_list'),
   path("author/<uuid:author_id>/inbox/", InboxAction.as_view(), name="inbox_action"),
-  path("author/<uuid:author_id>/posts/<uuid:post_id>/likes/", LikesList.as_view(), name="likes_list"),
-  path("author/<uuid:author_id>/liked", LikedList.as_view(), name="liked_list")
+  path("author/<uuid:author_id>/post/<uuid:post_id>/likes/", LikesList.as_view(), name="likes_list"),
+  path("author/<uuid:author_id>/liked/", LikedList.as_view(), name="liked_list")
+
   
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
