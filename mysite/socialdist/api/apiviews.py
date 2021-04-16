@@ -1,9 +1,12 @@
+import json
+
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import get_object_or_404
 from ..models import *
 from ..serializers import *
@@ -27,13 +30,26 @@ class PostList(APIView):
 
     def get(self, request):
         posts = Post.objects.all()
-        paginator = CustomPagination()
-        result_page = paginator.paginate_queryset(posts, request)
-        data = dict()
-        data['type'] = 'post'
-        data['items'] = PostSerializer(result_page, many=True).data
-        # data = PostSerializer(posts, many=True, context={'request' : request}).data
-        return Response(data=data)
+        paginator = CustomPagination() #PageNumberPagination()
+        paged_results = paginator.paginate_queryset(posts, request)
+        serializer = PostSerializer(paged_results, many=True)
+
+        next_page = paginator.get_next_link()
+        if next_page == None:
+            next_page = ""
+
+        previous_page = paginator.get_previous_link()
+
+        if previous_page == None:
+            previous_page = ""
+
+        result = {'count': paginator.page.paginator.count,
+                  'next': next_page,
+                  'previous': previous_page,
+                  'posts': serializer.data
+                  }
+
+        return Response(data=result)
 
     def post(self, request):
         author = request.user
@@ -94,7 +110,7 @@ class PostDetails(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
-    def get(self, request, post_id):
+    def get(self, request, post_id, author_id):
         posts = Post.objects.get(id=post_id)
         data = dict()
         data['type'] = 'post'
@@ -198,13 +214,34 @@ class CommentsList(APIView):
     def get(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
         comments = Comment.objects.filter(post=post_obj).all()
-        paginator = CustomPagination()
+        paginator = CustomPagination() #PageNumberPagination()
         result_page = paginator.paginate_queryset(comments, request)
         serializer = CommentSerializer(result_page, many=True)
-        data = dict()
-        data['type'] = "comments"
-        data['items'] = serializer
-        return Response(data=data)
+
+        next_page = paginator.get_next_link()
+        if next_page == None:
+            next_page = ""
+
+        previous_page = paginator.get_previous_link()
+
+        if previous_page == None:
+            previous_page = ""
+
+        
+        result = {'count':paginator.page.paginator.count,
+        'next':next_page,
+        'previous':previous_page,
+        'comments':serializer.data
+        }
+
+
+        result = {'count': paginator.page.paginator.count(),
+                  'next': next_page,
+                  'previous': previous_page,
+                  'comments': serializer.data
+                  }
+
+        return Response(data=result)
 
     def post(self, request, author_id, post_id):
         post_obj = get_object_or_404(Post, id=post_id)
@@ -226,19 +263,51 @@ class InboxAction(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, IsAdminUser)
 
+
+    def get(self, request, author_id):
+        author_obj = get_object_or_404(Author, id=author_id)
+        public_posts = Post.objects.filter(visibility='public', unlisted='False').all()
+        friends_posts = Post.objects.filter(visibility='friends', unlisted='False').all()
+        for post in friends_posts:
+            if post.author not in author_obj.friends.all():
+                friends_posts.remove(post)
+        all_posts = (public_posts | friends_posts).order_by("-published")
+        data = dict()
+        data['type'] = 'inbox'
+        data['author'] = author_obj.url
+        data['items'] = PostSerializer(all_posts, many=True).data
+        return Response(data=data)
+
+
+
+
     def post(self, request, author_id):
         data = request.POST
         if data.get('type') == "Like":
             get_index = data.get('author')['id'].find('author/')
             like_author_id = data.get('author')['id'][get_index + len('author/'):]
-            author_obj, created = Author.objects.get_or_create(id=like_author_id,
-                                                               username=data.get('author')['displayName'],
-                                                               url=data.get('author')['url'],
-                                                               github=data.get('author')['github'])
+            author_obj = Author.objects.get_or_create(id=like_author_id,
+                                                      username=data.get('author')['displayName'],
+                                                      url=data.get('author')['url'],
+                                                      github=data.get('author')['github'])
             get_index = data.get('object').find('posts/')
             post_id = data.get('object')[get_index + len('posts/'):]
             post_obj = Post.objects.get(id=post_id)
             like_obj = Like.object.create(author=author_obj, object=post_obj)
+            return Response(status=status.HTTP_200_OK)
+        if data.get('type') == "Follow":
+            from_author = data.get('actor')
+            to_author = data.get('object')
+            get_index = from_author['id'].find('author/')
+            from_author_id = from_author['id'][get_index + len('author/'):]
+            get_index = to_author['id'].find('author/')
+            to_author_id = to_author['id'][get_index + len('author/'):]
+            from_author_obj = Author.objects.get_or_create(id=from_author_id, username=from_author['displayName'],
+                                                           url=from_author['url'], github=from_author['github'])
+            to_author_obj = Author.objects.get_or_create(id=to_author_id, username=to_author['displayName'],
+                                                         url=to_author['url'], github=to_author['github'])
+            friend_request = FriendRequest.objects.get_or_create(from_author=from_author_obj,
+                                                                 to_author=to_author_obj)
             return Response(status=status.HTTP_200_OK)
 
 
@@ -250,7 +319,10 @@ class LikesList(APIView):
         post_obj = get_object_or_404(Post, id=post_id)
         like_obj_list = Like.objects.filter(object=post_obj).all()
         serializer = LikeSerializer(like_obj_list, many=True)
-        return Response(data=serializer.data)
+        data = dict()
+        data["type"] = "likes"
+        data["items"] = serializer.data
+        return Response(data=data)
 
 
 class LikedList(APIView):
@@ -259,8 +331,9 @@ class LikedList(APIView):
 
     def get(self, request, author_id):
         author_obj = get_object_or_404(Author, id=author_id)
-        like_obj_list = Like.objects.filter(author=author_obj)
+        like_obj_list = Like.objects.filter(author=author_obj).all()
         serializer = LikeSerializer(like_obj_list, many=True)
-        return Response(data=serializer.data)
-
-
+        data = dict()
+        data["type"] = "liked"
+        data["items"] = serializer.data
+        return Response(data=data)
