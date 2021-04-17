@@ -97,7 +97,8 @@ def deserialize_json(json_response, server):
         new_post = Post()
         new_post.title = obj_temp["title"]
         new_post.description = obj_temp["description"]
-        new_post.id = obj_temp["id"]
+        ind = obj_temp["id"].find('posts/')
+        new_post.id = obj_temp["id"][ind+len('posts/'):]
         new_post.author = Author()
         new_post.author.url = obj_temp["author"]["id"]
         new_post.author.username = obj_temp["author"]["displayName"]
