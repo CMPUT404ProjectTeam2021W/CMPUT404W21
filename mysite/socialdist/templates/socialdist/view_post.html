@@ -77,6 +77,7 @@
       <input onclick="unlikeToggle()" type="button" value="❤ Liked" id="unlike-button" class="btn btn-primary"></input>
     </a>
   {% endif %}
+  {% if post.origin == "https://hermes-cmput404.herokuapp.com/" %}
   {% if not post_shared %}
  <a href="/share/{{post.id}}/">
    <input onclick="shareToggle()" type="button" value="🚀 Share" id ="share-button" class="btn btn-primary"></input> </a>
@@ -85,6 +86,7 @@
      <input onclick="unshareToggle()" type="button" value="🚀 Shared" id="share-button" class="btn btn-primary"></input>
    </a>
    {% endif %}
+        {% endif %}
            </div>
            {% if request.user == post.author%}
            <input class="btn btn-primary" type="button" value = "✎ Edit" id = "editButton" data = "{{post.id}}" url = "{% url 'edit_post' %}" type="{{post.categories}}"></input>

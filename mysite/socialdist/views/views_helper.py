@@ -88,6 +88,26 @@ def fix_git_datetime(git_list):
     for event in git_list:
         event['created_at'] = parse_datetime(event['created_at'])
     return git_list
+
+def get_author_stream(request, author_username):
+    post_data = get_stream(request)[0]
+    post_list = []
+    data_list = []
+
+    for post in post_data:
+        if post.author.id == author_username:
+            post_list.append(post)
+
+    servers = Server.objects.all()
+    for server in servers:
+        url = server.hostname+'author/' + author_username
+        headers = {'Origin': server.hostname, 'X-Request-User': str(server.hostname) + "author" + author_username}
+        response = JsonResponse({"Error": "Bad request"}, status=400)
+        if request.method == "GET":
+            response = requests.get(url, headers=headers, auth=HTTPBasicAuth(server.username, server.password))
+            data_list.append(response.json())
+    data_list.append(post_list)
+    return data_list
     
 def get_stream(request):
 
@@ -175,6 +195,20 @@ def deserialize_likes_json(json_response, post):
         new_like.object = post
         likes_list.append(new_like)
     return likes_list
+
+
+def deserialize_friends_json(json_response):
+    friends_list = list()
+    for author_json in json_response:
+        new_author = Author()
+        get_index = author_json['id'].find('author/')
+        author_id = author_json["id"][get_index + len('author/'):]
+        new_author.id = author_id
+        new_author.username = author_json['displayName']
+        new_author.url = author_json['id']
+        new_author.github = author_json['github']
+        friends_list.append(new_author)
+    return friends_list
 
 
 

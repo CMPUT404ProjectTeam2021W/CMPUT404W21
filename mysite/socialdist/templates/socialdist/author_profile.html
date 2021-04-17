@@ -35,10 +35,14 @@
       {{author}}
       </span>
       <br>
-      {% if origin == 'host' %}
+            {% if origin == 'host' %}
     Friends: <a href="/author/{{author_id}}}}/friends/">{{friends_count}}</a>
+      {% else %}
+      Friends: {{friends_count}}</a>
+      {% endif %}
     <br>
     <br>
+            {% if origin == 'host' %}
       {% if request.user.username != author %}
         {% if not friend_status %}
             {% if not friend_request_status %}
@@ -107,6 +111,7 @@
                                 class="btn btn-primary"></input>
                             </a>
                             {% endif %}
+                            {% if post.origin == "https://hermes-cmput404.herokuapp.com/" %}
                             {% if not post_shared|get_item:post %}
                             <a href="/share/{{post.id}}/">
                               <input onclick="shareToggle()" type="button" value="🚀 Share" id="share-button"
@@ -116,6 +121,7 @@
                               <input onclick="unshareToggle()" type="button" value="🚀 Shared" id="share-button"
                                 class="btn btn-primary"></input>
                             </a>
+                            {% endif %}
                             {% endif %}
                             {% endif %}
                         </div>

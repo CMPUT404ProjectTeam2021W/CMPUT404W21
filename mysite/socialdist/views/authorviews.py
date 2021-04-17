@@ -18,32 +18,46 @@ def author_profile(request, author_id):
     friends_count = ''
     friends = ''
     friend_request_status = False
+    user_name = ''
+
     try:
-        author_details = get_object_or_404(Author, id=author_id)
+        author_details = Author.objects.get(id=author_id)
         posts = Post.objects.filter(**{'author': author_details}) | Post.objects.filter(**{'shared_by': author_details})
-        friends = request.user.friends.all()
-        friend_status = author_details in friends
-        try:
-            FriendRequest.objects.get(from_author=request.user, to_author=author_details)
-            friend_request_status = True
-        except FriendRequest.DoesNotExist:
-            friend_request_status = False
-        friends_count = friends.count()
         posts = posts.order_by('-published')
         origin = 'host'
+        user_name = Author.objects.get(id=author_id).github
+        friends = author_details.friends.all()
+        friend_status = author_details in friends
+        friends_count = friends.count()
+
     except:
-        remote_posts = get_stream(request)
-        for authors in remote_posts[1]:
-            if author_id == authors.id:
-                author_details = authors
+        posts = get_author_stream(request, author_id)[1]
+        author_details = Author()
+        remote_author = get_author_stream(request, author_id)[0]
+        # author_details.id = author_id
+        author_details.username = remote_author['displayName']
+        author_details.url = remote_author['url']
+        author_details.github = remote_author['github']
+        user_name = author_details.github
+        hostname = "https://chatbyte.herokuapp.com/"
+        url = "https://chatbyte.herokuapp.com/author/" + str(author_id) + "/followers"
+        headers = {'Origin': hostname, 'X-Request-User': str(hostname) + "author/" + '1' + "/"}
+        response = requests.get(url, headers=headers, auth=HTTPBasicAuth('chatbyte', 'jeremychoo'))
+        friends_list = deserialize_friends_json(response.json()['items'])
+        friends_count = len(friends_list)
+        friend_status = False
+        for friend in friends_list:
+            if request.user == friend:
+                friend_status = True
 
-        for remote_post in remote_posts[0]:
-            if remote_post.author == author_details:
-                posts.append(remote_post)
+    ''' to move back '''
+    try:
+        FriendRequest.objects.get(from_author=request.user, to_author=author_details)
+        friend_request_status = True
+    except FriendRequest.DoesNotExist:
+        friend_request_status = False
 
-    friends = request.user.friends.all()
-    if (author_details != request.user):
-        local_posts = posts.filter(visibility='public')
+    '''move back above'''
 
     post_likes_dict = {}
     post_id_dict = {}
@@ -59,25 +73,34 @@ def author_profile(request, author_id):
             post_id_dict[post] = post.id
             shared_by[post] = request.user in post.shared_by.all()
         else:
-            post_likes_dict[post] = -1
+            hostname = "https://chatbyte.herokuapp.com/"
+            url = "https://chatbyte.herokuapp.com/author/" + str(post.author.id) + "/posts/" + str(post.id) + "/likes"
+            headers = {'Origin': hostname, 'X-Request-User': str(hostname) + "author/" + '1' + "/"}
+            response = requests.get(url, headers=headers, auth=HTTPBasicAuth('chatbyte', 'jeremychoo'))
+            likes_list = deserialize_likes_json(response.json(), post)
+            post_likes_dict[post] = len(likes_list)
+            post_liked[post] = False
+            for like in likes_list:
+                if request.user == like.author:
+                    post_liked[post] = True
+            post_id_dict[post] = post.id
 
     #adapted from https://simpleisbetterthancomplex.com/tutorial/2018/02/03/how-to-use-restful-apis-with-django.html
     #author Vitor Freitas
-    user_name = Author.objects.get(id=author_id).github
     user = {}
-    if user_name != '':
-        username = user_name.split('/')[-1]
-        url = 'https://api.github.com/users/%s/events' % username
+
+    if user_name != '' and user_name !=None:
+        new_username = user_name.split('/')[-1]
+        url = 'https://api.github.com/users/%s/events' % new_username
         response = requests.get(url)
         user = fix_git_datetime(response.json())
-        
-    return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'author': author_details.username, 
+
+    return render(request, 'socialdist/author_profile.html', {'posts': post_likes_dict, 'author': author_details.username,
                                                               'post_liked': post_liked,
                                                               'author_id': author_id, 'friend_status': friend_status,
                                                               'friend_request_status': friend_request_status,
                                                               'friends_count': friends_count, 'post_id': post_id_dict,
                                                               'shared_by': shared_by, 'origin': origin, 'git_user': user})
-
 #https://api.github.com/users/{username}/events
 
 
