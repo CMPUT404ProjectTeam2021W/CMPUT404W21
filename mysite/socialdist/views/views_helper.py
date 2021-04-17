@@ -86,8 +86,8 @@ def get_stream(request):
 import pprint
 def deserialize_json(json_response, server):
     #x = PostDeserializer(json_response, many=True).data
-    #from pprint import pprint
-    #pprint(json_response[0])
+    from pprint import pprint
+    pprint(json_response)
     data_list = []
     temp = {}
     author_list = []
@@ -103,9 +103,14 @@ def deserialize_json(json_response, server):
         new_post.author.username = obj_temp["author"]["displayName"]
         new_post.author.github = obj_temp["author"]["github"]
         new_post.published = parse_datetime(obj_temp["published"])
-
         new_post.visibility = obj_temp["visibility"]
         new_post.categories = obj_temp["contentType"] #add ifs if their content type stuff is different than our catigores 
+        if obj_temp["contentType"] == "image/jpg":
+            new_post.categories = 'image/jpeg'
+            new_post.description = obj_temp['content']
+        if obj_temp['contentType'] == 'image/png':
+            new_post.categories = "image/png"
+            new_post.description = obj_temp['content']
         new_post.origin = obj_temp["origin"]
 
         get_index = obj_temp["author"]["id"].find('author/')
