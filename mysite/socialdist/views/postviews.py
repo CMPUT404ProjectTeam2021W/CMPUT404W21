@@ -130,34 +130,61 @@ def unlisted_posts(request):
 
 @login_required
 def view_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    likes = Like.objects.filter(**{'object': post})
-    likes_count = likes.count()
+    likes_count = 0
+    shared = False
+    liked = False
 
-    shared = request.user in post.shared_by.all()
-    comments = None
     try:
+        post = get_object_or_404(Post, id=post_id)
+        likes = Like.objects.filter(**{'object': post})
+        likes_count = likes.count()
 
-        comments = Comment.objects.filter(**{'post': post})
-    except Comment.DoesNotExist:
-        comments = None
-    try:
-        liked = Like.objects.get(author=request.user, object=post)
-    except Like.DoesNotExist:
-        liked = None
+        shared = request.user in post.shared_by.all()
+        try:
+            comments = Comment.objects.filter(**{'post': post})
+        except:
+            comments = None
+        try:
+            liked = Like.objects.get(author=request.user, object=post)
+        except Exception as e:
+            print(str(e))
+            print("got here no error 4")
+            liked = None
+    except:
+        post = get_foreign_post(request, post_id)
+        hostname = "https://chatbyte.herokuapp.com/"
+        url = "https://chatbyte.herokuapp.com/author/" + str(post.author.id) + "/posts/" + str(post.id) + "/likes"
+        headers = {'Origin': hostname, 'X-Request-User': str(hostname) + "author/" + '1' + "/"}
+        response = requests.get(url, headers=headers, auth=HTTPBasicAuth('chatbyte', 'jeremychoo'))
+        likes_list = deserialize_likes_json(response.json(), post)
+        likes_count = len(likes_list)
+        liked = False
+        for like in likes_list:
+            if request.user == like.author:
+                liked = True
+        try:
+            comments = get_foreign_comment(request, post_id)
+            print(comments)
+        except:
+            comments = None
+
+
     form = CreateCommentForm()
 
     if request.method == 'GET':
         return render(request, 'socialdist/view_post.html', {'post':post, 'post_id': post_id, 'likes_count': likes_count,'liked': liked, 'shared_post':shared, 'comments':comments, 'form':form})
+
     if request.method == 'POST':
         form = CreateCommentForm(request.POST)
         comment = form.save(commit=False)
         comment.author = request.user
         comment.post = post
-        comment.save()
-        form.save()
+        if post.origin == "https://hermes-cmput404.herokuapp.com/":
+            comment.save()
+            form.save()
+        else:
+            send_comment(request, comment, post)
         return redirect(request.META['HTTP_REFERER'])
-
 
 
 @login_required
@@ -262,7 +289,17 @@ def friends_feed(request):
             post_id_dict[post] = post.id
             post_shared[post] = request.user in post.shared_by.all()
         else:
-            post_likes_dict[post] = -1
+            hostname = "https://chatbyte.herokuapp.com/"
+            url = "https://chatbyte.herokuapp.com/author/" + str(post.author.id) + "/posts/" + str(post.id) + "/likes"
+            headers = {'Origin': hostname, 'X-Request-User': str(hostname) + "author/" + '1' + "/"}
+            response = requests.get(url, headers=headers, auth=HTTPBasicAuth('chatbyte', 'jeremychoo'))
+            likes_list = deserialize_likes_json(response.json(), post)
+            post_likes_dict[post] = len(likes_list)
+            post_liked[post] = False
+            for like in likes_list:
+                if request.user == like.author:
+                    post_liked[post] = True
+            post_id_dict[post] = post.id
 
     try:
         friend_requests = FriendRequest.objects.filter(**{'to_author': request.user})

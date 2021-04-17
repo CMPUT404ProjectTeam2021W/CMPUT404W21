@@ -90,7 +90,6 @@
             <small style="color:#add8e6; font-family:calibri; padding-right:45px">
               {{ post.published }}
             </small>
-          {% if likes >= 0 %}
           <small style="color:#add8e6; font-family:calibri; padding-right:45px">
             <span id='likes-{{post.id}}'>{{ likes }}</span> likes
           </small>
@@ -105,14 +104,13 @@
             <input onclick="unlikeToggle('{{post.id}}')" type="button" value="❤ Liked" id="unlike-button-{{post.id}}"
               class="btn btn-primary" url="{% url 'unlike' post.id %}" data="{{post.id}}"></input>
           {% endif %}
+          {% if post.origin == "https://hermes-cmput404.herokuapp.com/" %}
           {% if not post_shared|get_item:post %}
-
             <input onclick="shareToggle('{{post.id}}')" type="button" value="🚀 Share" id="share-button-{{post.id}}"
               class="btn btn-primary" url="{% url 'share' post.id %}"></input>
           {% else %}
             <input onclick="unshareToggle('{{post.id}}')" type="button" value="🚀 Shared" id="unshare-button-{{post.id}}"
               class="btn btn-primary" url="{% url 'unshare' post.id %}"></input>
-
           {% endif %}
           {% endif %}
       </div>

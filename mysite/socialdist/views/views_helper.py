@@ -1,6 +1,8 @@
+import json
+
 import requests
 from ..models import *
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from collections import OrderedDict
 from requests.auth import HTTPBasicAuth
 from ..serializers import *
@@ -8,6 +10,33 @@ from ..models import Server
 from django.utils.dateparse import parse_datetime
 import base64
 
+
+def get_foreign_post(request, post_id):
+    stream = get_stream(request)[0]
+
+    for post in stream:
+        if post.id == post_id:
+            return post
+    return Http404()
+
+
+def send_comment(request, comment, post):
+    hostname = "https://chatbyte.herokuapp.com/"
+    url = hostname + "author/" + post.author.id + "/posts/" + post.id + "/comments"
+    x_request_user = 'https://hermes-cmput404.herokuapp.com' + "/author/" + '9b21918e-df02-4e89-b8a9-ea12781d8ebb'
+    headers = {'Origin': hostname, 'X-Request-User': x_request_user }
+    response = JsonResponse({"Error": "Bad request"}, status=400)
+    comment_serialized = CommentSerializer(comment, many=False).data
+    data = {}
+    print("url: {}".format(url))
+    print("xrequest: {}".format(x_request_user))
+    print("headers: {}".format(headers))
+    data['content'] = comment_serialized['comment']
+    data['contentType'] = comment_serialized['contentType']
+    response = requests.post(url, data=json.dumps(data),headers=headers, auth=HTTPBasicAuth("chatbyte", "jeremychoo"))
+    print(data)
+    print(response)
+    return response
 
 
 def get_foreign_author(url,author_id): #can probably change url to node
