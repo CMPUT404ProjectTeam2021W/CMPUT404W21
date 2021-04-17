@@ -1,0 +1,101 @@
+.post-body
+{
+  margin-top: 10%;
+  height: auto;
+  width: 600px;
+}
+
+.post-body label
+{
+  margin-top: 10%;
+  color: black;
+}
+
+input#id_description{
+  margin-left: 20px;
+  color:black;
+  outline: none;
+  height:100px;
+  width: 400px;
+  border: none;
+  font-size: 20px;
+  font-family:"gotham-light", "times";
+}
+
+
+select#id_visibility{
+  margin-left: 20px;
+  color:black;
+    outline: none;
+    border:none;
+    padding: 5px 10px;
+}
+
+input#submitbtn
+{
+  margin-top: 20px;
+  border: none;
+  margin-left: 30%;
+  background-color: #D0B7D8;
+  height: 45px;
+  width:200px;
+  font-size: 18px;
+  border-radius:30px;
+  transition: background-color 0.5s;
+  cursor: pointer;
+}
+
+input#submitbtn:hover{
+  background-color: #d93d5c;
+  opacity: 0.5;
+  color: white;
+}
+
+#like-button {
+  color: #3399FF;
+  font-family: "Helvetica";
+  font-size: 10pt;
+  background-color: #ffffff;
+  border: 1px solid;
+  margin-left: 30%;
+  border-color: #3399FF;
+  border-radius: 10px;
+  width: 85px;
+  height: 30px;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#unlike-button {
+  color: #3399FF;
+  font-family: "Helvetica";
+  font-size: 10pt;
+  background-color: #ffffff;
+  border: 1px solid;
+  margin-left: 30%;
+  border-color: #3399FF;
+  border-radius: 10px;
+  width: 90px;
+  height: 30px;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#like-button:hover{
+  background-color: blue;
+  opacity: 0.6;
+  color: white;
+}
+
+#unlike-button:hover{
+  background-color: red;
+  opacity: 0.6;
+  color: white;
+  content: "Unlike";
+}

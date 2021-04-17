@@ -1,8 +1,6 @@
-import json
-
 import requests
 from ..models import *
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse
 from collections import OrderedDict
 from requests.auth import HTTPBasicAuth
 from ..serializers import *
