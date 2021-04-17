@@ -1,6 +1,8 @@
+import json
+
 import requests
 from ..models import *
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from collections import OrderedDict
 from requests.auth import HTTPBasicAuth
 from ..serializers import *
@@ -8,6 +10,33 @@ from ..models import Server
 from django.utils.dateparse import parse_datetime
 import base64
 
+
+def get_foreign_post(request, post_id):
+    stream = get_stream(request)[0]
+
+    for post in stream:
+        if post.id == post_id:
+            return post
+    return Http404()
+
+
+def send_comment(request, comment, post):
+    hostname = "https://chatbyte.herokuapp.com/"
+    url = hostname + "author/" + post.author.id + "/posts/" + post.id + "/comments"
+    x_request_user = 'https://hermes-cmput404.herokuapp.com' + "/author/" + '9b21918e-df02-4e89-b8a9-ea12781d8ebb'
+    headers = {'Origin': hostname, 'X-Request-User': x_request_user }
+    response = JsonResponse({"Error": "Bad request"}, status=400)
+    comment_serialized = CommentSerializer(comment, many=False).data
+    data = {}
+    print("url: {}".format(url))
+    print("xrequest: {}".format(x_request_user))
+    print("headers: {}".format(headers))
+    data['content'] = comment_serialized['comment']
+    data['contentType'] = comment_serialized['contentType']
+    response = requests.post(url, data=json.dumps(data),headers=headers, auth=HTTPBasicAuth("chatbyte", "jeremychoo"))
+    print(data)
+    print(response)
+    return response
 
 
 def get_foreign_author(url,author_id): #can probably change url to node
@@ -97,7 +126,8 @@ def deserialize_json(json_response, server):
         new_post = Post()
         new_post.title = obj_temp["title"]
         new_post.description = obj_temp["description"]
-        new_post.id = obj_temp["id"]
+        ind = obj_temp["id"].find('posts/')
+        new_post.id = obj_temp["id"][ind+len('posts/'):]
         new_post.author = Author()
         new_post.author.url = obj_temp["author"]["id"]
         new_post.author.username = obj_temp["author"]["displayName"]
@@ -128,6 +158,26 @@ def deserialize_json(json_response, server):
     data_list.append(author_list)
 
     return data_list
+
+
+def deserialize_likes_json(json_response, post):
+    likes_list = list()
+    for like_json in json_response:
+        new_like = Like()
+        new_like.id = like_json['id']
+        new_like.author = Author()
+        get_index = like_json['author']['id'].find('author/')
+        author_id = like_json["author"]["id"][get_index+len('author/'):]
+        new_like.author.id = author_id
+        new_like.author.username = like_json['author']['displayName']
+        new_like.author.url = like_json['author']['id']
+        new_like.author.github = like_json['author']['github']
+        new_like.object = post
+        likes_list.append(new_like)
+    return likes_list
+
+
+
 
 #adapted from: https://nemecek.be/blog/8/django-how-to-send-image-file-as-part-of-response
 #Author: Filip Němeček https://twitter.com/nemecek_f
