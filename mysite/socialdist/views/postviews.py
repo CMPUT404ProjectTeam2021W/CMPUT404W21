@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
@@ -64,15 +65,34 @@ def delete_post(request, post_id):
 
 
 def like(request, post_id):
-    the_post = Post.objects.get(id=post_id)
-    from_author = request.user
     try:
-        Like.objects.get(author=from_author, object=the_post)
-        return HttpResponse('already liked')
-    except Like.DoesNotExist:
-        like_obj = Like(author=from_author, object=the_post)
-        like_obj.save()
-        return redirect(request.META['HTTP_REFERER'])
+        the_post = Post.objects.get(id=post_id)
+        from_author = request.user
+        try:
+            Like.objects.get(author=from_author, object=the_post)
+            return HttpResponse('already liked')
+        except Like.DoesNotExist:
+            like_obj = Like(author=from_author, object=the_post)
+            like_obj.save()
+            return redirect(request.META['HTTP_REFERER'])
+    except:
+        the_post = get_foreign_post(request, post_id)
+        post_author_id = the_post.author.id
+        url = "https://chatbyte.herokuapp.com/author/" + str(post_author_id) + "/posts/" + str(post_id)
+        hostname = "https://chatbyte.herokuapp.com/"
+        headers = {'Origin': hostname, 'X-Request-User': "https://hermes-cmput404.herokuapp.com/author/" + str(request.user.id)}
+        response_json = requests.get(url, headers=headers, auth=HTTPBasicAuth('chatbyte', 'jeremychoo')).json()
+        url = "https://chatbyte.herokuapp.com/author/" + str(request.user.id) + "/likes"
+        headers = {'Origin': hostname, 'X-Request-User': "https://hermes-cmput404.herokuapp.com/author/" + str(request.user.id)}
+        print("Something")
+        response = requests.post(url, headers=headers, auth=HTTPBasicAuth('chatbyte', 'jeremychoo'), data=response_json)
+        if response.status_code == 200:
+            return redirect(request.META['HTTP_REFERER'])
+        else:
+            return HttpResponse('Failed')
+
+
+
 
 
 def unlike(request, post_id):
