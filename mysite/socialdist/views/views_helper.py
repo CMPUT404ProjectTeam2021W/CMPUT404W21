@@ -188,6 +188,20 @@ def deserialize_likes_json(json_response, post):
     return likes_list
 
 
+def deserialize_friends_json(json_response):
+    friends_list = list()
+    for author_json in json_response:
+        new_author = Author()
+        get_index = author_json['id'].find('author/')
+        author_id = author_json["id"][get_index + len('author/'):]
+        new_author.id = author_id
+        new_author.username = author_json['displayName']
+        new_author.url = author_json['id']
+        new_author.github = author_json['github']
+        friends_list.append(new_author)
+    return friends_list
+
+
 
 
 #adapted from: https://nemecek.be/blog/8/django-how-to-send-image-file-as-part-of-response
