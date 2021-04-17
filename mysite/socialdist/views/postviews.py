@@ -84,7 +84,6 @@ def like(request, post_id):
         response_json = requests.get(url, headers=headers, auth=HTTPBasicAuth('chatbyte', 'jeremychoo')).json()
         url = "https://chatbyte.herokuapp.com/author/" + str(request.user.id) + "/likes"
         headers = {'Origin': hostname, 'X-Request-User': "https://hermes-cmput404.herokuapp.com/author/" + str(request.user.id)}
-        print("Something")
         response = requests.post(url, headers=headers, auth=HTTPBasicAuth('chatbyte', 'jeremychoo'), data=response_json)
         if response.status_code == 200:
             return redirect(request.META['HTTP_REFERER'])
