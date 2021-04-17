@@ -13,18 +13,18 @@ API and Documentation at [https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W2
 
 # Installation and running Hermes locally
 
-## Clone the repo
+### Clone the repo
 
 ```
 git clone https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21.git
 
 ```
 
-## Create a virtual environment and activate it
+### Create a virtual environment and activate it
 
 Please make sure you're running python version >3 in your virtual environment
 
-## Install requirements
+### Install requirements
 
 Please run the following command to install necessary requirements
 
@@ -33,7 +33,7 @@ pip install -r requirements.txt
 
 ```
 
-## Start Hermes
+### Start Hermes
 
 ```
 cd mysite
