@@ -124,6 +124,26 @@ def deserialize_json(json_response, server):
 
     return data_list
 
+
+def deserialize_likes_json(json_response, post):
+    likes_list = list()
+    for like_json in json_response:
+        new_like = Like()
+        new_like.id = like_json['id']
+        new_like.author = Author()
+        get_index = like_json['author']['id'].find('author/')
+        author_id = like_json["author"]["id"][get_index+len('author/'):]
+        new_like.author.id = author_id
+        new_like.author.username = like_json['author']['displayName']
+        new_like.author.url = like_json['author']['id']
+        new_like.author.github = like_json['author']['github']
+        new_like.object = post
+        likes_list.append(new_like)
+    return likes_list
+
+
+
+
 #adapted from: https://nemecek.be/blog/8/django-how-to-send-image-file-as-part-of-response
 #Author: Filip Němeček https://twitter.com/nemecek_f
 def image_as_post(image_path):

@@ -186,7 +186,6 @@ def feed(request):
     full_posts.sort(key=lambda x: x.published, reverse=True)
     # print(full_posts)
     for post in full_posts:
-
         if post.origin == "https://hermes-cmput404.herokuapp.com/":
             post_likes_dict[post] = Like.objects.filter(**{'object': post}).count()
             try:
@@ -196,7 +195,17 @@ def feed(request):
             post_id_dict[post] = post.id
             post_shared[post] = request.user in post.shared_by.all()
         else:
-            post_likes_dict[post] = -1
+            hostname = "https://chatbyte.herokuapp.com/"
+            url = "https://chatbyte.herokuapp.com/author/" + str(post.author.id) + "/posts/" + str(post.id) + "/likes"
+            headers = {'Origin': hostname, 'X-Request-User': str(hostname) + "author/" + '1' + "/"}
+            response = requests.get(url, headers=headers, auth=HTTPBasicAuth('chatbyte', 'jeremychoo'))
+            likes_list = deserialize_likes_json(response.json(), post)
+            post_likes_dict[post] = len(likes_list)
+            post_liked[post] = False
+            for like in likes_list:
+                if request.user == like.author:
+                    post_liked[post] = True
+            post_id_dict[post] = post.id
 
     try:
         friend_requests = FriendRequest.objects.filter(**{'to_author': request.user})
