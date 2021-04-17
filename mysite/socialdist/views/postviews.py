@@ -22,13 +22,13 @@ def create_post(request):
             new_post_descript = image_as_post(post.description)
             if new_post_descript == 100:
                 post.categories = 'text/plain'
-                post.description = 'image size too large, please reduce size and try again' #can probably redirecthere or something better 
+                post.description = 'image size too large, please reduce size and try again' #can probably redirecthere or something better
             elif new_post_descript == 110:
                 post.categories = 'text/plain'
                 post.description = 'Wrong format'
             else:                                                                          # maybe redirect with error message showing
                 post.description = new_post_descript
-            
+
         # Save post in database.
         post.save()
         # Rediect to post list.
@@ -130,7 +130,7 @@ def unlisted_posts(request):
 
 @login_required
 def view_post(request, post_id):
-    print("view_post" + str(request))
+    print("view_post " + request.method)
 
     likes_count = 0
     shared = False
@@ -153,11 +153,11 @@ def view_post(request, post_id):
             print("got here no error 4")
             liked = None
     except:
-        post = get_foreign_post(request, post_id)
+        post = get_foreign_post(post_id)
         liked, likes_count = get_remote_likes(request, post_id)
-        
+
         try:
-            comments = get_foreign_comment(request, post_id)
+            comments = get_foreign_comment(post_id)
             print("hey lol")
             print(comments)
         except:
@@ -171,7 +171,7 @@ def view_post(request, post_id):
         return render(request, 'socialdist/view_post.html', {'post':post, 'post_id': post_id, 'likes_count': likes_count,'liked': liked, 'shared_post':shared, 'comments':comments, 'form':form})
 
     if request.method == 'POST':
-        
+
         form = CreateCommentForm(request.POST)
         comment = form.save(commit=False)
         comment.author = request.user
@@ -180,19 +180,15 @@ def view_post(request, post_id):
             comment.save()
             form.save()
         else:
-            print("before changing" + str(request))
-            request.method = 'GET'
-            print("after changing" + str(request))
             send_comment(comment, post)
         return redirect(request.META['HTTP_REFERER'])
-
 
 @login_required
 def feed(request):
     # post_likes_dict - contains a count of likes on a post
     # post_id_dict - contains the id of the post to iterate through the dictionaries
     # post_liked - contains the boolean value of the current user's like on the post
-    foreign_posts = get_stream(request) # get posts from other server
+    foreign_posts = get_stream() # get posts from other server
 
     full_posts = []
 
@@ -249,7 +245,7 @@ def friends_feed(request):
     # post_likes_dict - contains a count of likes on a post
     # post_id_dict - contains the id of the post to iterate through the dictionaries
     # post_liked - contains the boolean value of the current user's like on the post
-    foreign_posts = get_stream(request) # get posts from other server
+    foreign_posts = get_stream() # get posts from other server
 
     full_posts = []
 
