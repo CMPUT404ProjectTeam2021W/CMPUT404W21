@@ -82,3 +82,10 @@ Code is LICENSE'D under the Apache 2 license
 -  Debangana Ghosh (orackle)
 -  Jason Robock (Vinen88)
 -  Xinyu Chen (xinyuchen98)
+
+# Credits
+
+- [ParticleJS effect](https://vincentgarreau.com/particles.js/)
+- [Django docs](https://docs.djangoproject.com/en/3.2/)
+- [MarkdownX](https://neutronx.github.io/django-markdownx/)
+- [Gotham Font](https://www.downloadfonts.io/gotham-font-family-free/)
