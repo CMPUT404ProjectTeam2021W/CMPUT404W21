@@ -10,6 +10,9 @@ Deployed on Heroku at [https://hermes-cmput404.herokuapp.com/](https://hermes-cm
 ## API and Documentation
 API and Documentation at [https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21/wiki/API-and-Documentation](https://github.com/CMPUT404ProjectTeam2021W/CMPUT404W21/wiki/API-and-Documentation)
 
+## Video Demo
+
+[Drive Link](https://drive.google.com/file/d/1h8djvFAPCEa7mLMsY2l8c5d_MVQejAoE/view?usp=sharing)
 
 # Installation and running Hermes locally
 
