@@ -35,7 +35,7 @@ def send_comment(comment, post):
     data['contentType'] = comment_serialized['contentType']
     data=json.dumps(data)
     response = requests.post(url, data=json.dumps(data),headers=headers, auth=HTTPBasicAuth("chatbyte", "jeremychoo"))
-    print(data)
+    print
     print(response)
     return response
 
@@ -188,20 +188,6 @@ def deserialize_likes_json(json_response, post):
     return likes_list
 
 
-def deserialize_friends_json(json_response):
-    friends_list = list()
-    for author_json in json_response:
-        new_author = Author()
-        get_index = author_json['id'].find('author/')
-        author_id = author_json["id"][get_index + len('author/'):]
-        new_author.id = author_id
-        new_author.username = author_json['displayName']
-        new_author.url = author_json['id']
-        new_author.github = author_json['github']
-        friends_list.append(new_author)
-    return friends_list
-
-
 
 
 #adapted from: https://nemecek.be/blog/8/django-how-to-send-image-file-as-part-of-response
@@ -233,3 +219,36 @@ def get_remote_likes(request, post_id):
             liked = True
 
     return (liked, likes_count)
+
+def get_author_stream(author_username):
+    post_data = get_stream()[0]
+    post_list = []
+    data_list = []
+
+    for post in post_data:
+        if post.author.id == author_username:
+            post_list.append(post)
+
+    servers = Server.objects.all()
+    for server in servers:
+        url = server.hostname+'author/' + author_username
+        headers = {'Origin': server.hostname, 'X-Request-User': str(server.hostname) + "author" + author_username}
+        response = JsonResponse({"Error": "Bad request"}, status=400)
+
+        response = requests.get(url, headers=headers, auth=HTTPBasicAuth(server.username, server.password))
+        data_list.append(response.json())
+    data_list.append(post_list)
+    return data_list
+
+def deserialize_friends_json(json_response):
+    friends_list = list()
+    for author_json in json_response:
+        new_author = Author()
+        get_index = author_json['id'].find('author/')
+        author_id = author_json["id"][get_index + len('author/'):]
+        new_author.id = author_id
+        new_author.username = author_json['displayName']
+        new_author.url = author_json['id']
+        new_author.github = author_json['github']
+        friends_list.append(new_author)
+    return friends_list

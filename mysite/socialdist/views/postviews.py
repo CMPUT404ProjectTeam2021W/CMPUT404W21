@@ -76,7 +76,7 @@ def like(request, post_id):
             like_obj.save()
             return redirect(request.META['HTTP_REFERER'])
     except:
-        the_post = get_foreign_post(request, post_id)
+        the_post = get_foreign_post(post_id)
         post_author_id = the_post.author.id
         url = "https://chatbyte.herokuapp.com/author/" + str(post_author_id) + "/posts/" + str(post_id)
         hostname = "https://chatbyte.herokuapp.com/"

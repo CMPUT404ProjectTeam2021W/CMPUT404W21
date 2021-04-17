@@ -31,9 +31,9 @@ def author_profile(request, author_id):
         friends_count = friends.count()
 
     except:
-        posts = get_author_stream(request, author_id)[1]
+        posts = get_author_stream(author_id)[1]
         author_details = Author()
-        remote_author = get_author_stream(request, author_id)[0]
+        remote_author = get_author_stream(author_id)[0]
         # author_details.id = author_id
         author_details.username = remote_author['displayName']
         author_details.url = remote_author['url']
@@ -171,22 +171,22 @@ def friends(request, author_id):
 #    elif request.method == 'GET':
 #        form = GithubChangeForm()
 #        return render(request, 'socialdist/user_settings.html', {'form': form})
-#    
+#
 #    else:
 #        return HttpResponseNotAllowed(['GET', 'POST'])
 
 @login_required
-def user_settings(request):    
+def user_settings(request):
 
     if request.method == 'POST':
         form = SettingChangeForm(request.POST, request.FILES)
         if form.is_valid():
             setting_changed = form.save(request.user.id)
-            if setting_changed: 
+            if setting_changed:
                 return redirect(request.META['HTTP_REFERER'])
             else:
                 return HttpResponse('required an author')
-    
+
     elif request.method == 'GET':
         form = SettingChangeForm()
         return render(request, 'socialdist/user_settings.html', {'form': form})
